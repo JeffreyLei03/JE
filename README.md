@@ -12,23 +12,67 @@ Je 是一个面向专业开发者、轻量且高度可扩展的终端 AI 编程�
 
 ## 🏗 核心架构设计 (Architecture)
 
-Je 采用极度清晰的三层分层解耦架构，保证底层引擎的便携性与上层应用的可扩展性：
+Je 秉承**极简、高内聚、低耦合**的工程哲学，严格遵循三层分层解耦架构：
 
-```text
-je_coding (终端应用层)  →  je_agent (核心大脑)  →  je_ai (模型流式层)
+```mermaid
+graph TD
+    subgraph UI ["🖥 前端交互层 (Presentation Layer)"]
+        TUI["Textual TUI (富交互界面)"]
+        CLI["Print Mode (命令行无头模式)"]
+    end
+
+    subgraph Coding ["📦 je_coding (工程适配环境)"]
+        Session["CodingSession (编码会话)"]
+        Tools["CodingTools (read / write / edit / bash)"]
+        Context["ContextLoader (AGENTS.md / .je/skills)"]
+    end
+
+    subgraph Core ["⚡ je_agent (可复用核心大脑)"]
+        Harness["AgentHarness (调度线束引擎)"]
+        Loop["AgentLoop (ReAct 自治推理主循环)"]
+        Tree["SessionTree (不可变/只追加树状存储)"]
+    end
+
+    subgraph AI ["🌐 je_ai (统一模型通信层)"]
+        Provider["ProviderAdapter (适配 OpenAI / Claude / Ollama)"]
+        Stream["EventStream (统一异步流式分发)"]
+    end
+
+    UI -->|"订阅事件流 / 发送用户输入"| Coding
+    Coding -->|"组装工具与上下文"| Core
+    Core -->|"调度模型并驱动自治循环"| AI
 ```
 
-| 模块分层 | 核心定位 | 主要职责 |
+| 分层命名 | 核心定位 | 主要职责与边界 |
 | :--- | :--- | :--- |
-| **`je_ai`** | 统一大模型通信层 | 封装异构大模型协议（OpenAI、Anthropic、Ollama、DeepSeek、Hugging Face 等），转换为平台中立的统一事件流。 |
-| **`je_agent`** | 通用 Agent 调度引擎 | 包含 Agent 执行主循环、工具调用规范、状态机、消息模型与持久化树状会话基元。不依赖任何 UI 库，可作为独立库嵌入任何环境。 |
-| **`je_coding`** | 终端编码助理环境 | 完整的终端应用落地层：提供 Textual 交互式 TUI 界面、命令行单次执行模式（Print Mode）、内置编码工具集、工作区规则感知（`.je/`、`AGENTS.md`）及技能扩展。 |
+| **`je_ai`** | 统一大模型通信层 | 封装异构大模型协议（OpenAI、Anthropic、Ollama、DeepSeek、Hugging Face 等），将其转换为与厂商中立的标准异步事件流（Event Stream）。不含任何 Agent 业务逻辑。 |
+| **`je_agent`** | 通用 Agent 调度引擎 | 整个智能体的核心大脑：包含自主推理执行循环（ReAct Loop）、工具调用编排、状态机流转、不可变消息模型及树状持久化存储。**完全独立于 UI 和文件系统**，可作为纯 Python 库嵌入任意后端或应用。 |
+| **`je_coding`** | 终端编码助理环境 | 完整的终端落地应用：集成面向本地工程的实用工具集、工作区规则感知（`.je/`、`AGENTS.md`、Skills 技能包）、Textual 现代化交互 TUI 及命令行无头输出模式。 |
 
-```text
-AgentHarness  = 可复用的通用 Agent 大脑引擎
-CodingSession = 面向实际工程的编码助理环境
-TUI / CLI     = 前端消费层（事件流驱动）
-```
+---
+
+## 💡 核心亮点设计 (Key Highlights)
+
+### 1. 纯事件驱动的主脑架构 (Pure Event-Driven Agent)
+`je_agent` 不直接依赖任何渲染代码（不依赖 Rich、不依赖 Textual）。Agent 内部执行流（思考、工具调用、模型回复、错误捕获）均以**强类型事件流 (`AgentEvent`)** 的形式向上抛出。前端无论是 Textual TUI、Web 前端还是 CLI 脚本，只需简单消费事件即可无缝渲染，实现了 UI 与核心逻辑的彻底解耦。
+
+### 2. 只追加树状会话持久化 (Append-Only Tree Session)
+会话记录不是简单的平面聊天日志，而是基于 **JSONL 的只追加树状历史存储 (Tree-structured History)**：
+- **零破坏性存储**：每一次提问、回答与工具执行均作为不可变节点按需追加，永不重写已有文件。
+- **自由分叉与时光倒流**：支持像 Git 分支一样从任意历史节点派生新对话分支，会话恢复（`/resume`）绝对无损。
+
+### 3. 高精度原子化文件编辑系统 (Atomic Precision Editing)
+专为代码修改设计的智能编辑工具链：
+- **唯一性锚定 (`edit`)**：严格要求定位文本具有唯一上下文特征，杜绝模糊匹配改错代码。
+- **原子化执行与自动回滚**：编辑操作在内存缓冲中执行校验，任意异常即刻回滚，确保本地工作区源码绝不处于中间破坏状态。
+
+### 4. 开放无绑定的模型中立性 (Vendor-Neutral Provider)
+底层统一抽象了大模型调用规范，开箱支持：
+- 云端旗舰大模型（OpenAI GPT-4o、Claude 3.5 Sonnet、DeepSeek-V3/R1）。
+- 本地私有化推理（通过 Ollama 或 vLLM 驱动开源模型），完全离线亦可自主编码。
+
+### 5. 极速轻量与即插即用 (Zero-Bloat Engineering)
+抛弃沉重的重型框架（如 LangChain、AutoGPT 等重构层级），基于纯原生 Python 3.12 异步高并发特性构建，依赖极简、启动毫秒级、内存占用极低。
 
 ---
 
