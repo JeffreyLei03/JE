@@ -33,14 +33,14 @@ def test_default_resource_paths_follow_tau_home_and_share_agents(
     assert paths.root == tau_home
     assert paths.skills_dir == tau_home / "skills"
     assert paths.prompts_dir == tau_home / "prompts"
-    assert paths.themes_dirs == (tau_home / "themes", cwd / ".tau" / "themes")
+    assert paths.themes_dirs == (tau_home / "themes", cwd / ".je" / "themes")
     assert paths.system_prompt_path == tau_home / "SYSTEM.md"
     assert paths.append_system_prompt_path == tau_home / "APPEND_SYSTEM.md"
     assert paths.agents_root == Path.home() / ".agents"
     assert paths.skills_dirs == (
         tau_home / "skills",
         Path.home() / ".agents" / "skills",
-        cwd / ".tau" / "skills",
+        cwd / ".je" / "skills",
         cwd / ".agents" / "skills",
     )
 
@@ -69,13 +69,13 @@ def test_resource_paths_include_agents_and_project_directories(tmp_path: Path) -
     assert paths.skills_dirs == (
         tau_home / "skills",
         agents_home / "skills",
-        cwd / ".tau" / "skills",
+        cwd / ".je" / "skills",
         cwd / ".agents" / "skills",
     )
     assert paths.prompts_dirs == (
         tau_home / "prompts",
         agents_home / "prompts",
-        cwd / ".tau" / "prompts",
+        cwd / ".je" / "prompts",
         cwd / ".agents" / "prompts",
     )
     assert paths.system_prompt_path == tau_home / "SYSTEM.md"

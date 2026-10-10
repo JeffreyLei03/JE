@@ -4,11 +4,11 @@ description: The read, write, edit, and bash tools the agent uses to work in you
 ---
 
 Tools are the actions the agent can take in your working directory. The model
-decides when to call them; Tau executes them and streams the results back. Tau
+decides when to call them; Je executes them and streams the results back. Je
 ships four built-in coding tools: `read`, `write`, `edit`, and `bash`.
 
 All paths are resolved against the session's working directory (`--cwd`, or the
-directory you launched Tau from).
+directory you launched Je from).
 
 > [!NOTE]
 > This page documents tool *behavior* — what the model can do on your machine. To
@@ -34,12 +34,12 @@ truncates to at most 2,000 lines or 50 KB (whichever comes first), appending a
 hint like `[42 more lines in file. Use offset=101 to continue.]`. Supported
 images (JPEG, static PNG, GIF, WebP, and BMP) are detected from their file
 content and sent to vision-capable models as image attachments. BMP files are
-converted to PNG. Tau validates images and, when necessary, resizes them without
+converted to PNG. Je validates images and, when necessary, resizes them without
 upscaling or changing their aspect ratio. The processed attachment is limited to
 2,000 pixels on either side and 5 MB. Processing also rejects source files above
 50 MB or 40 million pixels. Animated PNG and JPEG XL inputs receive explicit
 unsupported-format notices. If decoding, conversion, or resizing cannot produce
-a safe attachment, Tau returns a clear omission notice.
+a safe attachment, Je returns a clear omission notice.
 
 When the active model does not accept images, `read` returns an explicit
 text-only notice that says the image contents are unavailable and recommends
@@ -81,7 +81,7 @@ Applies exact text replacements to one file.
 {
   "path": "src/example.py",
   "edits": [
-    { "oldText": "print('hello')", "newText": "print('hello, Tau')" }
+    { "oldText": "print('hello')", "newText": "print('hello, Je')" }
   ]
 }
 ```

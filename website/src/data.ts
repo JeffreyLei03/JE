@@ -3,13 +3,13 @@ import { parse as yaml } from "yaml";
 import { parse as toml } from "smol-toml";
 
 export const site = {
-  title: "Tau",
+  title: "Je",
   description:
     "An educational Python project for learning how coding agents are built.",
-  githubUrl: "https://github.com/huggingface/tau",
-  discordUrl: "https://link.alejandro-ao.com/tau-discord",
-  editRepoUrl: "https://github.com/huggingface/tau/edit/main/website/content",
-  githubRepo: "huggingface/tau",
+  githubUrl: "https://github.com/JeffreyLei03/JE",
+  communityUrl: "https://github.com/JeffreyLei03/JE/discussions",
+  editRepoUrl: "https://github.com/JeffreyLei03/JE/edit/main/website/content",
+  githubRepo: "JeffreyLei03/JE",
 };
 export const version = (
   toml(readFileSync("../pyproject.toml", "utf8")).project as { version: string }
@@ -40,4 +40,11 @@ export const releases = JSON.parse(
 ) as { version: string; date: string; sections: Record<string, string[]> }[];
 export function pagePath(id: string) {
   return id === "_index" ? "/" : `/${id.replace(/\/_index$/, "")}/`;
+}
+
+export function sitePath(path: string = "/") {
+  if (!path.startsWith("/") || path.startsWith("//")) return path;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+  if (base && (path === base || path.startsWith(`${base}/`))) return path;
+  return `${base}${path}`;
 }

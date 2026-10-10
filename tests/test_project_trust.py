@@ -160,11 +160,12 @@ def test_store_round_trip_is_sorted_and_nearest_decision_wins(tmp_path: Path) ->
     assert payload == {
         "version": 1,
         "decisions": [
-            {"path": str(parent.resolve()), "decision": "trusted"},
-            {"path": str(child.resolve()), "decision": "untrusted"},
+            {"path": str(canonicalize_project_path(parent).value), "decision": "trusted"},
+            {"path": str(canonicalize_project_path(child).value), "decision": "untrusted"},
         ],
     }
-    assert store.path.stat().st_mode & 0o777 == 0o600
+    if sys.platform != "win32":
+        assert store.path.stat().st_mode & 0o777 == 0o600
 
 
 def test_parent_trust_removes_exact_child_for_inheritance(tmp_path: Path) -> None:
@@ -321,9 +322,11 @@ async def test_tui_trust_modal_shows_boundary_parent_and_keyboard_cancel(
         parent_choice = host.screen.query_one("#trust-trust-parent", ListItem)
         assert "not a sandbox" in boundary
         assert "Escape cancels" in help_text
-        assert displayed_path == str(project.resolve())
+        assert displayed_path == str(canonicalize_project_path(project).value)
         assert "context (1)" in summary_copy
-        assert str(project.parent.resolve()) in str(parent_choice.query_one(Static).content)
+        assert str(canonicalize_project_path(project.parent).value) in str(
+            parent_choice.query_one(Static).content
+        )
         assert parent_choice.has_class("project-trust-choice")
         await pilot.press("escape")
         await pilot.pause()

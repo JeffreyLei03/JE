@@ -1,10 +1,10 @@
 ---
 title: Keyboard shortcuts
-description: Default keys for the Tau TUI, and how to remap them.
+description: Default keys for the Je TUI, and how to remap them.
 ---
 
 These are the default keys in the interactive [TUI](/guides/tui/). Run
-`/hotkeys` in-session to see them, and remap them in `~/.tau/tui.json` (see
+`/hotkeys` in-session to see them, and remap them in `~/.je/tui.json` (see
 [Configuration](/reference/configuration/#tui-settings)).
 
 ## Prompting
@@ -47,7 +47,7 @@ These are the default keys in the interactive [TUI](/guides/tui/). Run
 | `Ctrl+D` | Quit |
 
 > [!NOTE] Remapping
-> Keys use Textual's syntax (`ctrl+k`, `shift+tab`, `down`, `f2`, …). Tau rejects
+> Keys use Textual's syntax (`ctrl+k`, `shift+tab`, `down`, `f2`, …). Je rejects
 > unknown names, empty keys, and duplicate assignments so mistakes fail early. Any
 > key you don't set keeps its default. If your terminal cannot distinguish
 > `Shift+Enter` from `Enter`, choose a key it can report separately:

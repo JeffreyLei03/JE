@@ -1,9 +1,9 @@
 ---
 title: Skills & prompt templates
-description: Teach Tau reusable know-how with skills, and stop retyping instructions with prompt templates.
+description: Teach Je reusable know-how with skills, and stop retyping instructions with prompt templates.
 ---
 
-Tau loads two kinds of reusable Markdown from disk: **skills** (how to do a
+Je loads two kinds of reusable Markdown from disk: **skills** (how to do a
 task) and **prompt templates** (a saved prompt you trigger by name). Both can
 live at the user level (available everywhere) or inside a project.
 
@@ -13,26 +13,26 @@ Skills are loaded from these locations, in increasing precedence (later
 overrides earlier on name clashes):
 
 ```text
-~/.tau/skills/
+~/.je/skills/
 ~/.agents/skills/
-<cwd>/.tau/skills/
+<cwd>/.je/skills/
 <cwd>/.agents/skills/
 ```
 
 Prompt templates load from:
 
 ```text
-~/.tau/prompts/
+~/.je/prompts/
 ~/.agents/prompts/
-<cwd>/.tau/prompts/
+<cwd>/.je/prompts/
 <cwd>/.agents/prompts/
 ```
 
 After adding or editing files while the TUI is open, run **`/reload`** to
 rediscover them. Duplicate/overridden resources are reported as diagnostics, not
-fatal errors. At TUI startup, Tau also shows a red transcript alert when skills or
+fatal errors. At TUI startup, Je also shows a red transcript alert when skills or
 prompt templates in different locations share a name. The alert lists both paths
-so you can rename or remove the unintended duplicate; Tau still uses the
+so you can rename or remove the unintended duplicate; Je still uses the
 higher-precedence resource.
 
 ## Skills
@@ -43,7 +43,7 @@ The directory name is the skill name. Optional frontmatter gives it a
 description:
 
 ```text
-~/.tau/skills/security-review/SKILL.md
+~/.je/skills/security-review/SKILL.md
 ```
 
 ```md
@@ -59,23 +59,23 @@ inside the same directory.
 
 > [!TIP]
 > Bare `.md` files at the root of a skills directory (for example
-> `~/.tau/skills/review.md`) are **not** loaded as skills. Tau will surface a
+> `~/.je/skills/review.md`) are **not** loaded as skills. Je will surface a
 > diagnostic telling you to move them into their own directory:
 >
 > ```bash
-> cd ~/.tau/skills
+> cd ~/.je/skills
 > mkdir review && mv review.md review/SKILL.md
 > ```
 >
-> This matches the Agent Skills spec and applies uniformly across `.tau/` and
+> This matches the Agent Skills spec and applies uniformly across `.je/` and
 > `.agents/` locations.
 
-Tau's own extension and provider workflows are packaged documentation rather
+Je's own extension and provider workflows are packaged documentation rather
 than built-in skills. They remain available to the agent without appearing in
 your skill list, competing with your skill names, or being disabled by
 `--no-skills`.
 
-Tau lists loaded user and project skills in the system prompt so the model knows they exist and
+Je lists loaded user and project skills in the system prompt so the model knows they exist and
 can read the full file (via the `read` tool) when relevant. Run **`/skills`** to search names and
 descriptions, then select one to insert its invocation into the prompt for further instructions.
 In the picker, **F1** opens the complete header description and **Ctrl+Enter** displays the
@@ -95,7 +95,7 @@ Check the changes on this branch.
 Pay special attention to authentication boundaries.
 ```
 
-`/skill:<name>` is a *prompt-expansion* path — Tau expands the skill and any
+`/skill:<name>` is a *prompt-expansion* path — Je expands the skill and any
 inline or multiline request into your prompt, then runs it as a normal turn.
 
 ### Hiding a skill from the model
@@ -123,8 +123,8 @@ A prompt template is a saved prompt you trigger by its filename. For example,
 `~/.agents/prompts/wt.md` is invoked with `/wt`. Run `/prompts` in the TUI to
 search every loaded template. Press **Enter** to insert its invocation without
 submitting it, or **Ctrl+E** to edit its Markdown directly. Save with **Ctrl+S**;
-Tau reloads resources automatically. The filenames `prompts.md` and `tools.md` are
-reserved for built-in commands; Tau ignores templates with those names and
+Je reloads resources automatically. The filenames `prompts.md` and `tools.md` are
+reserved for built-in commands; Je ignores templates with those names and
 reports a resource diagnostic. Templates use the same argument variables as Pi:
 
 - `$1`, `$2`, ... for positional arguments
@@ -150,7 +150,7 @@ If a template has no argument placeholder, your arguments are appended after a
 blank line.
 
 The filenames `prompts.md` and `skills.md` are reserved for the built-in `/prompts`
-and `/skills` pickers. Tau ignores either template and reports a resource diagnostic;
+and `/skills` pickers. Je ignores either template and reports a resource diagnostic;
 rename the file to load it as a custom prompt.
 
 ## Skill vs. prompt template — which?
@@ -162,4 +162,4 @@ rename the file to load it as a custom prompt.
 
 > [!TIP]
 > Keep personal, cross-project helpers in `~/.agents/`. Keep project-specific ones
-> in the repo's `.tau/` or `.agents/` so they're shared with collaborators.
+> in the repo's `.je/` or `.agents/` so they're shared with collaborators.

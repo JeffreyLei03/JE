@@ -460,7 +460,8 @@ def theme_css_variables(theme: TuiTheme) -> dict[str, str]:
             css_vars[k.replace("je-", "tau-")] = v
     return css_vars
 
-def _legacy_vars(theme):
+
+def _legacy_vars(theme: TuiTheme) -> dict[str, str]:
     return {
         "tau-screen-background": theme.screen_background,
         "tau-screen-text": theme.screen_text,

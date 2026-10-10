@@ -1,6 +1,6 @@
-# Tau TUI
+# Je TUI
 
-Tau's interactive interface uses Textual behind an adapter boundary. The
+Je's interactive interface uses Textual behind an adapter boundary. The
 portable `je_agent` harness emits provider-neutral events; the TUI renders
 them and owns interaction. Ctrl+P cycles forward through scoped models;
 Shift+Ctrl+P cycles backward.
@@ -13,14 +13,14 @@ faint background matching its theme-colored source name and border. File-backed
 prompt overrides, append files, project instructions, and skills show their
 paths; extension sections and runtime values show their owning component. The
 command does not add content to model context or session history. If an effective prompt cannot
-be verified against Tau's deterministic builder inputs, Tau labels the whole
+be verified against Je's deterministic builder inputs, Je labels the whole
 prompt as runtime-composed rather than guessing provenance.
 
 The sidebar usage section shows `avg TPS` and `avg TTFT` across timed session
-history. Effective TPS uses the accumulated time Tau spends awaiting provider
+history. Effective TPS uses the accumulated time Je spends awaiting provider
 events, including provider queueing, network waits, prefill, and TTFT; it
-excludes Tau's rendering and persistence between stream pulls. TPS is
-token-weighted. TTFT is the arithmetic mean of provider-wait time through Tau's
+excludes Je's rendering and persistence between stream pulls. TPS is
+token-weighted. TTFT is the arithmetic mean of provider-wait time through Je's
 first text, thinking, or tool-call output event. Older assistant messages
 without persisted timing still count toward token usage but not these metrics.
 
@@ -40,15 +40,15 @@ catalog refresh does not prevent either picker from opening or interrupt the
 committed provider. Model selections and thinking
 changes in the TUI update immediately, but only the final selection is recorded
 in session history before the next accepted user message. Unsent selections are
-lost on restart and do not update defaults for future sessions. Use `tau update --models` for
-forced public-catalog revalidation or `TAU_OFFLINE=1` to disable catalog network
+lost on restart and do not update defaults for future sessions. Use `je update --models` for
+forced public-catalog revalidation or `JE_OFFLINE=1` to disable catalog network
 access.
 
 ## `/sidebar`
 
 Use `/sidebar` to toggle the detailed session sidebar for the current TUI
 session. It preserves a configured `left` or `right` position and never writes
-`~/.tau/tui.json`; the choice is forgotten when Tau restarts. When
+`~/.je/tui.json`; the choice is forgotten when Je restarts. When
 `sidebar_position` is `"off"`, an explicit show temporarily uses the default
 right position.
 
@@ -58,8 +58,8 @@ Click a prompt template, context file, or skill row in the sidebar to open its
 file in an editor in the main UI area. Skill rows open only their main
 `SKILL.md`, not supporting files from the skill directory. Editable rows use a
 highlighted, underlined hover state. Use the arrow keys to move the editing
-cursor. Press Ctrl+S to write changes to disk; Tau keeps the editor open and
-reports either success or the write error. Tau refuses to overwrite a file
+cursor. Press Ctrl+S to write changes to disk; Je keeps the editor open and
+reports either success or the write error. Je refuses to overwrite a file
 that changed on disk after you opened it, and keeps the current editor open if
 you click another file while it has unsaved changes. Save or close the current
 file first. Press Escape to restore the transcript. Run `/reload` afterward to
@@ -92,7 +92,7 @@ selected project.
 
 Type `/local` to open the generic local-backend host. It explicitly chooses a
 registered backend even when only one is available; the recommended backend is
-preselected but still requires confirmation. Once confirmed, Tau probes its one
+preselected but still requires confirmation. Once confirmed, Je probes its one
 effective saved/environment/default endpoint. The built-in `llama.cpp` backend
 provides endpoint/API-key fields plus separate arrow-key navigable model and
 action sections. Only the focused section has a `focused` marker, accent border,
@@ -119,8 +119,8 @@ llama.cpp and can be explicitly cancelled from the Actions section after
 reopening `/local`. Results from a retired or replaced extension generation are
 ignored.
 
-Reset removes only Tau's llama.cpp settings and safe snapshot. Stored credential
-deletion is separately confirmed. Tau never stops the external server or
+Reset removes only Je's llama.cpp settings and safe snapshot. Stored credential
+deletion is separately confirmed. Je never stops the external server or
 deletes model files. See `local-inference.md` and `security.md`.
 
 ## Herdr compatibility
@@ -132,7 +132,7 @@ Existing Ctrl-arrow and terminal Esc+b/Esc+f word navigation still work.
 
 Herdr 0.9.0 can advertise SGR pixel mouse support while forwarding cell
 coordinates. Textual then interprets those coordinates as pixels, collapsing
-mouse interactions into the pane's top-left corner. When `HERDR_ENV=1`, Tau
+mouse interactions into the pane's top-left corner. When `HERDR_ENV=1`, Je
 defaults `TEXTUAL_SMOOTH_SCROLL` to `0` before starting the TUI and updates
 Textual's already-loaded setting. This retains standard resize signals and cell
 mouse coordinates. An explicit user value is preserved.

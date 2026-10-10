@@ -5,7 +5,6 @@ import pytest
 from typer.testing import CliRunner
 
 from conftest import isolate_home
-from pi_event_helpers import assistant_done, assistant_error, assistant_start, text_delta
 from je_agent import AssistantMessage, UserMessage
 from je_agent.session import JsonlSessionStorage, MessageEntry, ModelChangeEntry
 from je_ai import (
@@ -14,6 +13,7 @@ from je_ai import (
 from je_coding import CodingSessionRecord, SessionManager, cli
 from je_coding.cli import app, run_print_mode
 from je_coding.paths import TauPaths
+from je_coding.project_trust import canonicalize_project_path
 from je_coding.provider_config import (
     OpenAICompatibleProviderConfig,
     ProviderSettings,
@@ -36,6 +36,7 @@ from je_coding.update_check import (
     UpdateNotice,
 )
 from je_coding.updater import UpdateResult
+from pi_event_helpers import assistant_done, assistant_error, assistant_start, text_delta
 
 _ANSI_ESCAPE_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
 
@@ -124,7 +125,7 @@ def test_help_lists_system_prompt_options() -> None:
     assert result.exit_code == 0
     assert "--system-promptTEXT_OR_PATH" in output
     assert "--append-system-promptTEXT_OR_PATH" in output
-    assert "tauinstallSOURCE[--force]" in output
+    assert "jeinstallSOURCE[--force]" in output
 
 
 def test_install_command_installs_extension(
@@ -374,16 +375,16 @@ def test_update_command_upgrades_without_startup_check(monkeypatch: pytest.Monke
         cli,
         "update_tau",
         lambda: UpdateResult(
-            command=("uv", "tool", "install", "tau-ai@0.2.4"),
-            stdout="Updated tau-ai",
+            command=("uv", "tool", "install", "je-ai@0.2.4"),
+            stdout="Updated je-ai",
         ),
     )
 
     result = CliRunner().invoke(app, ["update"])
 
     assert result.exit_code == 0
-    assert "Updated tau-ai" in result.stdout
-    assert "Tau update completed with: uv tool install tau-ai@0.2.4" in result.stdout
+    assert "Updated je-ai" in result.stdout
+    assert "Je update completed with: uv tool install je-ai@0.2.4" in result.stdout
 
 
 def test_update_models_force_refreshes_catalog(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -414,8 +415,8 @@ def test_update_command_reports_windows_handoff_without_claiming_completion(
         cli,
         "update_tau",
         lambda: UpdateResult(
-            command=("uv", "tool", "install", "tau-ai@0.2.4"),
-            stdout="Tau update is scheduled and will start after this process exits.",
+            command=("uv", "tool", "install", "je-ai@0.2.4"),
+            stdout="Je update is scheduled and will start after this process exits.",
             deferred=True,
         ),
     )
@@ -424,8 +425,8 @@ def test_update_command_reports_windows_handoff_without_claiming_completion(
 
     assert result.exit_code == 0
     assert "scheduled" in result.stdout
-    assert "Tau update handed off with:" in result.stdout
-    assert "Tau update completed" not in result.stdout
+    assert "Je update handed off with:" in result.stdout
+    assert "Je update completed" not in result.stdout
 
 
 def test_update_command_reports_installer_failures(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -464,7 +465,7 @@ def test_print_mode_writes_update_notice_to_stderr(monkeypatch: pytest.MonkeyPat
     result = CliRunner().invoke(app, ["-p", "hello"])
 
     assert result.exit_code == 0
-    assert "Tau 0.2.0 is available (installed: 0.1.0)" in result.stderr
+    assert "Je 0.2.0 is available (installed: 0.1.0)" in result.stderr
 
 
 def test_json_print_mode_suppresses_update_notice(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -662,7 +663,7 @@ async def test_run_openai_tui_combines_release_notes_and_update_notice(
     assert calls == [
         (
             "Je 0.1.3 is available (installed: 0.1.2). Run `je update` to upgrade.",
-            ("Tau updated to 0.1.2\n\n**New**\n- Release note",),
+            ("Je updated to 0.1.2\n\n**New**\n- Release note",),
             "Custom base",
             "Custom append",
         )
@@ -700,7 +701,7 @@ async def test_run_print_mode_prints_final_assistant_text(
     resource_paths = TauResourcePaths(root=tmp_path / "resources", agents_root=None)
     assert provider.calls[0][1] == build_system_prompt(
         BuildSystemPromptOptions(
-            cwd=tmp_path,
+            cwd=canonicalize_project_path(tmp_path).value,
             tools=create_coding_tools(cwd=tmp_path),
             skills=load_skills(resource_paths),
         )
@@ -743,7 +744,10 @@ async def test_run_print_mode_uses_custom_and_appended_system_prompt(
     assert "Follow project rules." in system
     assert "<available_skills>" in system
     assert "Current date:" in system
-    assert f"Current working directory: {tmp_path}" in system
+    assert (
+        f"Current working directory: {canonicalize_project_path(tmp_path).value.as_posix()}"
+        in system
+    )
 
 
 @pytest.mark.anyio
@@ -765,7 +769,7 @@ async def test_run_print_mode_system_command_prints_prompt_without_provider_call
     captured = capsys.readouterr()
     inspection = build_system_prompt_inspection(
         BuildSystemPromptOptions(
-            cwd=tmp_path,
+            cwd=canonicalize_project_path(tmp_path).value,
             tools=create_coding_tools(cwd=tmp_path),
             skills=load_skills(TauResourcePaths(root=tmp_path / "resources", agents_root=None)),
         )
@@ -911,7 +915,7 @@ async def test_run_print_mode_terminal_command_adds_context(
     provider = FakeProvider([])
 
     ok = await run_print_mode(
-        prompt="! printf hello",
+        prompt="! echo hello",
         model="fake",
         cwd=tmp_path,
         provider=provider,
@@ -923,7 +927,7 @@ async def test_run_print_mode_terminal_command_adds_context(
     messages = [entry.message for entry in entries if isinstance(entry, MessageEntry)]
 
     assert ok is True
-    assert "$ printf hello" in captured.out
+    assert "$ echo hello" in captured.out
     assert "[added to context]" in captured.out
     assert "hello" in captured.out
     assert len(messages) == 1
@@ -939,7 +943,7 @@ async def test_run_print_mode_terminal_command_can_skip_context(
     provider = FakeProvider([])
 
     ok = await run_print_mode(
-        prompt="!! printf hidden",
+        prompt="!! echo hidden",
         model="fake",
         cwd=tmp_path,
         provider=provider,
@@ -950,7 +954,7 @@ async def test_run_print_mode_terminal_command_can_skip_context(
     entries = await storage.read_all()
 
     assert ok is True
-    assert "$ printf hidden" in captured.out
+    assert "$ echo hidden" in captured.out
     assert "[not added to context]" in captured.out
     assert "hidden" in captured.out
     assert not any(isinstance(entry, MessageEntry) for entry in entries)
@@ -1752,7 +1756,7 @@ async def test_export_session_command_writes_html_for_jsonl_path(tmp_path: Path)
 
     html = output_path.read_text(encoding="utf-8")
     assert output_path == tmp_path / "session.html"
-    assert "<title>Tau session session</title>" in html
+    assert "<title>Je session session</title>" in html
     assert "Path export" in html
     assert '<details class="system-prompt">' not in html
 
@@ -1924,7 +1928,7 @@ def test_setup_command_writes_provider_settings(
         ],
     )
 
-    settings = load_provider_settings(TauPaths(home=tmp_path / ".tau"))
+    settings = load_provider_settings(TauPaths(home=tmp_path / ".je"))
     provider = settings.get_provider("local")
     assert result.exit_code == 0
     assert "Saved provider 'local'" in result.stdout
@@ -2013,7 +2017,7 @@ def test_setup_command_warns_when_api_key_env_is_missing(
     )
 
     assert result.exit_code == 0
-    assert "Set MISSING_API_KEY before running Tau with this provider." in result.stderr
+    assert "Set MISSING_API_KEY before running Je with this provider." in result.stderr
 
 
 @pytest.mark.parametrize("output", [PrintOutputMode.json, PrintOutputMode.transcript])

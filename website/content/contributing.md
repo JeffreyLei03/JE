@@ -1,10 +1,10 @@
 ---
 title: Contributing
-description: How Tau is developed, where the build journals live, and how to run the project locally.
+description: How Je is developed, where the build journals live, and how to run the project locally.
 type: doc
 ---
 
-Tau is built in small, documented phases — partly to ship a usable agent, partly
+Je is built in small, documented phases — partly to ship a usable agent, partly
 so the codebase reads as a teaching example of how a coding agent is assembled.
 
 ## The build journals
@@ -19,7 +19,7 @@ decision records live **in the repository**, under `dev-notes/`:
 
 These are intentionally **not** published on this site — they're contributor
 material. The published docs distill the result; see
-[How Tau works](/internals/architecture/).
+[How Je works](/internals/architecture/).
 
 ## Roadmap
 
@@ -33,7 +33,7 @@ tracked in [GitHub issue #1](https://github.com/huggingface/tau/issues/1).
 git clone https://github.com/huggingface/tau.git
 cd tau
 uv sync --dev
-uv run tau --version
+uv run je --version
 ```
 
 Checks:
@@ -64,7 +64,7 @@ npm run preview      # preview the built site, including search
 Search requires the built Pagefind index: use `build` followed by `preview`,
 not the development server, to validate search.
 
-User-facing docs live in `website/content/`; the landing and "Why Tau?" pages
+User-facing docs live in `website/content/`; the landing and "Why Je?" pages
 are `website/content/_index.md` and `website/content/why-tau.md`, rendered by
 Astro components in `website/src/components/`. Content collections validate page
 metadata and preserve the existing trailing-slash URLs. Internal links use normal

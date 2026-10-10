@@ -102,7 +102,7 @@ async def test_codex_resume_restores_astra_through_real_frontend(
     monkeypatch.setattr(tui_app, "create_model_provider", lambda *a, **k: CatalogProvider())
     monkeypatch.setattr(session_module, "create_model_provider", lambda *a, **k: CatalogProvider())
 
-    real_app = tui_app.TauTuiApp
+    real_app = tui_app.JeTuiApp
 
     async def inspect_picker(session: CodingSession) -> None:
         async def refresh() -> None:
@@ -131,7 +131,7 @@ async def test_codex_resume_restores_astra_through_real_frontend(
                 assert self.session.model == "gpt-6-astra"
                 await inspect_picker(self.session)
 
-        monkeypatch.setattr(tui_app, "TauTuiApp", InspectApp)
+        monkeypatch.setattr(tui_app, "JeTuiApp", InspectApp)
         await tui_app.run_tui_app(
             model=None,
             cwd=tmp_path,

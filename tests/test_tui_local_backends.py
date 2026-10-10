@@ -169,6 +169,9 @@ async def test_backend_open_auto_refreshes_and_renders_clickable_models() -> Non
         await pilot.pause()
 
         screen = app.screen
+        if screen._worker is not None:
+            await screen._worker
+        await pilot.pause()
         status = screen.query_one("#local-backend-status", Static).render().plain
         assert "http://127.0.0.1:8080/v1" in status
         assert screen.query_one("#local-backend-progress", Static).styles.display == "none"
@@ -192,6 +195,9 @@ async def test_backend_open_auto_refreshes_and_renders_clickable_models() -> Non
         assert model_list.has_focus
 
         model_list.action_select_cursor()
+        await pilot.pause()
+        if screen._worker is not None:
+            await screen._worker
         await pilot.pause()
         assert loaded == ["downloaded"]
         assert "loaded" in model_list.children[0].query_one(Label).render().plain
@@ -232,12 +238,14 @@ async def test_download_progress_renders_fraction_and_remaining_detail() -> None
         screen = LocalBackendScreen(registry, "backend", theme=TAU_DARK_THEME)
         app.push_screen(screen)
         await pilot.pause()
+        if screen._worker is not None:
+            await screen._worker
         screen._start_operation(
             "download_model",
             model_id="owner/repo:Q4_K_M",
             confirmation="download",
         )
-        await started.wait()
+        await asyncio.wait_for(started.wait(), timeout=5)
         await pilot.pause()
 
         progress = screen.query_one("#local-backend-progress", Static).render().plain
@@ -292,6 +300,11 @@ async def test_clicking_loaded_model_uses_exact_model_id() -> None:
                 on_use=use,
             )
         )
+        await pilot.pause()
+        backend_screen = app.screen
+        assert isinstance(backend_screen, LocalBackendScreen)
+        if backend_screen._worker is not None:
+            await backend_screen._worker
         await pilot.pause()
         model_list = app.screen.query_one("#local-model-list", ListView)
         model_list.index = 1
@@ -409,12 +422,14 @@ async def test_closing_download_modal_detaches_and_reopen_offers_explicit_cancel
         screen = LocalBackendScreen(registry, "backend", theme=TAU_DARK_THEME)
         app.push_screen(screen)
         await pilot.pause()
+        if screen._worker is not None:
+            await screen._worker
         screen._start_operation(
             "download_model",
             model_id="owner/repo:Q4_K_M",
             confirmation="download",
         )
-        await entered.wait()
+        await asyncio.wait_for(entered.wait(), timeout=5)
         worker = screen._worker
         assert worker is not None
 
@@ -427,6 +442,9 @@ async def test_closing_download_modal_detaches_and_reopen_offers_explicit_cancel
 
         reopened = LocalBackendScreen(registry, "backend", theme=TAU_DARK_THEME)
         app.push_screen(reopened)
+        await pilot.pause()
+        if reopened._worker is not None:
+            await reopened._worker
         await pilot.pause()
         labels = [
             item.query_one(Label).render().plain
@@ -492,12 +510,14 @@ async def test_detached_download_completion_immediately_shows_model_available() 
         screen = LocalBackendScreen(registry, "backend", theme=TAU_DARK_THEME)
         app.push_screen(screen)
         await pilot.pause()
+        if screen._worker is not None:
+            await screen._worker
         screen._start_operation(
             "download_model",
             model_id="owner/repo:Q4_K_M",
             confirmation="download",
         )
-        await entered.wait()
+        await asyncio.wait_for(entered.wait(), timeout=5)
         worker = screen._worker
         assert worker is not None
         screen.action_cancel()
@@ -566,7 +586,7 @@ async def test_unmount_cancels_backend_work_without_late_updates() -> None:
     screen = LocalBackendScreen(registry, "backend", theme=TAU_DARK_THEME)
     screen._worker = asyncio.create_task(screen._run_operation("refresh", None, None))
 
-    await entered.wait()
+    await asyncio.wait_for(entered.wait(), timeout=5)
     screen.on_unmount()
     await screen._worker
 

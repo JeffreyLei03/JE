@@ -277,9 +277,8 @@ def _manifest_entries(
     tool_table = data.get("tool")
     je_table = tool_table.get("je") if isinstance(tool_table, dict) else None
     tau_table = tool_table.get("tau") if isinstance(tool_table, dict) else None
-    declared = (
-        (je_table.get("extensions") if isinstance(je_table, dict) else None)
-        or (tau_table.get("extensions") if isinstance(tau_table, dict) else None)
+    declared = (je_table.get("extensions") if isinstance(je_table, dict) else None) or (
+        tau_table.get("extensions") if isinstance(tau_table, dict) else None
     )
     if declared is None:
         return []
@@ -288,7 +287,9 @@ def _manifest_entries(
             ResourceDiagnostic(
                 kind="extension",
                 path=manifest,
-                message="`tool.je.extensions` (or `tool.tau.extensions`) must be a list of file paths",
+                message=(
+                    "`tool.je.extensions` (or `tool.tau.extensions`) must be a list of file paths"
+                ),
                 severity="error",
             )
         )

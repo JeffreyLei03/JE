@@ -38,16 +38,16 @@ def test_desktop_notification_protocol_detects_supported_terminals() -> None:
 
 def test_desktop_notification_sequence_uses_terminal_protocol() -> None:
     assert (
-        desktop_notification_sequence("Tau turn finished", environ={"TERM_PROGRAM": "ghostty"})
-        == "\x1b]9;Tau turn finished\x07"
+        desktop_notification_sequence("Je turn finished", environ={"TERM_PROGRAM": "ghostty"})
+        == "\x1b]9;Je turn finished\x07"
     )
     assert (
-        desktop_notification_sequence("Tau turn finished", environ={"TERM": "xterm-kitty"})
-        == "\x1b]99;;Tau turn finished\x1b\\"
+        desktop_notification_sequence("Je turn finished", environ={"TERM": "xterm-kitty"})
+        == "\x1b]99;;Je turn finished\x1b\\"
     )
     assert (
         desktop_notification_sequence(
-            "Tau turn finished", environ={"TERM_PROGRAM": "Apple_Terminal"}
+            "Je turn finished", environ={"TERM_PROGRAM": "Apple_Terminal"}
         )
         is None
     )
@@ -79,7 +79,7 @@ def test_terminal_notification_controller_writes_configured_sequence() -> None:
     ).notify_turn_finished()
 
     assert bell_writes == ["\a"]
-    assert desktop_writes == ["\x1b]9;Tau turn finished\x07"]
+    assert desktop_writes == ["\x1b]9;Je turn finished\x07"]
 
 
 def test_terminal_notification_controller_noops_when_off_disabled_or_unknown() -> None:

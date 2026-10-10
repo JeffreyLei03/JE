@@ -1,4 +1,4 @@
-# Tau providers and models
+# Je providers and models
 
 A provider hosts models; a model is the exact ID accepted by that provider. Use
 `/login` for durable built-in credentials and `/model` to choose an available
@@ -6,27 +6,27 @@ model.
 
 ## Multiple account profiles
 
-Tau stores one saved credential per provider in its user-data home. The home is
-`~/.tau` by default; set `TAU_HOME` to a non-empty absolute path (after `~`
+Je stores one saved credential per provider in its user-data home. The home is
+`~/.je` by default; set `JE_HOME` to a non-empty absolute path (after `~`
 expansion) to select another one. Separate homes isolate credentials, sessions,
 provider preferences, settings, extensions, and caches, which makes shell
 aliases useful for multiple provider accounts:
 
 ```bash
-alias tau-work='TAU_HOME="$HOME/.tau-work" command tau'
-alias tau-personal='TAU_HOME="$HOME/.tau-personal" command tau'
+alias tau-work='JE_HOME="$HOME/.je-work" command tau'
+alias tau-personal='JE_HOME="$HOME/.je-personal" command tau'
 ```
 
 Run `/login anthropic-subscription` once through each alias to connect a
 different Claude Pro/Max account. User-level `~/.agents` resources and project
-`.tau`/`.agents` resources remain shared; `TAU_HOME` is an application profile
+`.je`/`.agents` resources remain shared; `JE_HOME` is an application profile
 boundary, not a security sandbox. Environment-provided API keys also remain
-process-wide. An explicit `TauPaths` supplied by an embedding application takes
-precedence over `TAU_HOME`.
+process-wide. An explicit `JePaths` supplied by an embedding application takes
+precedence over `JE_HOME`.
 
 ## Built-in llama.cpp
 
-Tau includes a trusted, hidden `llama.cpp` provider layer for local inference.
+Je includes a trusted, hidden `llama.cpp` provider layer for local inference.
 Configure it in the TUI with `/local`, not `/login custom`:
 
 ```text
@@ -42,13 +42,13 @@ troubleshooting, Doctor, and reset behavior.
 After setup, choose models in `/model` or start explicitly:
 
 ```bash
-tau --provider llama.cpp --model <server-reported-id>
-tau --provider llama.cpp --model <server-reported-id> --print "summarize this project"
+je --provider llama.cpp --model <server-reported-id>
+je --provider llama.cpp --model <server-reported-id> --print "summarize this project"
 ```
 
 The built-in provider is dynamic and process-local. Its safe endpoint/model
-snapshot is stored under `~/.tau/state/extensions/llama.cpp.json`; its optional
-secret is stored separately in `~/.tau/credentials.json`. Dynamic definitions
+snapshot is stored under `~/.je/state/extensions/llama.cpp.json`; its optional
+secret is stored separately in `~/.je/credentials.json`. Dynamic definitions
 are never copied into `catalog.toml`, `providers.json`, or session files. A
 cached snapshot can keep an explicit startup usable during temporary server
 downtime. An unavailable local backend is never an implicit fallback for a new
@@ -66,7 +66,7 @@ Dynamic providers support required, optional, or absent authentication without
 fake keys. Secrets resolve immediately before refresh or runtime creation and are
 excluded from representations, diagnostics, snapshots, sessions, and exports.
 The contract is validated by a permanent second fake backend and a test-only
-Ollama adapter; Ollama is not a shipped Tau backend.
+Ollama adapter; Ollama is not a shipped Je backend.
 
 Trusted built-in llama.cpp models may persist as scoped references containing
 only provider ID plus exact model ID. Loaded/sleeping references are selectable.
@@ -77,18 +77,18 @@ mutation. User/project dynamic providers cannot persist scoped references.
 ## Existing custom providers
 
 Other OpenAI-compatible endpoints can still be configured with `/login custom`,
-`tau setup`, or a user-level `~/.tau/catalog.toml` entry. That path is useful for
+`je setup`, or a user-level `~/.je/catalog.toml` entry. That path is useful for
 Ollama, gateways, and older manually configured local providers. An existing
-provider named `llama-cpp` remains distinct from the built-in `llama.cpp`; Tau
+provider named `llama-cpp` remains distinct from the built-in `llama.cpp`; Je
 does not migrate or overwrite it.
 
 ## Metadata and selection rules
 
-Use exact provider/model IDs. Tau does not infer context windows, output limits,
+Use exact provider/model IDs. Je does not infer context windows, output limits,
 reasoning support, modalities, pricing, or tool compatibility when a server does
 not report them. Local Doctor can verify streaming and tool-call behavior only
 when explicitly requested. If a refreshed server no longer reports the active
-model, Tau keeps the current runtime usable and marks the model snapshot stale;
+model, Je keeps the current runtime usable and marks the model snapshot stale;
 it does not silently replace the model.
 
 Provider/model selection precedence is explicit CLI selection, the resumed
@@ -109,7 +109,7 @@ overridden. The external Hugging Face extension controls these modes with
 
 ## Changing the built-in catalog
 
-Tau follows Pi's build-time model-generation design. Provider transports,
+Je follows Pi's build-time model-generation design. Provider transports,
 authentication, defaults, compatibility corrections, and fallback model rows
 live in `src/je_coding/data/catalog.toml`. Complete model inventories and
 models.dev-owned metadata live in the checked-in
@@ -125,43 +125,43 @@ effort values. New source models therefore require no hand edit to the inventory
 Verify transports and narrow corrections against official provider documentation;
 never guess them.
 
-Tau thinking levels match Pi: `off`, `minimal`, `low`, `medium`, `high`,
+Je thinking levels match Pi: `off`, `minimal`, `low`, `medium`, `high`,
 `xhigh`, and `max`. `none` becomes `off`; `max` remains distinct from `xhigh`.
 Empty or toggle-only reasoning options produce no generated override, matching
 Pi. Provider/manual behavior remains in effect for those models.
 
-Tau also refreshes catalogs like Pi. Opening `/model` or `/scoped-models` does
+Je also refreshes catalogs like Pi. Opening `/model` or `/scoped-models` does
 not reload provider settings first: the pickers show the current snapshot
 immediately and refresh in the background. A refreshed catalog that drops the
 active model (including an empty catalog) updates the picker without replacing
 the already running provider. The missing model cannot be selected again until
 it reappears. A pending TUI preview is not used when rebuilding the committed
-runtime. `tau update --models` forces a
+runtime. `je update --models` forces a
 refresh. Results are ETag-revalidated, throttled to four hours, and cached at
-`~/.tau/models-store.json`; a cache applies only when newer than the bundled
-snapshot. Since Tau has no hosted catalog service, it fetches models.dev and
+`~/.je/models-store.json`; a cache applies only when newer than the bundled
+snapshot. Since Je has no hosted catalog service, it fetches models.dev and
 NVIDIA directly and transforms them locally.
 
 The `openai-codex` provider is different: its inventory is account-specific.
-When Codex OAuth is configured, Tau loads the last successful account-matched
-snapshot from `~/.tau/codex-models-store.json` at startup. This makes a model
+When Codex OAuth is configured, Je loads the last successful account-matched
+snapshot from `~/.je/codex-models-store.json` at startup. This makes a model
 that was discovered in an earlier session available immediately. Opening
 `/model` or `/scoped-models` refreshes the authenticated Codex `/models` catalog
 in the background. Because that endpoint filters models by official-client
-version, Tau first resolves the current stable `@openai/codex` release from the
+version, Je first resolves the current stable `@openai/codex` release from the
 npm registry. The version lookup is ETag-revalidated, throttled to four hours,
-and cached at `~/.tau/codex-version-store.json`; a stale cached or bundled
+and cached at `~/.je/codex-version-store.json`; a stale cached or bundled
 version is the non-fatal fallback. This lets newly gated models appear without a
-Tau release.
+Je release.
 
 A successful live snapshot replaces the checked-in Codex inventory for that
 process and supplies model names, input modalities, reasoning efforts, and
-runtime limits. Tau persists only parsed model metadata and the account ID, not
+runtime limits. Je persists only parsed model metadata and the account ID, not
 OAuth tokens. The cache is never merged into `catalog.toml`, `providers.json`,
 or the models.dev cache. A different account does not use the previous
 account's snapshot. Missing credentials, malformed data, or network failures
 retain the account-matched snapshot or static Codex fallback.
-`TAU_OFFLINE=1` disables catalog network access and permits only the cached or
+`JE_OFFLINE=1` disables catalog network access and permits only the cached or
 bundled data.
 
 Explicit startup and resume of a Codex model absent from the static catalog
@@ -174,7 +174,7 @@ older session has a stale saved selection, resume it and explicitly select the
 intended model in `/model` to record the correction.
 
 Static-model startup never requires network. Missing, invalid, or incompatible generated or
-cached data falls back silently to `catalog.toml`. User `~/.tau/catalog.toml`
+cached data falls back silently to `catalog.toml`. User `~/.je/catalog.toml`
 overlays are applied last. When withdrawing one provider's model, add it to that
 provider's `removed_models` list so stale user overlays cannot restore it.
 

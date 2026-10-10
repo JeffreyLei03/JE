@@ -123,6 +123,8 @@ ExtensionDecider = Callable[[ProjectTrustEvent], Awaitable[ExtensionTrustResult 
 
 def _darwin_filesystem_path(path: Path) -> Path:
     """Return macOS's case-preserving path for an existing filesystem object."""
+    if sys.platform != "darwin":
+        raise OSError("Filesystem casing lookup requires macOS")
     import fcntl
 
     descriptor = os.open(path, os.O_RDONLY)
@@ -662,11 +664,11 @@ def format_trust_diagnostic(
 
 def _lock(handle: IO[bytes]) -> None:
     try:
-        if os.name == "nt":
+        if sys.platform == "win32":
             import msvcrt
 
             handle.seek(0)
-            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)  # type: ignore[attr-defined]
+            msvcrt.locking(handle.fileno(), msvcrt.LK_LOCK, 1)
         else:
             import fcntl
 
@@ -677,11 +679,11 @@ def _lock(handle: IO[bytes]) -> None:
 
 def _unlock(handle: IO[bytes]) -> None:
     try:
-        if os.name == "nt":
+        if sys.platform == "win32":
             import msvcrt
 
             handle.seek(0)
-            msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)  # type: ignore[attr-defined]
+            msvcrt.locking(handle.fileno(), msvcrt.LK_UNLCK, 1)
         else:
             import fcntl
 

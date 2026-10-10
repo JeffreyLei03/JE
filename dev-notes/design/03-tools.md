@@ -14,14 +14,16 @@ Je 将工具的抽象与具体的前端界面解耦：
 一个 `AgentTool` 包含：
 - `name`：工具名称，例如 `read` 或 `bash`
 - `description`：用户/模型可读的描述
-- `input_schema`：符合 JSON Schema 规范的入参定义
-- `executor`：异步执行函数（async executor）
+- `label`：前端显示名称
+- `parameters`：JSON Schema 入参定义（`input_schema` 是只读兼容属性）
+- `execute_fn`：异步执行器，接收 `tool_call_id`、`arguments`、可选取消信号和 `on_update` 回调
 
 执行完成后返回 `AgentToolResult`：
-- `ok`：工具是否执行成功
-- `content`：返回给模型的文本内容
-- 可选的 `data`：供 UI、日志或前端组件展示的结构化元数据
-- 可选的 `error`：结构化错误信息
+- `content`：文本或图片内容块列表
+- `details`：供 UI 和日志使用的 JSON 元数据
+- `added_tool_names` / `terminate`：可选运行时信息
+
+成功与失败通过 `ToolExecutionEndEvent.is_error` 和 `ToolResultMessage.is_error` 表示，结果对象没有 `ok` 或 `error` 字段。执行器异常由循环转换为错误结果；通过 `on_update(AgentToolResult(...))` 主动报告的进度在工具完成前派发。
 
 ## 内置编码工具 (Built-in Coding Tools)
 

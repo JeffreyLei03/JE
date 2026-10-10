@@ -7,7 +7,7 @@ from textual.widgets import Input, Static
 
 from je_coding.oauth_types import OAuthAuthInfo, OAuthDeviceCodeInfo, OAuthPrompt
 from je_coding.provider_catalog import builtin_provider_entry
-from je_coding.tui.app import OAuthLoginScreen, TauTuiApp
+from je_coding.tui.app import JeTuiApp, OAuthLoginScreen
 from je_coding.tui.config import TAU_DARK_THEME
 
 LONG_URL = "https://claude.ai/oauth/authorize?" + "&".join(f"p{index}=value" for index in range(40))
@@ -30,7 +30,7 @@ def _themed_app(screen: OAuthLoginScreen) -> App[None]:
     from je_coding.tui.app import _textual_theme_for_tau_theme
 
     class TestApp(App[None]):
-        CSS = TauTuiApp.CSS
+        CSS = JeTuiApp.CSS
 
         def __init__(self) -> None:
             super().__init__()

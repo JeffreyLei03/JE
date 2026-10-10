@@ -40,13 +40,15 @@ flowchart TD
 
     UI -->|订阅事件流 / 发送输入| Coding
     Coding -->|组装工具与工程上下文| Core
-    Core -->|调度模型并驱动自治循环| AI
+    Core -.->|运行时调用注入的 ModelProvider| AI
+    AI -->|代码依赖：实现核心定义的契约| Core
+    Coding -->|构造模型适配器| AI
 ```
 
 | 分层命名 | 核心定位 | 主要职责与边界 |
 | :--- | :--- | :--- |
 | **`je_ai`** | 统一大模型通信层 | 封装异构大模型协议（OpenAI、Anthropic、Ollama、DeepSeek、Hugging Face 等），将其转换为与厂商中立的标准异步事件流（Event Stream）。不含任何 Agent 业务逻辑。 |
-| **`je_agent`** | 通用 Agent 调度引擎 | 整个智能体的核心大脑：包含自主推理执行循环（ReAct Loop）、工具调用编排、状态机流转、不可变消息模型及树状持久化存储。**完全独立于 UI 和文件系统**，可作为纯 Python 库嵌入任意后端或应用。 |
+| **`je_agent`** | 通用 Agent 调度引擎 | 整个智能体的核心大脑：包含自主推理执行循环（ReAct Loop）、工具调用编排、状态机流转、不可变消息模型及树状持久化存储。**运行时独立于 UI 和应用级路径配置**；同包提供可选的本地 JSONL 存储实现，可作为纯 Python 库嵌入任意后端或应用。 |
 | **`je_coding`** | 终端编码助理环境 | 完整的终端落地应用：集成面向本地工程的实用工具集、工作区规则感知（`.je/`、`AGENTS.md`、Skills 技能包）、Textual 现代化交互 TUI 及命令行无头输出模式。 |
 
 ---
@@ -57,18 +59,18 @@ flowchart TD
 
 ### 1. 全异步细粒度事件流运行时 (Async Event-Driven Runtime)
 `je_agent` 核心引擎采用**完全异步生成器 (`AsyncIterator[AgentEvent]`)** 贯穿整个 ReAct 主执行循环：
-- **微观全生命周期感知**：标准化定义了从 `AgentStart`、`TurnStart`、`MessageUpdate` 到 `ToolExecutionStart/Update/End` 的强类型事件流，打字机文本、CoT 思考过程（Thinking Delta）与工具执行进度均实现**零缓冲实时流式推送**。
+- **微观全生命周期感知**：标准化定义了从 `AgentStart`、`TurnStart`、`MessageUpdate` 到 `ToolExecutionStart/Update/End` 的强类型事件流，打字机文本、CoT 思考过程（Thinking Delta）与工具执行进度通过异步事件流逐步推送；工具主动报告的进度在执行结束前派发，实际延迟受工具、消费者和网络影响。
 - **纯粹的前后端契约解耦**：Agent 核心大脑不包含任何终端绘制或特定前端绑定代码（无 UI 污染）。上层无论是消费为 Rich 命令行输出、Textual 响应式 TUI，还是通过 WebSocket/SSE 接入 Web 端，只需监听事件流即可直接驱动，具备工业级 SDK 嵌入能力。
 
 ### 2. 双向生命周期 Hook 与动态方向控制 (Lifecycle Hooks & Dynamic Steering)
-在 Agent 自主推理执行主循环（`run_agent_loop`）中内置了严格的企业级安全与动态干预机制：
-- **工具调用前置拦截 (`before_tool_call`)**：支持执行前风控校验、权限鉴权（如写盘/Shell 敏感命令审批）或参数动态篡改重写；若判定高危可直接熔断中断（Block），从底层确保 Agent 代码执行的确定性与安全性。
+Agent 主循环（`run_agent_loop`）提供可选的工具拦截和动态干预接口：
+- **工具调用前置拦截 (`before_tool_call`)**：支持执行前风控校验、权限鉴权（如写盘/Shell 敏感命令审批）或参数动态篡改重写；Hook 可返回阻止标志和原因。实际权限策略由应用提供；该接口和项目信任机制不构成操作系统沙箱。
 - **工具调用后置修饰 (`after_tool_call`)**：执行完成后可无缝注入结果清洗、脱敏过滤或自动异常捕获补偿。
 - **动态消息导向与自主跟随 (`get_steering_messages` & `get_follow_up_messages`)**：支持外部在执行轮次间隙动态注入插队指导消息（Steering），无需中断 Agent 状态机即可实现用户动态干预与任务纠偏。
 
 ### 3. 基于不可变树的只追加会话存储 (Append-Only Tree-Structured History)
 彻底告别传统 Agent 常见的“粗暴覆写式”扁平聊天记录：
-- **零丢失与不可变状态机**：交互历史以 JSONL 只追加（Append-Only）方式落盘，每个节点记录完整的推理、工具调用及时间戳元数据，杜绝并发竞态下的数据损坏。
+- **会话持久化**：历史在逻辑上只追加，JSONL 存储使用跨进程锁、flush/fsync 和批量原子替换降低并发及中断风险。已成功提交的消息可恢复；未提交的流式片段、磁盘错误和异常断电不在零丢失保证内。
 - **会话分叉与时空回溯 (Branching & Resuming)**：支持从任意历史节点无损衍生出新分支，轻松实现会话快速恢复（`/resume`）、多方案分叉实验与上下文精简压缩。
 
 ### 4. 生产级韧性与弹性降级 (Production Resilience & Context Repair)
@@ -135,7 +137,7 @@ je --help
   - `read`：高效读取文本与多模态图片文件（JPEG、PNG、GIF、WebP），超大文件自动智能截断与续读提示。
   - `write`：原子化全量写入或新建文件，自动处理缺失父目录。
   - `edit`：高精度局部块替换，具备严格的唯一性校验与原子回滚机制。
-  - `bash`：在当前工作区安全执行终端命令，实时捕获输出并支持超时熔断。
+  - `bash`：以当前工作区为 cwd 执行终端命令（拥有运行进程的系统权限），实时捕获输出并支持超时熔断。
 - **只追加树状会话持久化**：所有交互记录保存在 `~/.je/sessions/`，以 JSONL 树状结构存储，支持会话无损恢复（`/resume`）与历史分支分叉。
 - **工程上下文规则注入**：自动识别工作区中的 `AGENTS.md`、`.je/skills/` 技能及 `.je/SYSTEM.md` 系统提示词。
 - **多模型与本地生态支持**：无缝对接 OpenAI、Anthropic、Ollama 本地大模型、DeepSeek 以及任何兼容 OpenAI 规范的 API 接口。
@@ -144,10 +146,11 @@ je --help
 
 ## 📦 作为独立 Python 库调用 (Library Usage)
 
-得益于 `je_agent` 核心引擎的无 UI 依赖设计，你可以在自己的脚本或独立应用中直接嵌入 Je 的智能体大脑：
+先通过环境变量设置 `OPENAI_API_KEY`。得益于 `je_agent` 核心引擎的无 UI 依赖设计，你可以在自己的脚本或独立应用中直接嵌入 Je 的智能体大脑：
 
 ```python
 import asyncio
+import os
 from je_ai.openai_compatible import OpenAICompatibleProvider, OpenAICompatibleConfig
 from je_agent import AgentHarness, AgentHarnessConfig
 from je_coding.tools import create_coding_tools
@@ -156,8 +159,8 @@ async def main():
     # 配置模型提供商
     provider = OpenAICompatibleProvider(
         OpenAICompatibleConfig(
-            api_key="your-api-key",
-            base_url="https://api.deepseek.com/v1",
+            api_key=os.environ["OPENAI_API_KEY"],
+            base_url="https://api.openai.com/v1",
         )
     )
     
@@ -165,16 +168,24 @@ async def main():
     harness = AgentHarness(
         AgentHarnessConfig(
             provider=provider,
-            model="deepseek-chat",
+            model="gpt-4.1-mini",
             system="你是一名资深的自主软件架构师。",
             tools=create_coding_tools(cwd="."),
         )
     )
 
     # 订阅事件流并输出
-    async for event in harness.prompt("分析当前目录下的核心文件"):
-        if event.type == "message_delta":
-            print(event.delta, end="", flush=True)
+    try:
+        async for event in harness.prompt("分析当前目录下的核心文件"):
+            if event.type == "message_update":
+                delta = event.assistant_message_event
+                if delta.type == "text_delta":
+                    print(delta.delta, end="", flush=True)
+            elif event.type == "message_end" and event.message.role == "assistant":
+                if event.message.error_message:
+                    raise RuntimeError(event.message.error_message)
+    finally:
+        await provider.aclose()
 
 asyncio.run(main())
 ```

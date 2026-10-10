@@ -404,7 +404,7 @@ def test_thinking_argument_completion_uses_available_modes() -> None:
 
 def test_theme_argument_completion_uses_theme_names() -> None:
     state = build_completion_state(
-        "/theme tau-",
+        "/theme je-",
         command_registry=create_default_command_registry(),
         skills=(),
         prompt_templates=(),
@@ -413,7 +413,7 @@ def test_theme_argument_completion_uses_theme_names() -> None:
 
     assert [item.display for item in state.items] == ["je-dark", "je-light"]
     assert state.selected is not None
-    assert state.selected.apply("/theme tau-") == "/theme je-dark"
+    assert state.selected.apply("/theme je-") == "/theme je-dark"
 
 
 def test_resume_argument_completion_uses_session_ids() -> None:

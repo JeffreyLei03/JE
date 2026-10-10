@@ -37,7 +37,7 @@ def test_default_prompt_includes_tools_guidelines_date_and_cwd(tmp_path: Path) -
         )
     )
 
-    assert ("You are an expert coding assistant operating inside Je" in prompt or "You are an expert coding assistant operating inside Tau" in prompt)
+    assert "You are an expert coding assistant operating inside Je" in prompt
     assert "Available tools:\n- read: Read file contents" in prompt
     assert "- Use bash for file operations like ls, rg, find" in prompt
     assert "- When using bash, include a brief present-participle description" in prompt
@@ -45,10 +45,12 @@ def test_default_prompt_includes_tools_guidelines_date_and_cwd(tmp_path: Path) -
     assert "- Inspect relevant files and project instructions before editing" in prompt
     assert "- Do not overwrite or discard unrelated user changes" in prompt
     assert "- Report checks honestly; never claim a command passed unless you ran it" in prompt
-    assert ("Je documentation (read only when the user asks about Je itself" in prompt or "Tau documentation (read only when the user asks about Tau itself" in prompt)
+    assert "Je documentation (read only when the user asks about Je itself" in prompt
     assert "custom providers or adding built-in providers/models (docs/models.md)" in prompt
     assert "creating or modifying extensions (docs/extensions.md" in prompt
-    assert prompt.endswith(f"Current date: 2026-06-17\nCurrent working directory: {tmp_path}")
+    assert prompt.endswith(
+        f"Current date: 2026-06-17\nCurrent working directory: {tmp_path.as_posix()}"
+    )
 
 
 def test_tool_without_prompt_snippet_is_hidden_from_available_tools() -> None:
@@ -86,7 +88,7 @@ def test_custom_prompt_replaces_default_but_keeps_append_context_and_date(tmp_pa
 
     assert prompt.startswith("Custom base.\n\nExtra rules.")
     assert "Available tools:" not in prompt
-    assert "Tau documentation" not in prompt
+    assert "Je documentation" not in prompt
     assert '<project_instructions path="/repo/AGENTS.md">' in prompt
     assert "Follow rules." in prompt
     assert "Current date: 2026-06-17" in prompt
@@ -151,8 +153,8 @@ def test_inspection_attributes_prompt_inputs_without_changing_text(tmp_path: Pat
         "/home/.agents/AGENTS.md",
         "/repo/AGENTS.md",
         str(skill_path),
-        "Tau runtime",
-        str(tmp_path),
+        "Je runtime",
+        tmp_path.as_posix(),
     ]
 
 

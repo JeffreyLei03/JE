@@ -1,10 +1,10 @@
-# Tau documentation
+# Je documentation
 
-Tau is a minimalist Python coding-agent harness inspired by Pi. Use these installed references when a user asks how to configure, extend, or contribute to Tau.
+Je is a minimalist Python coding-agent harness inspired by Pi. Use these installed references when a user asks how to configure, extend, or contribute to Je.
 
-Tau's user-data home defaults to `~/.tau`. Set `TAU_HOME` to a non-empty
-absolute path (after `~` expansion) to select another home. All `~/.tau` paths
-in these references follow that override; `~/.agents` and project `.tau`
+Je's user-data home defaults to `~/.je`. Set `JE_HOME` to a non-empty
+absolute path (after `~` expansion) to select another home. All `~/.je` paths
+in these references follow that override; `~/.agents` and project `.je`
 resources remain separate.
 
 - [Extensions](extensions.md): build Python extensions, custom tools, commands, hooks, dialogs, and renderers.

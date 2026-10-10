@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile, readdir, access } from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
+import { siteUrl, withBase } from "../site-config.mjs";
 import { admonitions } from "../src/admonitions.mjs";
 
 const dist = path.resolve("dist");
@@ -21,12 +22,13 @@ test("all Markdown routes and static hosting artifacts exist", async () => {
     if (!file.endsWith(".md")) continue;
     const route = path
       .relative(path.resolve("content"), file)
+      .split(path.sep)
+      .join("/")
       .replace(/\.md$/, "")
       .replace(/(^|\/)\_index$/, "");
     await access(path.join(dist, route, "index.html"));
   }
   for (const file of [
-    "CNAME",
     "404.html",
     "index.xml",
     "robots.txt",
@@ -37,10 +39,6 @@ test("all Markdown routes and static hosting artifacts exist", async () => {
     "pagefind/pagefind.js",
   ])
     await access(path.join(dist, file));
-  assert.equal(
-    (await readFile(path.join(dist, "CNAME"), "utf8")).trim(),
-    "twotimespi.dev",
-  );
 });
 
 test("built HTML contains no Hugo syntax or unresolved template values, and local links resolve", async () => {
@@ -49,19 +47,20 @@ test("built HTML contains no Hugo syntax or unresolved template values, and loca
   )) {
     const html = await readFile(file, "utf8");
     assert.doesNotMatch(html, /\{\{[<%]|\{site\./, file);
-    assert.match(
-      html,
-      /rel="canonical" href="https:\/\/twotimespi.dev\//,
-      file,
-    );
+    assert.ok(html.includes(`rel="canonical" href="${siteUrl.href}`), file);
     const route = "/" + path.relative(dist, file).replace(/index\.html$/, "");
     for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
       const url = new URL(
         match[1].replaceAll("&amp;", "&"),
-        `https://twotimespi.dev${route}`,
+        new URL(withBase(route), siteUrl.origin),
       );
-      if (url.origin !== "https://twotimespi.dev") continue;
-      const target = decodeURIComponent(url.pathname);
+      if (url.origin !== siteUrl.origin) continue;
+      const base = siteUrl.pathname.replace(/\/$/, "");
+      assert.ok(
+        url.pathname.startsWith(`${base}/`),
+        `${file}: outside base ${url}`,
+      );
+      const target = decodeURIComponent(url.pathname.slice(base.length));
       const targetFile = path.join(
         dist,
         target.endsWith("/") ? `${target}index.html` : target,
@@ -91,7 +90,7 @@ test("docs retain callouts, highlighting, navigation, and edit links", async () 
   ])
     assert.ok(html.includes(value), value);
   const home = await readFile(path.join(dist, "index.html"), "utf8");
-  assert.ok(home.includes("https://github.com/huggingface/tau"));
+  assert.ok(home.includes("https://github.com/JeffreyLei03/JE"));
   assert.ok(home.includes("loopRadius"));
   const why = await readFile(path.join(dist, "why-tau/index.html"), "utf8");
   assert.ok(why.includes("MathJax"));

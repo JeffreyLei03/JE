@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections import deque
 from collections.abc import AsyncIterator, Awaitable, Callable, Sequence
-from contextlib import suppress
+from contextlib import aclosing, suppress
 from dataclasses import dataclass, field
 from inspect import isawaitable
 from typing import Literal
@@ -171,24 +171,27 @@ class AgentHarness:
             repaired_from = len(self._messages)
             self._append_interrupted_tool_results()
             repairs = self._messages[repaired_from:]
-            async for event in run_agent_loop(
-                provider=self._config.provider,
-                model=self._config.model,
-                system=self._config.system,
-                messages=self._messages,
-                prompts=prompts,
-                prelude_messages=repairs,
-                tools=self._config.tools,
-                max_turns=self._config.max_turns,
-                signal=signal,
-                session_id=self._config.session_id,
-                get_steering_messages=self._drain_steering_messages,
-                get_follow_up_messages=self._drain_follow_up_messages,
-                before_tool_call=self._config.before_tool_call,
-                after_tool_call=self._config.after_tool_call,
-            ):
-                await self._notify(event)
-                yield event
+            async with aclosing(
+                run_agent_loop(
+                    provider=self._config.provider,
+                    model=self._config.model,
+                    system=self._config.system,
+                    messages=self._messages,
+                    prompts=prompts,
+                    prelude_messages=repairs,
+                    tools=self._config.tools,
+                    max_turns=self._config.max_turns,
+                    signal=signal,
+                    session_id=self._config.session_id,
+                    get_steering_messages=self._drain_steering_messages,
+                    get_follow_up_messages=self._drain_follow_up_messages,
+                    before_tool_call=self._config.before_tool_call,
+                    after_tool_call=self._config.after_tool_call,
+                )
+            ) as stream:
+                async for event in stream:
+                    await self._notify(event)
+                    yield event
         finally:
             if signal.is_cancelled():
                 repaired_from = len(self._messages)

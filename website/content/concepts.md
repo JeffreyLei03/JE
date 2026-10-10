@@ -1,19 +1,19 @@
 ---
 title: Core concepts
-description: The handful of ideas behind Tau — agents, providers, tools, sessions, skills, context, and thinking.
+description: The handful of ideas behind Je — agents, providers, tools, sessions, skills, context, and thinking.
 type: doc
 ---
 
-Tau is built from a small set of concepts. Understand these and the rest of the
+Je is built from a small set of concepts. Understand these and the rest of the
 docs (and the agent itself) will make sense.
 
 ## The agent loop
 
-When you send a prompt, Tau runs an **agent loop**: it asks the model to respond,
-streams that response, and when the model asks to use a **tool**, Tau runs the
+When you send a prompt, Je runs an **agent loop**: it asks the model to respond,
+streams that response, and when the model asks to use a **tool**, Je runs the
 tool, feeds the result back, and asks the model to continue — repeating until the
 model has nothing left to do. That loop is the heart of every coding agent.
-→ [How Tau works: the agent loop](/internals/agent-loop/)
+→ [How Je works: the agent loop](/internals/agent-loop/)
 
 ## Providers and models
 
@@ -25,8 +25,8 @@ You pick a provider + model; you can switch either mid-session.
 
 ## Tools
 
-**Tools** are the actions the agent can take in your project. Tau ships four:
-`read`, `write`, `edit`, and `bash`. The model decides when to call them; Tau
+**Tools** are the actions the agent can take in your project. Je ships four:
+`read`, `write`, `edit`, and `bash`. The model decides when to call them; Je
 executes them in your working directory and streams the results.
 → [Tools reference](/reference/tools/)
 
@@ -41,7 +41,7 @@ point to try a different direction, and **export** a session to HTML or JSONL.
 ## Project instructions (`AGENTS.md`)
 
 An **`AGENTS.md`** file gives the agent standing instructions about *your*
-project — conventions, gotchas, how to run tests. Tau discovers these files
+project — conventions, gotchas, how to run tests. Je discovers these files
 automatically and folds them into the system prompt.
 → [Project instructions](/guides/project-instructions/)
 
@@ -56,20 +56,20 @@ level (all projects) or per-project.
 ## Context and compaction
 
 The model can only "see" a limited amount of text at once — its **context
-window**. Long sessions fill it up. Tau estimates usage and **compacts**
+window**. Long sessions fill it up. Je estimates usage and **compacts**
 automatically: it summarizes older messages so the conversation can keep going.
 You can also compact on demand with `/compact`.
 → [Managing context](/guides/context/)
 
 ## Thinking modes
 
-Some models can spend extra effort "thinking" before they answer. Tau exposes a
+Some models can spend extra effort "thinking" before they answer. Je exposes a
 **thinking mode** (off → minimal → low → medium → high → xhigh → max) you can cycle
 when the active model supports it, and optionally show the streamed reasoning.
 → [Managing context](/guides/context/#thinking-modes)
 
 ## Two interfaces
 
-Tau runs as an **interactive TUI** (the default) or in **print mode** (`-p`) for
+Je runs as an **interactive TUI** (the default) or in **print mode** (`-p`) for
 a single non-interactive prompt. Both share the same session environment.
 → [The interactive session](/guides/tui/) · [Print mode](/guides/print-mode/)

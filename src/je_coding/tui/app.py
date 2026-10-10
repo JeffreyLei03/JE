@@ -2801,17 +2801,22 @@ class LoginProviderPickerScreen(ModalScreen[str | _LoginFlowAction | None]):
             )
             yield Static("Enter selects - Escape closes", id="login-provider-help")
 
-    async def on_mount(self) -> None:
+    def on_mount(self) -> None:
         """Focus the provider search field."""
         self.query_one("#login-provider-search", Input).focus()
-        await self._refresh_provider_list()
+        # compose() already populated the list. Keep those mounted rows so
+        # startup never exposes an empty list before its first highlight.
+        self.query_one("#login-provider-list", ListView).index = 0 if self.providers else None
 
     async def on_input_changed(self, event: Input.Changed) -> None:
         """Filter providers as the search value changes."""
         if event.input.id != "login-provider-search":
             return
         event.stop()
-        self.visible_providers = _filter_login_providers(self.providers, event.value)
+        visible_providers = _filter_login_providers(self.providers, event.value)
+        if visible_providers == self.visible_providers:
+            return
+        self.visible_providers = visible_providers
         await self._refresh_provider_list()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
@@ -3675,6 +3680,9 @@ class OAuthLoginScreen(ModalScreen[OAuthCredential | _LoginFlowAction | None]):
         hyperlink keeps a click on any wrapped line opening the intact URL.
         """
         self.query_one("#login-oauth-url", Static).update(Text(url, style=Style(link=url)))
+        self.call_after_refresh(
+            self.query_one("#login-oauth-code", Input).scroll_visible, animate=False
+        )
 
     def _show_device_code(self, info: OAuthDeviceCodeInfo) -> None:
         # No clipboard copy here: the verification URI is short and clickable,

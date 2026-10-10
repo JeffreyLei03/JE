@@ -4,16 +4,16 @@ description: Connect OAuth subscriptions, API-key providers, or a local model �
 ---
 
 A **provider** is the service hosting AI models; a **model** is the specific one
-you talk to. Tau ships with several built-in providers and lets you add your own
+you talk to. Je ships with several built-in providers and lets you add your own
 OpenAI-compatible endpoints (including local models).
 
 ## The fastest setup: `/login`
 
-Start Tau and use `/login` to connect a provider. The provider picker includes
+Start Je and use `/login` to connect a provider. The provider picker includes
 a search field, which is especially useful for the longer API-key provider list:
 
 ```bash
-tau
+je
 ```
 
 ```text
@@ -37,7 +37,7 @@ and **NVIDIA NIM**.
 
 Choose **Subscription / OAuth** in `/login` for:
 
-| Tau provider | Login flow | Prerequisite |
+| Je provider | Login flow | Prerequisite |
 | --- | --- | --- |
 | `openai-codex` | Browser callback with pasted-code fallback | A supported ChatGPT/Codex subscription |
 | `anthropic` | Browser callback with PKCE and pasted-code fallback | Claude Pro/Max with Anthropic extra usage available |
@@ -56,20 +56,20 @@ Claude Code identity and may be billed as extra usage rather than consuming
 ordinary Claude plan limits. Check Anthropic's current account terms before
 using it.
 
-OAuth tokens refresh automatically. `/logout` removes Tau's local credential,
+OAuth tokens refresh automatically. `/logout` removes Je's local credential,
 but does not revoke the grant remotely; use the provider's account settings for
 remote revocation.
 
 #### OpenAI prompt caching
 
-For direct OpenAI API and Codex OAuth sessions, Tau sends a stable session-derived
+For direct OpenAI API and Codex OAuth sessions, Je sends a stable session-derived
 prompt-cache key with every model request, including continuations after tool
 calls. OpenAI can use that key to keep successive append-only requests on the same
 cache path, improving reuse of the system prompt, tool schemas, and conversation
-prefix. Resuming a Tau session reuses its key; starting or branching a session
+prefix. Resuming a Je session reuses its key; starting or branching a session
 creates a new one.
 
-Requests remain stateless: Tau keeps provider storage disabled and resends the
+Requests remain stateless: Je keeps provider storage disabled and resends the
 complete transcript. The key improves cache affinity but cannot preserve a hit if
 the prefix changes or the provider cache expires. OpenAI-compatible gateways do
 not receive these fields unless their catalog compatibility settings explicitly
@@ -78,9 +78,9 @@ request actually hit.
 
 #### Anthropic prompt caching
 
-Tau marks cache breakpoints on Anthropic requests so the system prompt, tool
+Je marks cache breakpoints on Anthropic requests so the system prompt, tool
 schemas, and conversation history are reused between turns instead of being
-reprocessed. Which retention Tau asks for depends on how you authenticated:
+reprocessed. Which retention Je asks for depends on how you authenticated:
 
 - **Claude Pro/Max via OAuth** requests the one-hour cache. Subscription auth is
   not billed per token, and the five-minute default is shorter than a build, a
@@ -96,7 +96,7 @@ sidebar's cache hit rate to see caching working; see
 [The interactive session](/guides/tui/) for how to read it.
 
 Anthropic reports `input_tokens` as the fresh, uncached portion after the last
-cache breakpoint. Tau preserves that value as fresh input, retains the separate
+cache breakpoint. Je preserves that value as fresh input, retains the separate
 cache-read and cache-write counters, and reports total input as their sum. This
 keeps usage and cost displays aligned with Anthropic's response contract.
 
@@ -108,24 +108,24 @@ window through Codex OAuth than through an API key. For example, the public
 GPT-5.6 Sol API advertises a 1.05M-token window, while Codex has advertised
 substantially smaller limits through its authenticated model catalog.
 
-Tau loads the last successful account-specific snapshot from
-`~/.tau/codex-models-store.json` when a session starts, so models discovered in a
+Je loads the last successful account-specific snapshot from
+`~/.je/codex-models-store.json` when a session starts, so models discovered in a
 previous session are immediately available without opening a picker. It refreshes
 the authenticated catalog in the background when `/model` or `/scoped-models`
-opens. Since OpenAI filters the response by official-client version, Tau resolves
+opens. Since OpenAI filters the response by official-client version, Je resolves
 the current stable `@openai/codex` release from the npm registry and caches that
-safe, non-secret version for four hours at `~/.tau/codex-version-store.json`.
-Failed lookups use the stale cached version or Tau's bundled fallback. A
+safe, non-secret version for four hours at `~/.je/codex-version-store.json`.
+Failed lookups use the stale cached version or Je's bundled fallback. A
 successful refresh replaces the Codex model picker inventory, so newly enabled
-and newly client-gated models appear without a Tau release. Models unavailable to
-the account are not copied from the separate public API catalog. Tau also uses
+and newly client-gated models appear without a Je release. Models unavailable to
+the account are not copied from the separate public API catalog. Je also uses
 reported context windows, compaction thresholds, input modalities, and reasoning
 efforts when present.
 
-If discovery is unavailable or invalid, Tau retains the last account-matched
+If discovery is unavailable or invalid, Je retains the last account-matched
 snapshot, or the checked-in Codex model list when no snapshot is available; it
 does not reuse the public API inventory or limits. `/session` reports whether the
-active context value came from the live provider catalog or Tau's configured
+active context value came from the live provider catalog or Je's configured
 fallback. The model cache contains only parsed account/model metadata (no OAuth
 tokens), is scoped to the saved Codex account ID, and is never written to
 `catalog.toml`, `providers.json`, or the models.dev cache.
@@ -133,19 +133,19 @@ tokens), is scoped to the saved Codex account ID, and is never written to
 Starting or resuming a live-only Codex model discovers the account inventory
 before validating the selection. This requires successful discovery; offline
 startup remains available for static models. If a later refresh omits the active
-model, Tau preserves its runtime metadata without adding it back to the picker.
+model, Je preserves its runtime metadata without adding it back to the picker.
 Resume restores the transcript's saved model selection. If an older session
 restores a stale selection, resume it and explicitly choose the intended model
 in `/model` once to record the correction.
 
-Live limits can vary by account or rollout and may change independently of Tau.
-A discovery failure is non-fatal: Tau reports it in `/session` and continues with
+Live limits can vary by account or rollout and may change independently of Je.
+A discovery failure is non-fatal: Je reports it in `/session` and continues with
 the fallback. Direct OpenAI API sessions retain the context limits documented on
 the API model page. Vision-capable Codex models retain their image-input
 metadata separately from these runtime context limits, allowing image files read
-by Tau to reach the model. The `gpt-5.6` alias, which routes to GPT-5.6 Sol, is only
+by Je to reach the model. The `gpt-5.6` alias, which routes to GPT-5.6 Sol, is only
 available through the direct OpenAI API; Codex subscription users should select
-the explicit `gpt-5.6-sol` model instead. Tau tombstones the API-only alias for
+the explicit `gpt-5.6-sol` model instead. Je tombstones the API-only alias for
 the Codex provider, so older user catalog overlays and saved preferences cannot
 restore it after an upgrade.
 
@@ -160,7 +160,7 @@ and then run:
 /login opencode     # Zen pay-as-you-go; https://opencode.ai/zen/v1
 ```
 
-Both can also read `OPENCODE_API_KEY`. Tau stores their saved credentials under
+Both can also read `OPENCODE_API_KEY`. Je stores their saved credentials under
 separate `opencode-go` and `opencode` names, allowing different keys when
 needed. Available models and plan limits change over time; consult the
 [OpenCode Go](https://opencode.ai/docs/go) and
@@ -168,7 +168,7 @@ needed. Available models and plan limits change over time; consult the
 
 ### Z.AI
 
-Log in with `/login zai` or set `ZAI_API_KEY`. Tau sends Z.AI's provider-specific
+Log in with `/login zai` or set `ZAI_API_KEY`. Je sends Z.AI's provider-specific
 thinking object rather than an OpenAI `reasoning_effort` field:
 `{"thinking": {"type": "enabled"}}` for an enabled logical mode and
 `{"thinking": {"type": "disabled"}}` for `off`. This keeps configured
@@ -176,7 +176,7 @@ thinking enabled for GLM models whose endpoint does not accept the raw effort
 field.
 
 Z.AI documents `reasoning_effort` only for GLM-5.2 and newer, with model-specific
-values. Tau therefore emits that additional field only when the selected model's
+values. Je therefore emits that additional field only when the selected model's
 compatibility metadata explicitly supports it; unsupported providers and models
 continue to omit it. See the [Z.AI deep-thinking
 reference](https://docs.z.ai/guides/capabilities/thinking) and [chat-completion
@@ -185,33 +185,33 @@ wire contract.
 
 ### Hugging Face Inference Providers
 
-Log in with `/login huggingface` or set `HF_TOKEN`. Tau's Hugging Face model
+Log in with `/login huggingface` or set `HF_TOKEN`. Je's Hugging Face model
 list is generated at build time from [models.dev](https://models.dev) and routed
 through `https://router.huggingface.co/v1`. It includes tool-capable models from
 DeepSeek, Gemma, GLM, GPT OSS, Kimi, Llama, MiniMax, MiMo, Qwen, Step, and other
 families. Use `/model` to search the generated list; availability and the backing
 inference provider can vary over time and by account.
 
-Like Pi, Tau's released snapshot includes model names, limits, costs, modalities,
+Like Pi, Je's released snapshot includes model names, limits, costs, modalities,
 reasoning support, and verified effort values. Thinking levels are `off`,
 `minimal`, `low`, `medium`, `high`, `xhigh`, and `max`; `max` is distinct from
 `xhigh`. Empty or toggle-only reasoning options do not replace provider/manual
 behavior. Hugging Face `zai-org/GLM-5.2` currently uses a narrow verified
-correction exposing `off`, `high`, and `max`, so Tau never sends its unsupported
+correction exposing `off`, `high`, and `max`, so Je never sends its unsupported
 `medium` value. A bundled snapshot keeps startup offline. Opening `/model`
 refreshes catalogs in the background and caches them in
-`~/.tau/models-store.json`; run `tau update --models` to force revalidation.
-New models and capability changes can therefore arrive without upgrading Tau.
-Set `TAU_OFFLINE=1` to use cached/bundled data without catalog network access.
+`~/.je/models-store.json`; run `je update --models` to force revalidation.
+New models and capability changes can therefore arrive without upgrading Je.
+Set `JE_OFFLINE=1` to use cached/bundled data without catalog network access.
 
 For a new session without an explicit preference, Hugging Face initially routes
-the model automatically. After the first successful response, Tau reads Hugging
+the model automatically. After the first successful response, Je reads Hugging
 Face's `x-inference-provider` response header and keeps that backing provider as
 a sticky automatic route. If that route later exhausts its normal retries with a
-retryable HTTP failure before producing output, Tau retries the interrupted turn
+retryable HTTP failure before producing output, Je retries the interrupted turn
 once through unsuffixed automatic routing and makes the successful replacement
 the new sticky route. To choose a fixed provider instead, add a per-model
-`inference_providers` preference to `~/.tau/providers.json`:
+`inference_providers` preference to `~/.je/providers.json`:
 
 ```json
 {
@@ -227,18 +227,18 @@ the new sticky route. To choose a fixed provider instead, add a per-model
 }
 ```
 
-Use the exact provider suffix advertised for that model by Hugging Face. Tau
+Use the exact provider suffix advertised for that model by Hugging Face. Je
 sends `zai-org/GLM-5.2:deepinfra` on the wire and continues to display and store
 the logical `zai-org/GLM-5.2` model. The pin survives resume; changing the
 preference does not rewrite existing sessions. `/session` shows the active pin.
 Route selection is available through the external
 [`alejandro-ao/tau-huggingface`](https://github.com/alejandro-ao/tau-huggingface)
-extension rather than a built-in command. It requires Tau 0.3.10 or newer. Clone
+extension rather than a built-in command. It requires Je 0.3.10 or newer. Clone
 and load it explicitly:
 
 ```bash
 git clone https://github.com/alejandro-ao/tau-huggingface.git
-tau -e ./tau-huggingface
+je -e ./tau-huggingface
 ```
 
 Then use `/hf route` to pick from the model's currently live routes,
@@ -252,7 +252,7 @@ Transient failures first retry on the same wire model, and stream failures are
 not retried or rerouted after model output has started. After those retries are
 exhausted, only sticky routes selected in automatic mode fail over; routes chosen
 through `/hf route <provider>` or the `inference_providers` preference remain
-fixed so Tau never overrides explicit user intent. Automatic failover emits
+fixed so Je never overrides explicit user intent. Automatic failover emits
 visible retry progress and durable provider diagnostics. Pinning can reduce cold
 prefix-cache misses caused by cross-provider routing, but cannot prevent eviction,
 TTL expiry, or load balancing among workers within the chosen provider. A reroute
@@ -266,7 +266,7 @@ Both Kimi providers authenticate requests with Bearer API keys; neither uses
 OAuth. They are separate because the keys come from different consoles, use
 different endpoints, and charge against different billing plans:
 
-| Tau provider | Access and billing | Model | Endpoint | Environment variable |
+| Je provider | Access and billing | Model | Endpoint | Environment variable |
 | --- | --- | --- | --- | --- |
 | `moonshotai` | Pay-as-you-go key from the [Kimi Open Platform](https://platform.kimi.ai/console/api-keys) | `kimi-k2.7-code` | `https://api.moonshot.ai/v1` | `MOONSHOT_API_KEY` |
 | `kimi-code` | Subscription key from the [Kimi Code console](https://www.kimi.com/code/console) | `k3` or rolling `kimi-for-coding` alias | `https://api.kimi.com/coding/v1` | `KIMI_CODE_API_KEY` |
@@ -274,7 +274,7 @@ different endpoints, and charge against different billing plans:
 Kimi K3 uses the `k3` model ID, accepts text and image input, and supports up to
 a 1,048,576-token context window on eligible plans. It supports three
 reasoning-effort levels via the `reasoning_effort` field: `low`, `high`, and
-`max` (default). Tau exposes these as the distinct `low`, `high`, and `max`
+`max` (default). Je exposes these as the distinct `low`, `high`, and `max`
 thinking levels, and starts new K3 sessions at `max` unless a remembered
 per-model choice exists. Start a new session when switching to K3 so the
 previous model's context cache is not re-prefilled. See
@@ -282,27 +282,27 @@ previous model's context cache is not re-prefilled. See
 for current plan availability and context limits.
 
 A key for one service should not be treated as interchangeable with a key for
-the other. Tau stores them independently under the `moonshotai` and `kimi-code`
+the other. Je stores them independently under the `moonshotai` and `kimi-code`
 credential names, so `/login moonshotai` and `/login kimi-code` can configure
 both at once. The distinct environment variable names provide the same
 separation when credentials are supplied through the shell.
 
-Credentials saved through `/login` live in `~/.tau/credentials.json` with
+Credentials saved through `/login` live in `~/.je/credentials.json` with
 private `0600` permissions and atomic file replacement. The file is not
-encrypted; protect your Tau home directory and do not share its contents. The custom-provider
+encrypted; protect your Je home directory and do not share its contents. The custom-provider
 flow asks for the provider name, display name, base URL, API-key environment
 variable, default model, and API key; it writes the provider definition to
-`~/.tau/catalog.toml` and runtime preferences to `~/.tau/providers.json`.
+`~/.je/catalog.toml` and runtime preferences to `~/.je/providers.json`.
 
 Check what's configured and how each provider will authenticate:
 
 ```bash
-tau providers
+je providers
 ```
 
 ## Managing saved credentials
 
-Use these slash commands inside Tau:
+Use these slash commands inside Je:
 
 ```text
 /login [provider]   # add or refresh a saved credential
@@ -314,25 +314,25 @@ edits saved credentials — it never touches your environment or `providers.json
 
 ### Multiple account profiles
 
-Tau stores one saved credential per provider in its user-data home. To use
+Je stores one saved credential per provider in its user-data home. To use
 multiple accounts for the same provider, give each account a separate
-`TAU_HOME`. This isolates credentials, sessions, provider preferences, settings,
+`JE_HOME`. This isolates credentials, sessions, provider preferences, settings,
 extensions, and caches:
 
 ```bash
 # POSIX shells
 install -d -m 700 "$HOME/.tau-work" "$HOME/.tau-personal"
-alias tau-work='TAU_HOME="$HOME/.tau-work" command tau'
-alias tau-personal='TAU_HOME="$HOME/.tau-personal" command tau'
+alias tau-work='JE_HOME="$HOME/.tau-work" command tau'
+alias tau-personal='JE_HOME="$HOME/.tau-personal" command tau'
 ```
 
 In PowerShell, a function can scope the environment change to one invocation:
 
 ```powershell
 function tau-personal {
-  $previous = $env:TAU_HOME
-  try { $env:TAU_HOME = "$HOME\.tau-personal"; tau @args }
-  finally { $env:TAU_HOME = $previous }
+  $previous = $env:JE_HOME
+  try { $env:JE_HOME = "$HOME\.tau-personal"; tau @args }
+  finally { $env:JE_HOME = $previous }
 }
 ```
 
@@ -342,10 +342,10 @@ Run each alias or function and authenticate that profile once:
 /login anthropic-subscription
 ```
 
-`TAU_HOME` must be an absolute path after optional `~` expansion. User-level
+`JE_HOME` must be an absolute path after optional `~` expansion. User-level
 `~/.agents` resources and project `.tau`/`.agents` resources remain shared, as
 do credentials supplied directly through environment variables. See
-[Configuration](/reference/configuration/#tau-home) for the
+[Configuration](/reference/configuration/#je-home) for the
 complete boundary.
 
 > [!NOTE] OAuth troubleshooting
@@ -364,7 +364,7 @@ complete boundary.
 
 - **`/model`** — open the picker (lists models across configured providers;
   choosing one can switch the active provider too).
-- **`tau -m <model>`** or **`tau --provider <name> -m <model>`** — choose at
+- **`tau -m <model>`** or **`je --provider <name> -m <model>`** — choose at
   launch.
 - **Ctrl+P** / **Shift+Ctrl+P** — cycle your *scoped* (favorite) models
   forward / backward without opening the picker.
@@ -377,24 +377,24 @@ to reload. A background refresh that omits the active model leaves its existing
 runtime working, but does not offer that model as a new selection. Even an empty
 catalog does not prevent the picker from opening when the active model is stale.
 
-Tau validates the selected model against the active provider's configured model
+Je validates the selected model against the active provider's configured model
 list before creating or refreshing a runtime provider. This prevents accidental
 provider/model mismatches, such as trying to send an API-only OpenAI model to the
 separate `openai-codex` subscription provider.
 
-When a switch crosses provider APIs, Tau compiles existing tool history for the
+When a switch crosses provider APIs, Je compiles existing tool history for the
 target provider. Provider-specific tool-call IDs are deterministically translated
 to a portable format, with the same translated ID used for each call and result.
-When compiling history for Anthropic, Tau also omits opaque reasoning signatures
+When compiling history for Anthropic, Je also omits opaque reasoning signatures
 created by other APIs. This lets a session continue after tools have run without
 exposing users to provider validation errors or rewriting the saved JSONL history.
 
 ### Claude Opus 5
 
-Tau supports Anthropic's `claude-opus-5` through the direct `anthropic`
+Je supports Anthropic's `claude-opus-5` through the direct `anthropic`
 provider. The model has a 1M-token context window, accepts text and images,
 generates up to 128k tokens, and costs $5 / $25 per million input/output tokens.
-Anthropic enables adaptive thinking by default. Tau exposes models.dev's
+Anthropic enables adaptive thinking by default. Je exposes models.dev's
 verified `low`, `medium`, `high`, `xhigh`, and `max` efforts as distinct modes.
 
 Use `/login anthropic-api` or `/login anthropic-subscription`, then select
@@ -404,26 +404,26 @@ for current behavior and availability.
 
 ## Dynamic extension providers
 
-Tau's extension API has a process-local `DynamicProvider` contract validated
+Je's extension API has a process-local `DynamicProvider` contract validated
 by a permanent second fake backend and a test-only Ollama adapter. Unlike
-providers created by `/login custom` or `tau setup`, these definitions are
+providers created by `/login custom` or `je setup`, these definitions are
 source/generation-owned overlays and are never copied into `catalog.toml`,
 `providers.json`, sessions, or generic disk storage. Source ownership is a stable
 host identity derived from the canonical extension entry path—not the display
-name. Tau freezes every discovered identity before importing extension code, so
+name. Je freezes every discovered identity before importing extension code, so
 symlink retargeting cannot change registration or cleanup ownership; separate
 same-name extension files cannot remove one another's providers. They support
 dormant model sets, deeply immutable compatibility metadata, atomic
 model-snapshot refresh, per-caller refresh deadlines, retry-safe coalescing, and
 required/optional/no authentication without fake keys or exposed auth provenance.
 Custom auth-resolution exceptions are reduced to a categorical host error during
-runtime creation; Tau's required-key guidance remains actionable.
+runtime creation; Je's required-key guidance remains actionable.
 
 Phase 1 established the contracts and registry mechanics. The `/local` host now
 provides the generic TUI flow for registered dynamic local backends. Dynamic
 providers still do not become durable catalog entries or automatic startup
 fallbacks: configure a backend, then choose its provider/model explicitly. The
-trusted built-in llama.cpp provider is the narrow scoped-model exception: Tau
+trusted built-in llama.cpp provider is the narrow scoped-model exception: Je
 may persist only its stable provider ID plus exact model ID. An unloaded/stale
 reference remains visible as unavailable and cannot trigger load or download.
 User and project dynamic providers cannot opt into durable references. See
@@ -439,12 +439,12 @@ Ollama. The easiest interactive path is:
 /login custom
 ```
 
-Tau prompts for the provider details, saves the API key, writes the provider
-metadata to `~/.tau/catalog.toml`, and makes the provider available immediately.
+Je prompts for the provider details, saves the API key, writes the provider
+metadata to `~/.je/catalog.toml`, and makes the provider available immediately.
 
 ### Built-in llama.cpp backend
 
-Tau's first-class llama.cpp integration is configured through the provider-neutral
+Je's first-class llama.cpp integration is configured through the provider-neutral
 `/local` command. For download/load/unload management, start llama.cpp
 independently in router mode without a model argument:
 
@@ -453,17 +453,17 @@ llama-server --models-max 1 --parallel 1 --flash-attn auto
 ```
 
 See the [official router guide](https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md#using-multiple-models)
-and Tau's complete guide below before adding hardware- or model-specific flags.
+and Je's complete guide below before adding hardware- or model-specific flags.
 
-Then open Tau and run:
+Then open Je and run:
 
 ```text
 /local
 ```
 
-Choose and confirm the recommended `llama.cpp` backend. Tau automatically
+Choose and confirm the recommended `llama.cpp` backend. Je automatically
 checks the saved, environment, or default endpoint; use **Configure** for a
-server elsewhere and an optional API key. Tau discovers exact loaded model IDs
+server elsewhere and an optional API key. Je discovers exact loaded model IDs
 through OpenAI-compatible or compatible router discovery; it does not use a
 fake key or fake model. Compatible b9688–b10595 routers show arrow-key
 navigable model states plus explicitly confirmed load, unload, Hugging Face GGUF
@@ -475,12 +475,12 @@ server-side download running; reopen it to cancel explicitly. No key means no
 Use the discovered ID explicitly from the TUI or print mode:
 
 ```bash
-tau --provider llama.cpp --model <model-id>
-tau --provider llama.cpp --model <model-id> --print "summarize this project"
+je --provider llama.cpp --model <model-id>
+je --provider llama.cpp --model <model-id> --print "summarize this project"
 ```
 
 The configured endpoint and safe model snapshot are stored under
-`~/.tau/state/extensions/llama.cpp.json`; secrets stay in the credential store.
+`~/.je/state/extensions/llama.cpp.json`; secrets stay in the credential store.
 A cached snapshot allows explicit startup during temporary server downtime.
 `/local` never scans ports or processes, stops the external server, or deletes
 model files. See the [complete llama.cpp guide](/guides/local-inference/)
@@ -489,26 +489,26 @@ for endpoint precedence, Doctor, reset, and troubleshooting.
 An older manually configured provider named `llama-cpp` remains separate and is
 not migrated. Configure the built-in `llama.cpp` layer through `/local`, and use
 the custom-provider flow below for Ollama and other OpenAI-compatible servers.
-Tau does not ship an Ollama backend.
+Je does not ship an Ollama backend.
 
 For scripted or one-off setup with another OpenAI-compatible server, use the
-same `tau setup` flow. For example, Ollama's OpenAI-compatible endpoint usually
+same `je setup` flow. For example, Ollama's OpenAI-compatible endpoint usually
 runs at `http://localhost:11434/v1`:
 
 ```bash
-tau --provider local \
+je --provider local \
   --base-url http://localhost:11434/v1 \
   --api-key-env LOCAL_API_KEY \
   --model qwen \
   setup
 ```
 
-This writes the provider definition to `~/.tau/catalog.toml`, writes runtime
-preferences to `~/.tau/providers.json`, and (by default) makes it the default
+This writes the provider definition to `~/.je/catalog.toml`, writes runtime
+preferences to `~/.je/providers.json`, and (by default) makes it the default
 provider.
 
 For reusable provider definitions, add a user-level catalog overlay at
-`~/.tau/catalog.toml`:
+`~/.je/catalog.toml`:
 
 ```toml
 schema_version = 1
@@ -528,27 +528,27 @@ docs_url = "https://example.test/local-gateway"
 qwen-coder = 64000
 ```
 
-Tau loads its bundled `src/je_coding/data/catalog.toml` first, then overlays
-`~/.tau/catalog.toml`. A user entry with the same `name` can extend or override a
+Je loads its bundled `src/je_coding/data/catalog.toml` first, then overlays
+`~/.je/catalog.toml`. A user entry with the same `name` can extend or override a
 built-in provider: scalar fields replace built-in values, `models` are merged
 with your models first, and `context_windows` are merged.
 
-There is intentionally **no project-level** `.tau/catalog.toml`. Only the
-user-level `~/.tau/catalog.toml` is loaded, so cloning a repository cannot
+There is intentionally **no project-level** `.je/catalog.toml`. Only the
+user-level `~/.je/catalog.toml` is loaded, so cloning a repository cannot
 silently redirect a provider's `base_url` or credentials to an unexpected
 service.
 
 Run the custom provider with:
 
 ```bash
-tau --provider local-gateway
-tau --provider local-gateway "summarize this project"    # TUI with an initial prompt
-tau --provider local-gateway -p "summarize this project" # one-shot print mode
+je --provider local-gateway
+je --provider local-gateway "summarize this project"    # TUI with an initial prompt
+je --provider local-gateway -p "summarize this project" # one-shot print mode
 ```
 
 Catalog TOML is for provider and model metadata. It does **not** accept runtime
 request options such as custom HTTP headers, timeouts, or retry settings. Put
-those in `~/.tau/providers.json` instead. Saved `providers.json` entries support
+those in `~/.je/providers.json` instead. Saved `providers.json` entries support
 `headers`, `timeout_seconds`, `max_retries`, and `max_retry_delay_seconds`. For
 the full JSON shape, the catalog TOML shape, and `thinking_levels` for custom
 models, see [Configuration](/reference/configuration/#providers).
@@ -556,7 +556,7 @@ models, see [Configuration](/reference/configuration/#providers).
 > [!TIP] Hugging Face org billing
 > To send a Hugging Face billing header, keep the provider definition in the
 > catalog, then add the header to the matching provider preference in
-> `~/.tau/providers.json`:
+> `~/.je/providers.json`:
 >
 > ```json
 > {
@@ -577,8 +577,8 @@ models, see [Configuration](/reference/configuration/#providers).
 
 ## How credentials are resolved
 
-For a given provider, Tau uses, in order: a stored credential in
-`~/.tau/credentials.json`, then the environment variable named by the provider's
+For a given provider, Je uses, in order: a stored credential in
+`~/.je/credentials.json`, then the environment variable named by the provider's
 `api_key_env`. OAuth credentials are refreshed immediately before a request and
 the replacement is saved atomically. Use `/login` for built-in providers or
 `/login custom` for OpenAI-compatible custom providers.

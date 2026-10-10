@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import stat
+import sys
 from collections.abc import Callable, Mapping
 from pathlib import Path
 
@@ -505,9 +506,10 @@ def test_state_is_atomic_locked_private_and_recovers_interrupted_writes(tmp_path
     paths = TauPaths(home=tmp_path / "tau", agents_home=tmp_path / "agents")
     store = LlamaCppStateStore(paths=paths)
     store.save(_state())
-    assert stat.S_IMODE(store.path.stat().st_mode) == 0o600
-    assert stat.S_IMODE(store.lock_path.stat().st_mode) == 0o600
-    assert stat.S_IMODE(store.path.parent.stat().st_mode) == 0o700
+    if sys.platform != "win32":
+        assert stat.S_IMODE(store.path.stat().st_mode) == 0o600
+        assert stat.S_IMODE(store.lock_path.stat().st_mode) == 0o600
+        assert stat.S_IMODE(store.path.parent.stat().st_mode) == 0o700
 
     temporary = store.path.parent / f".{store.path.name}.interrupted.tmp"
     temporary.write_text("partial", encoding="utf-8")
@@ -798,7 +800,7 @@ async def test_tui_explicit_dynamic_startup_uses_cached_state_during_downtime(
     from je_coding.tui import app as tui_app
 
     isolate_home(monkeypatch, tmp_path)
-    paths = TauPaths(home=tmp_path / ".tau", agents_home=tmp_path / ".agents")
+    paths = TauPaths(home=tmp_path / ".je", agents_home=tmp_path / ".agents")
     LlamaCppStateStore(paths=paths).save(_state())
     project = tmp_path / "project"
     project.mkdir()
@@ -819,7 +821,7 @@ async def test_tui_explicit_dynamic_startup_uses_cached_state_during_downtime(
 
         return httpx.AsyncClient(transport=httpx.MockTransport(handler), timeout=timeout)
 
-    monkeypatch.setattr(tui_app, "TauTuiApp", HeadlessTui)
+    monkeypatch.setattr(tui_app, "JeTuiApp", HeadlessTui)
     monkeypatch.setattr(llama_service, "create_async_client", unavailable_client)
     session_id = await tui_app.run_tui_app(
         model="qwen-local",

@@ -1,6 +1,7 @@
 import asyncio
 import base64
 import shlex
+import sys
 from io import BytesIO
 from pathlib import Path
 from time import monotonic
@@ -360,10 +361,10 @@ async def test_edit_tool_requires_unique_matches(tmp_path: Path) -> None:
 async def test_bash_tool_tolerates_missing_required_display_description(tmp_path: Path) -> None:
     tool = create_bash_tool(cwd=tmp_path)
 
-    result = await tool.execute("test-call", {"command": "printf hello"})
+    result = await tool.execute("test-call", {"command": "echo hello"})
 
     assert result.text
-    assert result.text == "hello"
+    assert result.text.strip() == "hello"
     assert result.details is not None
     assert result.details["exit_code"] == 0
     assert result.details["timed_out"] is False
@@ -398,6 +399,7 @@ async def test_bash_tool_disconnects_stdin_from_commands(
     assert subprocess_options["stdin"] == asyncio.subprocess.DEVNULL
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Bash aliases require POSIX")
 @pytest.mark.anyio
 async def test_create_coding_tools_applies_shell_command_prefix(
     tmp_path: Path,
@@ -416,6 +418,7 @@ async def test_create_coding_tools_applies_shell_command_prefix(
     assert result.details["shell_command_prefix_applied"] is True
 
 
+@pytest.mark.skipif(sys.platform == "win32", reason="Bash aliases require POSIX")
 @pytest.mark.anyio
 async def test_bash_tool_applies_opt_in_shell_command_prefix(tmp_path: Path) -> None:
     rc_path = tmp_path / ".zshrc"

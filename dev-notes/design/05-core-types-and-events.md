@@ -18,7 +18,7 @@ title: "05 — 核心类型与事件体系 (Core Types and Events)"
 
 ## 工具类型 (Tools)
 
-位于 `je_agent.tools`：
+`ToolCall` 定义在 `je_agent.messages`，并由 `je_agent.tools` 兼容导出：
 - `ToolCall`：模型发出的结构化工具调用请求
 - `AgentTool`：工具元数据声明（名称、描述、JSON Schema、异步执行器）
 - `AgentToolResult`：工具执行的标准结构化响应
@@ -27,9 +27,11 @@ title: "05 — 核心类型与事件体系 (Core Types and Events)"
 
 位于 `je_agent.events`，描述 Agent 生命周期中的所有实时进度：
 - 周期事件：`agent_start` / `agent_end`、`turn_start` / `turn_end`
-- 消息流：`message_start`、`message_delta`、`message_end`
-- 深度思考：`thinking_delta`（捕获大模型思维链流式内容）
+- 消息流：`message_start`、`message_update`、`message_end`
+- 增量内容：`message_update.assistant_message_event` 包含 `text_delta`、`thinking_delta` 或工具调用增量；思考内容仅限供应商实际返回的内容，不保证提供完整思维链
 - 工具执行流：`tool_execution_start`、`tool_execution_update`、`tool_execution_end`
-- 状态与异常：`queue_update`、`retry`、`error`
+- 模型错误：通过消息中的 `stop_reason` / `error_message` 表达，没有顶层 `error` 事件
+
+`je_coding.events` 扩展会话事件：`queue_update`、`agent_settled`、`auto_retry_start/end`、`compaction_start/end` 等。`AgentHarness` 与 `CodingSession` 的事件范围不同，消费者应按所用接口处理。
 
 无头命令行（Print Mode）、JSON 流模式以及 Textual 交互式终端统一订阅消费此事件流。

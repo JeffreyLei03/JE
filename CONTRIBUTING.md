@@ -85,3 +85,5 @@ uv run pytest
 - `docs:` 文档更新
 - `test:` 测试用例补充
 - `chore:` 构建或辅助工具调整
+
+代码导入方向由 `je_agent` 定义消息、事件、工具与 `ModelProvider` 契约，`je_ai` 实现该契约，`je_coding` 组装两者。运行时则由 Harness 调用注入的 Provider。核心运行时不依赖 UI；`je_agent.session` 同时提供可选的本地 JSONL 存储实现。

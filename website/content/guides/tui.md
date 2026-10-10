@@ -1,6 +1,6 @@
 ---
 title: The interactive session
-description: Get fluent in Tau's terminal UI — prompting, steering, the command palette, tool output, and pickers.
+description: Get fluent in Je's terminal UI — prompting, steering, the command palette, tool output, and pickers.
 ---
 
 Running `tau` with no arguments opens the interactive terminal UI (TUI). This is
@@ -13,15 +13,15 @@ Type into the prompt box at the bottom and press **Enter** to submit. The editor
 keeps its padded block size and background, while a single left border changes
 color to reflect focus, shell mode, and active runs without boxing it in.
 **Shift+Enter** inserts a newline for multi-line prompts. If your terminal cannot
-distinguish it from Enter, remap `insert_newline` in `~/.tau/tui.json`; see
-[Keyboard shortcuts](/reference/keybindings/#prompting). Tau streams the
+distinguish it from Enter, remap `insert_newline` in `~/.je/tui.json`; see
+[Keyboard shortcuts](/reference/keybindings/#prompting). Je streams the
 assistant's reply above the prompt, showing tool calls as they run. When OpenAI
-returns several reasoning-summary parts, Tau keeps them as separate Markdown
+returns several reasoning-summary parts, Je keeps them as separate Markdown
 paragraphs rather than joining their headings together. In supported terminal
-emulators, Tau also updates the tab title: named sessions show as
+emulators, Je also updates the tab title: named sessions show as
 `τ | <name>`, and active runs add an animated running indicator so you can see
-work continuing from another tab. When a run fully settles while Tau's terminal
-surface is unfocused, Tau emits a desktop notification by default on supported
+work continuing from another tab. When a run fully settles while Je's terminal
+surface is unfocused, Je emits a desktop notification by default on supported
 terminals: OSC 9 for Ghostty, iTerm2, and MinTTY, and OSC 99 for Kitty. Unknown
 terminals are left untouched. Set `turn_notification` to `"bell"` to let the
 terminal mark the tab or apply its configured bell behavior instead, or `"off"`
@@ -30,14 +30,14 @@ produce sounds according to the user's terminal and system settings; see
 [Configuration](/reference/configuration/#tui-settings).
 
 Chat Completions providers can interleave reasoning and answer fragments (for
-example, DeepSeek through Hugging Face). Tau keeps each channel in one continuous
+example, DeepSeek through Hugging Face). Je keeps each channel in one continuous
 block while streaming and saving the reply, rather than splitting sentences at
 channel switches. Previously saved replies retain their original block layout.
 
 Clicking anywhere in the window returns focus to the prompt, so you can scroll
 the transcript and keep typing without tabbing back.
 
-If a provider request fails after retries, Tau shows the failure as an explicit
+If a provider request fails after retries, Je shows the failure as an explicit
 error block in the transcript, using the provider's own error message (for
 example `server_is_overloaded` details instead of a generic failure). The block
 includes a diagnostic log path and a reminder that the run ended. You can submit
@@ -83,7 +83,7 @@ The full list is in the [Slash commands reference](/reference/slash-commands/). 
 ### Local backends
 
 `/local` first opens an explicit backend chooser. One backend is preselected but
-still requires confirmation; a recommended backend is only a marker. Tau's
+still requires confirmation; a recommended backend is only a marker. Je's
 built-in `llama.cpp` backend automatically probes its one effective
 saved/environment/default endpoint; **Configure** accepts another URL and an
 optional secret key. It renders models and backend actions as separate
@@ -136,7 +136,7 @@ Type `@` in the prompt to open file suggestions from the project tree, and inser
 a path like `@src/app.py`. Use an explicit parent-relative path such as `@../` to
 complete files and directories outside the project root. External completion
 follows only the path you type instead of scanning the surrounding filesystem.
-Dot-prefixed content such as `.env` and `.agents/` is included. Tau still skips
+Dot-prefixed content such as `.env` and `.agents/` is included. Je still skips
 known metadata and generated directories such as `.git`, `.venv`, `node_modules`,
 `__pycache__`, `build`, and `dist`. Press **Tab** to insert the highlighted file;
 press **Enter** to submit exactly what you typed without inserting it. The same
@@ -144,7 +144,7 @@ rule applies to `@` suggestions in skill and custom-prompt argument text.
 
 ## Dropping files into the prompt
 
-Drag one or more files from your file manager onto the terminal window and Tau
+Drag one or more files from your file manager onto the terminal window and Je
 inserts their filesystem paths into the prompt at the cursor, separated by
 spaces. Paths that contain spaces are quoted automatically, and any text you
 already typed is preserved. This works anywhere over the TUI, not just above
@@ -175,8 +175,8 @@ file mutations one at a time still produce one file list. Extension tools, custo
 rendered call cards, and skill loads remain separate.
 
 Tool results (like long `read` or `bash` output) render as compact previews so
-the transcript stays readable. Tau requires the model to give each `bash` call a
-brief description such as `Running tests`. Tau shows that description in full;
+the transcript stays readable. Je requires the model to give each `bash` call a
+brief description such as `Running tests`. Je shows that description in full;
 collapsed rows never show command text. Press **Ctrl+O** to keep the description
 visible and reveal the exact command
 and result beneath it. Malformed provider output,
@@ -203,7 +203,7 @@ This visually ties submitted prompts to the composer.
 
 ## Long sessions
 
-Tau keeps long transcripts responsive by mounting only a window of messages in
+Je keeps long transcripts responsive by mounting only a window of messages in
 the terminal at once. Your complete session remains in display state and durable
 history. When older or newer messages are outside the current window, a small
 boundary row appears; keep scrolling toward it to page through the rest of the
@@ -223,16 +223,16 @@ when you want to reduce what is sent to the model.
   refreshes it.
 - **`/scoped-models`** opens the favorite-model picker and refreshes provider
   catalogs in the background too, so newly discovered Codex models can be
-  scoped without opening `/model` first. Use `tau update --models` to force
-  public-catalog refresh or `TAU_OFFLINE=1` to disable catalog network access.
+  scoped without opening `/model` first. Use `je update --models` to force
+  public-catalog refresh or `JE_OFFLINE=1` to disable catalog network access.
 - **Ctrl+P** quickly cycles forward through your *scoped* (favorite) models;
   **Shift+Ctrl+P** cycles backward. Neither opens the picker. Manage that list
   with `/scoped-models` or by pressing `Space` on a model in the `/model` picker.
-- Model and thinking selections update the status display immediately. Tau records
+- Model and thinking selections update the status display immediately. Je records
   only the final selections when you send the next message, before that message
   enters session history. Unsent selections disappear when you restart; cycling
   does not change the default for future sessions. If the selected model cannot
-  be prepared, Tau reports an error instead of sending with the old model.
+  be prepared, Je reports an error instead of sending with the old model.
 - **`/theme`** switches between `je-dark`, `je-light`, `high-contrast`, and
   any custom themes you have installed. Each theme uses one shared selection
   palette for prompt autocomplete and modal lists such as `/resume`. In
@@ -243,7 +243,7 @@ when you want to reduce what is sent to the model.
 
 ## The sidebar
 
-On wide-enough terminals Tau shows the session name prominently without a
+On wide-enough terminals Je shows the session name prominently without a
 redundant section label, followed by active-branch
 turn and tool-call totals, provider-reported token usage, average effective
 output speed and TTFT, latest-request and session prompt-cache hit rates, estimated cost,
@@ -251,8 +251,8 @@ automatic-compaction threshold,
 and loaded tools, skills, prompt templates, extensions, and context files such as
 `AGENTS.md`. Tool and extension names use compact comma-separated lists limited
 to three rendered lines. Skills and prompt templates are grouped under their
-resource origins (for example, `./.tau/skills`, `~/.agents/skills`, or
-`./.tau/prompts`). These two sections start collapsed and show their loaded-item
+resource origins (for example, `./.je/skills`, `~/.agents/skills`, or
+`./.je/prompts`). These two sections start collapsed and show their loaded-item
 counts in the headings. The skills heading also shows the estimated token cost of
 the loaded skill index in the system prompt; full skill instructions enter context
 only when that skill is invoked. Click either heading (or focus it and press
@@ -261,7 +261,7 @@ remain open when needed. Every loaded skill or prompt is shown while its section
 is expanded. Click a skill, prompt template, or context-file row to replace the
 transcript with a main-area editor. Use the **arrow keys** to move the editing
 cursor. **Ctrl+S** writes the edited contents to disk and reports success or
-failure without closing the editor. Tau refuses to overwrite a file changed on
+failure without closing the editor. Je refuses to overwrite a file changed on
 disk after it was opened, and blocks switching to another sidebar file while
 the current editor has unsaved changes. Save or close that file first.
 **Escape** closes the editor and restores the transcript. Run **`/reload`**
@@ -273,30 +273,30 @@ use a solid bullet (`•`), while user-only skills with
 `disable-model-invocation: true` use a hollow bullet (`◦`). If
 the sidebar content is
 taller than the available space, scroll it to see the remaining resource groups;
-the Tau version mark stays pinned at the bottom. Context files
-use a bullet list with one path per line, limited to five entries. When Tau loads a
+the Je version mark stays pinned at the bottom. Context files
+use a bullet list with one path per line, limited to five entries. When Je loads a
 `SYSTEM.md` replacement or `APPEND_SYSTEM.md` addition from a user or project
 `.tau` directory, a separate **system prompt** section lists each active file.
-Tau omits that section when no system-prompt files are active. Truncated sections
+Je omits that section when no system-prompt files are active. Truncated sections
 end with `...(X more)` showing how many entries are hidden. Project resource paths
 are relative to the working directory; resources loaded from the home directory
 start with `~/`, while other resources loaded from outside the project use their
 full path.
 
 The wider, borderless sidebar uses the prompt field's background color, bright
-section headings, quieter gray values, and keeps Tau's versioned `τ = 2π` mark
-pinned to its bottom edge. Tau does not render separate
+section headings, quieter gray values, and keeps Je's versioned `τ = 2π` mark
+pinned to its bottom edge. Je does not render separate
 top-header or shortcut-footer rows. Named sessions remain visible in the sidebar
 and terminal tab title; `/hotkeys` lists shortcuts when needed. The sidebar hides
 automatically when the terminal is small, while the tab title continues to
 identify the session.
 
-`avg TPS` divides provider-reported output tokens by the accumulated time Tau
+`avg TPS` divides provider-reported output tokens by the accumulated time Je
 spends awaiting provider stream events. That includes provider queueing, network
-waits, prefill, and time to first output, but excludes Tau's rendering and
+waits, prefill, and time to first output, but excludes Je's rendering and
 persistence work between stream pulls. TPS is token-weighted across timed
 responses rather than an average of per-response rates. `avg TTFT` is the
-arithmetic mean of provider-wait time through Tau's first text, thinking, or
+arithmetic mean of provider-wait time through Je's first text, thinking, or
 tool-call output event. Timing is persisted on new assistant messages. Older
 history still counts toward cumulative token usage and cost but is omitted from
 both performance metrics.
@@ -306,7 +306,7 @@ compaction and the model requests used to generate compaction or branch summarie
 Heuristic summary fallbacks have no provider usage and add nothing. Input usage
 counts tokens processed on every provider request, so it can be much larger than
 the context used by the next request. Cost is an estimate based on provider-reported usage and configured
-catalog rates; the sidebar shows `$N/A` when Tau lacks complete pricing data.
+catalog rates; the sidebar shows `$N/A` when Je lacks complete pricing data.
 
 The cache line separates the latest model request from the cumulative session.
 Both rates are the share of prompt tokens the provider served from its cache
@@ -316,24 +316,24 @@ includes every request on the active branch, including the initial cold request.
 A low latest rate usually means something early in the request changed, such as
 a reloaded tool list or thinking level, or that a pause outlived the provider's
 cache.
-Tau hides both figures for providers that do not report cache usage.
+Je hides both figures for providers that do not report cache usage.
 
 The compact status block below the prompt puts `provider:model (thinking)` on its
 first line and provider-anchored active context as `used/limit` on the second. When
 no valid provider usage exists yet, such as immediately after compaction, it shows
 `?/limit` until a fresh response reports usage. Unlike cumulative usage, this
 active count describes the system prompt, tools,
-and active messages Tau expects to send on the next request. It can decrease
+and active messages Je expects to send on the next request. It can decrease
 after compaction while cumulative usage continues to increase. The
 working-directory name and model are emphasized while the parent path, Git
 branch, and provider use the quieter metadata color.
 
 The sidebar appears on the **right** by default. It can be moved to the **left**
-or turned **off** entirely by setting `sidebar_position` in `~/.tau/tui.json` —
+or turned **off** entirely by setting `sidebar_position` in `~/.je/tui.json` —
 see [Configuration](/reference/configuration/#tui-settings).
 Use `/sidebar` to toggle visibility during a session. This is temporary: it
 preserves a configured left/right position, does not change `tui.json`, and is
-forgotten when Tau restarts. A configured `off` sidebar can be shown temporarily
+forgotten when Je restarts. A configured `off` sidebar can be shown temporarily
 on the default right side.
 
 ## Herdr compatibility
@@ -343,12 +343,12 @@ Herdr, whether forwarded as Alt arrows or Kitty Alt+b/Alt+f. Alt+b/Alt+f also
 move by word. Add Shift to arrows to select by word. No macOS Ctrl-arrow shortcut changes are
 needed. Existing Ctrl-arrow and terminal Esc+b/Esc+f navigation still work.
 
-When Tau detects that its TUI is running inside Herdr, it defaults Textual to
+When Je detects that its TUI is running inside Herdr, it defaults Textual to
 cell-coordinate mouse input and standard terminal resize signals. This avoids a
 Herdr 0.9.0 interoperability bug that can collapse clicks, hover, selection, and
 scrolling into the top-left corner of the pane. Other terminals keep Textual's
 normal in-band resize and pixel-mouse behavior. An explicitly configured
-`TEXTUAL_SMOOTH_SCROLL` environment variable takes precedence over Tau's
+`TEXTUAL_SMOOTH_SCROLL` environment variable takes precedence over Je's
 compatibility default.
 
 ## Next

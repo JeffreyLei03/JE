@@ -4,7 +4,7 @@ description: Keep long sessions working with automatic and manual compaction, an
 ---
 
 A model can only read so much text at once — its **context window**. Long coding
-sessions fill it up. Tau handles this with **compaction** (summarizing older
+sessions fill it up. Je handles this with **compaction** (summarizing older
 history) and lets you tune how hard the model works with **thinking modes**.
 
 ## Seeing context usage
@@ -22,10 +22,10 @@ Context token breakdown: system=<count>, messages=<count>, tools=<count>
 Thinking mode: <mode>
 ```
 
-After a successful model response, Tau uses the provider-reported token usage as
+After a successful model response, Je uses the provider-reported token usage as
 the authoritative size of the context processed by that response, then estimates
 only messages added afterward. Before the first response, immediately after
-compaction, or when no valid usage is available, Tau falls back to a deterministic
+compaction, or when no valid usage is available, Je falls back to a deterministic
 estimate (roughly `characters / 4` plus small per-message and per-tool overhead).
 The fallback covers the system prompt, project context (`AGENTS.md`), skill
 metadata, active message history, and tool schemas.
@@ -39,12 +39,12 @@ This is different from the cumulative token totals in the sidebar's **usage**
 section. Cumulative usage adds the provider-reported input and output tokens from every request on the active
 branch, including history later replaced by compaction. Repeatedly sending the
 same context therefore increases cumulative input usage, while active context
-consumption describes only what Tau expects to send next. The two figures are
+consumption describes only what Je expects to send next. The two figures are
 not expected to match.
 
 ## Automatic compaction
 
-By default, Tau compacts automatically when the estimate gets close to the
+By default, Je compacts automatically when the estimate gets close to the
 model's context window. It checks three moments:
 
 - before a new prompt (to catch context added out-of-band),
@@ -52,7 +52,7 @@ model's context window. It checks three moments:
 - after a context-overflow error (force compaction regardless of the local estimate,
   then retry once).
 
-When it compacts, Tau asks the model to summarize older messages, keeps a recent
+When it compacts, Je asks the model to summarize older messages, keeps a recent
 suffix of the conversation, and continues. The original session file is never
 edited — only the *active context* sent to the provider changes.
 
@@ -63,10 +63,10 @@ authenticated model catalog because those limits can differ from the public Open
 You can override the resulting threshold for a run:
 
 ```bash
-tau --auto-compact-threshold 100000
+je --auto-compact-threshold 100000
 ```
 
-Automatic compaction is best-effort: if summarization fails, Tau logs it and keeps
+Automatic compaction is best-effort: if summarization fails, Je logs it and keeps
 the original context. During successful overflow recovery, the TUI shows compaction
 and retry progress instead of presenting the intermediate provider rejection as a
 terminal error. The error becomes visible only if recovery cannot complete.
@@ -82,7 +82,7 @@ Compact on demand any time:
 
 Optional text after `/compact` is added as extra focus for the summary. Like automatic
 compaction, manual compaction summarizes an older prefix and keeps a recent suffix. If
-there is not enough older context to summarize while retaining a real entry, Tau reports
+there is not enough older context to summarize while retaining a real entry, Je reports
 that the context is too short to compact. Summary generation failures remain visible.
 
 In the TUI, a manual compaction looks like a normal working turn: the prompt
@@ -92,7 +92,7 @@ Press `Esc` to cancel a running compaction.
 
 ## Thinking modes
 
-Some models can spend extra effort reasoning before answering. Tau exposes a
+Some models can spend extra effort reasoning before answering. Je exposes a
 thinking level you can cycle:
 
 ```text
@@ -104,13 +104,13 @@ off → minimal → low → medium → high → xhigh → max
   Reasoning blocks are saved with the assistant response, so their original
   positions and visibility toggle are restored when you resume a session.
 
-Thinking is model-aware: Tau enables it only when the active provider declares
+Thinking is model-aware: Je enables it only when the active provider declares
 supported levels for the active model. When it's unavailable, `/session` shows
 the reason (e.g. the provider doesn't declare `thinking_levels`, or the model
 isn't listed). Custom providers can opt in via `thinking_levels` in their config
 — see [Configuration](/reference/configuration/#providers).
 
-At startup Tau picks a valid level for the selected model automatically: a
+At startup Je picks a valid level for the selected model automatically: a
 remembered per-model choice wins, then `medium`, then the provider's own
 default, then the first level the model supports. For example, `kimi-code:k3`
 supports `low`, `high`, and `xhigh`; because `medium` is unavailable, it opens

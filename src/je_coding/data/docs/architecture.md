@@ -1,6 +1,6 @@
-# Tau architecture
+# Je architecture
 
-Tau preserves Pi's separation of concerns:
+Je preserves Pi's separation of concerns:
 
 ```text
 AgentHarness = reusable agent brain
@@ -57,4 +57,4 @@ contract. Refresh cancellation is bounded and generation-safe, and a late
 operation cannot publish after retirement. Router mutations remain a later
 phase.
 
-In a Tau checkout, read `AGENTS.md`, `website/content/internals/architecture.md`, and relevant `dev-notes/architecture/` documents before broad architectural changes.
+In a Je checkout, read `AGENTS.md`, `website/content/internals/architecture.md`, and relevant `dev-notes/architecture/` documents before broad architectural changes.

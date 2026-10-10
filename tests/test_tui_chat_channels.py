@@ -2,14 +2,14 @@
 
 import pytest
 
-from je_coding.tui.app import TauTuiApp
+from je_coding.tui.app import JeTuiApp
 from je_coding.tui.widgets import StreamingTranscriptMessageWidget, TranscriptView
 from test_tui_app import FakeSession
 
 
 @pytest.mark.anyio
 async def test_text_delta_does_not_close_open_thinking_channel() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
     async with app.run_test(size=(100, 30)):
         transcript = app.query_one("#transcript", TranscriptView)
         await transcript.append_thinking_delta("Done. C", show_thinking=True)

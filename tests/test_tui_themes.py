@@ -392,5 +392,5 @@ def test_resource_paths_expose_theme_dirs(tmp_path: Path) -> None:
 
     assert paths.themes_dirs == (
         tmp_path / ".tau" / "themes",
-        tmp_path / "project" / ".tau" / "themes",
+        tmp_path / "project" / ".je" / "themes",
     )

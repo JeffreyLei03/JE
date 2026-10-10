@@ -2714,7 +2714,8 @@ def _context_usage(session: SessionSummarySource) -> str:
 def _styled_cwd(cwd: Path, *, theme: TuiTheme) -> Text:
     """Style the parent path as metadata while emphasizing the working directory."""
     short_path = _short_path(cwd)
-    parent, separator, name = short_path.rpartition("/")
+    separator = "\\" if "\\" in short_path else "/"
+    parent, separator, name = short_path.rpartition(separator)
     text = Text(overflow="fold", no_wrap=False)
     if separator and name:
         text.append(f"{parent}{separator}", style=theme.completion_description)

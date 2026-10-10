@@ -1,82 +1,68 @@
 ---
 title: Quickstart
-description: Install Tau, connect a model, and run your first coding session.
+description: Install Je, connect a model, and run your first coding session.
 type: doc
 ---
 
-This page takes you from nothing to your first Tau session. It should take a few
+This page takes you from nothing to your first Je session. It should take a few
 minutes.
 
-## 1. Install Tau
+## 1. Install Je
 
-Tau is a Python tool requiring Python 3.12 or newer. Its installer uses
+Je is a Python tool requiring Python 3.12 or newer. Its installer uses
 [`uv`](https://docs.astral.sh/uv/) to create an isolated environment and installs
 `uv` first when it is not already available.
 
 On macOS or Linux, run:
 
 ```bash
-curl -LsSf https://twotimespi.dev/install.sh | sh
+curl -LsSf https://raw.githubusercontent.com/JeffreyLei03/JE/main/website/static/install.sh | sh
 ```
 
 On Windows, run in PowerShell:
 
 ```powershell
-irm https://twotimespi.dev/install.ps1 | iex
+irm https://raw.githubusercontent.com/JeffreyLei03/JE/main/website/static/install.ps1 | iex
 ```
 
 The installer announces before installing `uv`, never uses `sudo`, verifies the
-installed `tau` command, and tells you if you need to restart your shell for a
+installed `je` command, and tells you if you need to restart your shell for a
 `PATH` update. To review code before executing it, download and inspect
 [`install.sh`](/install.sh) or [`install.ps1`](/install.ps1) first.
 
 Check it worked:
 
 ```bash
-tau --version
+je --version
 ```
 
 > [!TIP] Already have a package manager?
-> Install Tau directly with `uv tool install tau-ai`, `pipx install tau-ai`, or
-> `python -m pip install tau-ai`.
+> Install Je directly with `uv tool install git+https://github.com/JeffreyLei03/JE.git`, `pipx install git+https://github.com/JeffreyLei03/JE.git`, or
+> `python -m pip install git+https://github.com/JeffreyLei03/JE.git`.
 
-### Upgrade Tau
+### Upgrade Je
 
-For a normal install, let Tau detect and reuse the installer that owns its environment:
-
-```bash
-tau update
-```
-
-Tau reuses uv or pipx when their environment receipt is present. For uv tools,
-it installs the latest stable version explicitly so an older version pin cannot
-block the update. For ordinary Python installs, standard package metadata tells
-Tau whether to use uv or pip, and Tau targets the exact Python environment
-running it. It stops instead of
-switching installers for editable, direct-URL, Conda/Pixi, or unrecognized
-installations.
-
-If you installed a local checkout with `uv tool install --editable .`, run the
-install command again after pulling changes:
+The installer currently uses this repository as a Git source. Git is required.
+To update that installation, run:
 
 ```bash
-uv tool install --editable --force .
+uv tool install --force git+https://github.com/JeffreyLei03/JE.git
 ```
 
-Editable installs expose source changes immediately, but installed package
-metadata (including the version), dependencies, and entry points are refreshed
-only when uv reinstalls the tool.
+For an editable checkout, pull changes and reinstall with
+`uv tool install --editable --force .`. `je update` supports published PyPI
+installations and intentionally refuses to replace a direct-source installation.
 
 ## 2. Connect a model
 
-Tau needs an AI model to talk to. A **provider** is the service that hosts the
-model (OpenAI, Anthropic, …). Start Tau and use `/login` to connect one:
+Je needs an AI model to talk to. A **provider** is the service that hosts the
+model (OpenAI, Anthropic, …). Start Je and use `/login` to connect one:
 
 ```bash
-tau
+je
 ```
 
-Then run one of these inside Tau:
+Then run one of these inside Je:
 
 ```text
 /login              # choose a provider
@@ -84,17 +70,17 @@ Then run one of these inside Tau:
 /login openai-codex # authenticate a Codex/ChatGPT subscription
 ```
 
-Tau ships with built-in entries for OpenAI, Anthropic, OpenAI Codex,
+Je ships with built-in entries for OpenAI, Anthropic, OpenAI Codex,
 OpenRouter, and Hugging Face. See [Providers & models](/guides/providers-and-models/)
 for switching models or adding a custom/local OpenAI-compatible endpoint.
 
 ## 3. Start a session
 
-Run Tau from inside the project you want to work on:
+Run Je from inside the project you want to work on:
 
 ```bash
 cd my-project
-tau
+je
 ```
 
 This opens the interactive terminal UI. Type a request and press **Enter**:
@@ -103,7 +89,7 @@ This opens the interactive terminal UI. Type a request and press **Enter**:
 explain what this project does
 ```
 
-Tau streams its response, and when it needs to, it reads files and runs commands
+Je streams its response, and when it needs to, it reads files and runs commands
 to answer you. Try something that changes code:
 
 ```text
@@ -119,16 +105,16 @@ You'll see each tool call (read, edit, bash) as it happens.
 
 ## 4. Come back later
 
-Tau saves every session. List them:
+Je saves every session. List them:
 
 ```bash
-tau sessions
+je sessions
 ```
 
 Resume the most recent one for this directory, or pick from a list:
 
 ```bash
-tau --session <session-id>
+je --session <session-id>
 ```
 
 …or open the picker inside the TUI with `/resume`. See
@@ -140,7 +126,7 @@ Don't need the UI? Run a single prompt and get the result on stdout — handy fo
 scripts and pipes:
 
 ```bash
-tau -p "summarize the changes in the last commit"
+je -p "summarize the changes in the last commit"
 ```
 
 More in [Print mode & scripting](/guides/print-mode/).

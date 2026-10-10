@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import AsyncIterator, Awaitable, Callable, Mapping, Sequence
+from collections.abc import AsyncGenerator, AsyncIterator, Awaitable, Callable, Mapping, Sequence
+from contextlib import aclosing, suppress
 from time import monotonic_ns
 
 from je_agent.events import (
@@ -65,7 +66,7 @@ async def run_agent_loop(
     get_follow_up_messages: Callable[[], Sequence[AgentMessage]] | None = None,
     before_tool_call: BeforeToolCall | None = None,
     after_tool_call: AfterToolCall | None = None,
-) -> AsyncIterator[AgentEvent]:
+) -> AsyncGenerator[AgentEvent, None]:
     """Run the provider/tool loop and emit Pi-compatible agent events."""
     new_messages = list(prompts)
     if prompts:
@@ -154,20 +155,23 @@ async def run_agent_loop(
             calls = list(assistant.tool_calls)
             has_more_tools = bool(calls)
             for call in calls:
-                async for event in _execute_tool_call(
-                    call,
-                    tool_by_name,
-                    signal,
-                    before_tool_call,
-                    after_tool_call,
-                ):
-                    yield event
-                    if isinstance(event, MessageEndEvent) and isinstance(
-                        event.message, ToolResultMessage
-                    ):
-                        tool_results.append(event.message)
-                        messages.append(event.message)
-                        new_messages.append(event.message)
+                async with aclosing(
+                    _execute_tool_call(
+                        call,
+                        tool_by_name,
+                        signal,
+                        before_tool_call,
+                        after_tool_call,
+                    )
+                ) as execution:
+                    async for event in execution:
+                        yield event
+                        if isinstance(event, MessageEndEvent) and isinstance(
+                            event.message, ToolResultMessage
+                        ):
+                            tool_results.append(event.message)
+                            messages.append(event.message)
+                            new_messages.append(event.message)
 
             yield TurnEndEvent(message=assistant, tool_results=tool_results)
             turn += 1
@@ -286,7 +290,7 @@ async def _execute_tool_call(
     signal: CancellationToken | None,
     before_tool_call: BeforeToolCall | None,
     after_tool_call: AfterToolCall | None,
-) -> AsyncIterator[AgentEvent]:
+) -> AsyncGenerator[AgentEvent, None]:
     yield ToolExecutionStartEvent(
         tool_call_id=call.id,
         tool_name=call.name,
@@ -310,14 +314,17 @@ async def _execute_tool_call(
             result = _error_result(f"Tool {call.name} not found")
             is_error = True
         else:
-            result, is_error, updates = await _run_tool(tool, call, signal)
-            for update in updates:
-                yield ToolExecutionUpdateEvent(
-                    tool_call_id=call.id,
-                    tool_name=call.name,
-                    args=call.arguments,
-                    partial_result=update,
-                )
+            async with aclosing(_run_tool(tool, call, signal)) as execution:
+                async for update in execution:
+                    if isinstance(update, AgentToolResult):
+                        yield ToolExecutionUpdateEvent(
+                            tool_call_id=call.id,
+                            tool_name=call.name,
+                            args=call.arguments,
+                            partial_result=update,
+                        )
+                    else:
+                        result, is_error = update
 
     if after_tool_call is not None:
         result, is_error = await after_tool_call(call, result, is_error)
@@ -344,23 +351,38 @@ async def _run_tool(
     tool: AgentTool,
     call: ToolCall,
     signal: CancellationToken | None,
-) -> tuple[AgentToolResult, bool, list[AgentToolResult]]:
-    updates: list[AgentToolResult] = []
+) -> AsyncGenerator[AgentToolResult | tuple[AgentToolResult, bool], None]:
+    updates: asyncio.Queue[AgentToolResult | tuple[AgentToolResult, bool] | None] = asyncio.Queue()
     accepting = True
 
     def on_update(partial: AgentToolResult) -> None:
         if accepting:
-            updates.append(partial.model_copy(deep=True))
+            updates.put_nowait(partial.model_copy(deep=True))
 
+    async def execute() -> None:
+        nonlocal accepting
+        try:
+            result = await tool.execute(call.id, call.arguments, signal, on_update)
+            updates.put_nowait((result, False))
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:  # noqa: BLE001 - tools are an isolation boundary
+            updates.put_nowait((_error_result(str(exc)), True))
+        finally:
+            accepting = False
+            updates.put_nowait(None)
+
+    task = asyncio.create_task(execute())
     try:
-        result = await tool.execute(call.id, call.arguments, signal, on_update)
-        return result, False, updates
-    except asyncio.CancelledError:
-        raise
-    except Exception as exc:  # noqa: BLE001 - tools are an isolation boundary
-        return _error_result(str(exc)), True, updates
+        while (update := await updates.get()) is not None:
+            yield update
+        await task
     finally:
         accepting = False
+        if not task.done():
+            task.cancel()
+        with suppress(asyncio.CancelledError):
+            await task
 
 
 def _error_result(message: str) -> AgentToolResult:

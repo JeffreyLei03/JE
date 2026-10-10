@@ -12,7 +12,7 @@ from je_coding.tui.config import TurnNotificationMode
 from je_coding.tui.terminal_title import sanitize_terminal_title
 
 OSC_TERMINATOR = "\a"
-TURN_FINISHED_MESSAGE = "Tau turn finished"
+TURN_FINISHED_MESSAGE = "Je turn finished"
 type DesktopNotificationProtocol = Literal["osc9", "osc99"]
 
 

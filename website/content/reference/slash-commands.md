@@ -1,6 +1,6 @@
 ---
 title: Slash commands
-description: Every in-session slash command in the Tau TUI.
+description: Every in-session slash command in the Je TUI.
 ---
 
 Type these inside the interactive [TUI](/guides/tui/). Open the searchable
@@ -31,11 +31,11 @@ command palette with **Ctrl+K**.
 | `/skills` | Open a searchable picker of loaded skills and insert a selection into the prompt |
 | `/skill:<name> [request]` | Expand a loaded skill into your prompt |
 
-`/system` labels contiguous prompt sections with their origin, including Tau's
+`/system` labels contiguous prompt sections with their origin, including Je's
 built-in prompt, `SYSTEM.md` and `APPEND_SYSTEM.md` files, project instruction
 files, skills, extension sections, and runtime date/cwd values. In the TUI,
 each section uses a separate faint background matching its source-name color.
-If the active prompt no longer matches Tau's deterministic composition, Tau conservatively
+If the active prompt no longer matches Je's deterministic composition, Je conservatively
 shows one runtime-composed source instead of guessing.
 
 > [!NOTE] Live HTML exports include the system prompt
@@ -48,7 +48,7 @@ shows one runtime-composed source instead of guessing.
 > against the next model request so cache changes have session context.
 
 > [!NOTE] `/skill:` is special
-> `/skill:<name>` is a *prompt-expansion* path, not a normal command — Tau expands
+> `/skill:<name>` is a *prompt-expansion* path, not a normal command — Je expands
 > the named skill into your prompt and runs it as a turn. Its optional request may
 > start on the same line or on following lines. See
 > [Skills & prompt templates](/guides/skills-and-prompts/).

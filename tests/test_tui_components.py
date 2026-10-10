@@ -1,6 +1,6 @@
 """Focused tests for the component (widget-hosting) seam.
 
-These drive the generic seam on the real ``TauTuiApp`` via the host bridge,
+These drive the generic seam on the real ``JeTuiApp`` via the host bridge,
 reusing the fakes/helpers that already back the broader TUI suite in
 ``test_tui_app`` (pytest's prepend import mode puts the tests directory on
 ``sys.path``, so a sibling test module is importable). They close the gaps the
@@ -9,6 +9,7 @@ exceptions staying un-swallowed, and main-view open/close restoring the main
 transcript.
 """
 
+import asyncio
 from pathlib import Path
 
 import pytest
@@ -17,7 +18,7 @@ from textual.widgets import Static
 
 from conftest import isolate_home
 from je_coding.extensions import ExtensionRuntime
-from je_coding.tui.app import PromptInput, TauTuiApp
+from je_coding.tui.app import JeTuiApp, PromptInput
 from je_coding.tui.config import TuiSettings
 from je_coding.tui.widgets import TranscriptView
 from test_tui_app import (  # noqa: E402 - sibling test module (see docstring)
@@ -28,7 +29,7 @@ from test_tui_app import (  # noqa: E402 - sibling test module (see docstring)
 
 @pytest.mark.anyio
 async def test_component_above_prompt_slot_mounts_into_above_slot() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -50,7 +51,7 @@ async def test_component_above_prompt_slot_mounts_into_above_slot() -> None:
 
 @pytest.mark.anyio
 async def test_component_multiple_slot_widgets_mount_in_call_order() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -67,7 +68,7 @@ async def test_component_multiple_slot_widgets_mount_in_call_order() -> None:
 
 @pytest.mark.anyio
 async def test_component_second_main_view_replaces_first() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -97,7 +98,7 @@ async def test_component_slot_replace_same_id_same_tick_no_duplicate() -> None:
     drains would leave two widgets sharing an id (``DuplicateIds``). The swap
     must await the removal, so exactly one widget survives with no failure.
     """
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -124,7 +125,7 @@ async def test_component_slot_replace_same_id_same_tick_no_duplicate() -> None:
 @pytest.mark.anyio
 async def test_component_slot_rapid_a_b_c_last_wins() -> None:
     """Three same-id slot swaps in one tick collapse to the last, no duplicates."""
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -157,7 +158,7 @@ async def test_component_slot_rapid_a_b_c_last_wins() -> None:
 @pytest.mark.anyio
 async def test_component_second_main_view_same_id_no_duplicate() -> None:
     """Opening a second same-id main view while one is open must not collide."""
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -180,7 +181,7 @@ async def test_component_second_main_view_same_id_no_duplicate() -> None:
 @pytest.mark.anyio
 async def test_component_main_view_rapid_a_b_c_last_wins() -> None:
     """Three same-id main-view opens in one tick mount exactly the last one."""
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -207,7 +208,7 @@ async def test_component_main_view_rapid_a_b_c_last_wins() -> None:
 
 @pytest.mark.anyio
 async def test_component_host_exception_is_not_swallowed() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     with pytest.raises(RuntimeError, match="core-bug"):
         async with app.run_test(size=(100, 30)) as pilot:
@@ -231,7 +232,7 @@ async def test_component_host_exception_is_not_swallowed() -> None:
 
 @pytest.mark.anyio
 async def test_component_main_view_open_close_restores_transcript() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(100, 30)) as pilot:
         await pilot.pause()
@@ -255,7 +256,7 @@ async def test_component_main_view_open_close_restores_transcript() -> None:
 
 @pytest.mark.anyio
 async def test_sidebar_sections_mount_update_and_remove_by_owned_key() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()
@@ -263,6 +264,7 @@ async def test_sidebar_sections_mount_update_and_remove_by_owned_key() -> None:
 
         bridge.set_sidebar_section("alpha", "status", title="Alpha", content=["first"])
         bridge.set_sidebar_section("beta", "status", title="Beta", content=["second"])
+        await asyncio.gather(*app._extension_swap_tasks)
         await pilot.pause()
 
         slot = app.query_one("#sidebar-extension-sections", Container)
@@ -307,7 +309,7 @@ async def test_sidebar_sections_mount_update_and_remove_by_owned_key() -> None:
 async def test_sidebar_removing_absent_key_does_not_schedule_reconciliation(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()
@@ -326,7 +328,7 @@ async def test_sidebar_removing_absent_key_does_not_schedule_reconciliation(
 
 @pytest.mark.anyio
 async def test_sidebar_same_local_key_is_isolated_between_extensions() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()
@@ -340,7 +342,7 @@ async def test_sidebar_same_local_key_is_isolated_between_extensions() -> None:
 
 @pytest.mark.anyio
 async def test_sidebar_remove_then_readd_moves_section_to_end() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()
@@ -365,7 +367,7 @@ async def test_sidebar_remove_then_readd_moves_section_to_end() -> None:
 
 @pytest.mark.anyio
 async def test_sidebar_off_is_unsupported_and_does_not_call_factory() -> None:
-    app = TauTuiApp(FakeSession(), tui_settings=TuiSettings(sidebar_position="off"))
+    app = JeTuiApp(FakeSession(), tui_settings=TuiSettings(sidebar_position="off"))
     called = False
 
     def factory(theme):  # noqa: ANN001, ANN202
@@ -387,7 +389,7 @@ async def test_sidebar_off_is_unsupported_and_does_not_call_factory() -> None:
 
 @pytest.mark.anyio
 async def test_responsive_hidden_sidebar_keeps_sections_for_resize() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(80, 30)) as pilot:
         await pilot.pause()
@@ -407,7 +409,7 @@ async def test_responsive_hidden_sidebar_keeps_sections_for_resize() -> None:
 @pytest.mark.anyio
 @pytest.mark.parametrize("position", ["left", "right"])
 async def test_sidebar_sections_work_in_both_sidebar_positions(position: str) -> None:
-    app = TauTuiApp(FakeSession(), tui_settings=TuiSettings(sidebar_position=position))
+    app = JeTuiApp(FakeSession(), tui_settings=TuiSettings(sidebar_position=position))
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()
@@ -424,7 +426,7 @@ async def test_sidebar_factory_rebuilds_with_live_theme(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     isolate_home(monkeypatch, tmp_path)
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
     themes: list[str] = []
 
     def factory(theme):  # noqa: ANN001, ANN202
@@ -449,7 +451,7 @@ async def test_sidebar_factory_rebuilds_with_live_theme(
 
 @pytest.mark.anyio
 async def test_sidebar_factory_failure_keeps_app_running() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()
@@ -476,7 +478,7 @@ async def test_sidebar_render_failure_is_quarantined_and_diagnosed() -> None:
     session = FakeSession()
     runtime = ExtensionRuntime()
     session.extension_runtime = runtime
-    app = TauTuiApp(session)
+    app = JeTuiApp(session)
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()
@@ -501,7 +503,7 @@ async def test_sidebar_render_failure_is_quarantined_and_diagnosed() -> None:
 
 @pytest.mark.anyio
 async def test_component_clear_removes_sidebar_sections() -> None:
-    app = TauTuiApp(FakeSession())
+    app = JeTuiApp(FakeSession())
 
     async with app.run_test(size=(120, 40)) as pilot:
         await pilot.pause()

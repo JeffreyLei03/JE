@@ -282,7 +282,10 @@ def _handoff_windows_update(
         "-UpdatePayloadBase64",
         encoded_payload,
     )
-    creationflags = getattr(subprocess, "DETACHED_PROCESS", 0x00000008) | getattr(
+    # PowerShell can exit without executing -File when started without a
+    # console via DETACHED_PROCESS. A hidden console keeps the helper working
+    # independently after the parent exits.
+    creationflags = getattr(subprocess, "CREATE_NO_WINDOW", 0x08000000) | getattr(
         subprocess, "CREATE_NEW_PROCESS_GROUP", 0x00000200
     )
     try:

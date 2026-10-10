@@ -9,7 +9,6 @@ import pytest
 from PIL import Image
 
 from conftest import isolate_home
-from pi_event_helpers import assistant_done, assistant_error, assistant_start
 from je_agent import (
     AgentMessage,
     AgentTool,
@@ -77,6 +76,7 @@ from je_coding.extensions import (
     ProviderModel,
 )
 from je_coding.extensions.runtime import InputHookOutcome
+from je_coding.project_trust import canonicalize_project_path
 from je_coding.prompt_templates import PromptTemplate
 from je_coding.provider_config import ProviderModelMetadata, provider_thinking_levels
 from je_coding.session import (
@@ -85,6 +85,7 @@ from je_coding.session import (
     is_retryable_huggingface_route_error,
     parse_terminal_command,
 )
+from pi_event_helpers import assistant_done, assistant_error, assistant_start
 
 
 async def _collect_session_events(session_stream: object) -> list[object]:
@@ -420,7 +421,7 @@ async def test_prompt_logs_unexpected_agent_call_exception(tmp_path: Path) -> No
     assert entry["provider_name"] == "fake-provider"
     assert entry["model"] == "fake"
     assert entry["session_id"] == "session-1"
-    assert entry["cwd"] == str(tmp_path)
+    assert entry["cwd"] == str(canonicalize_project_path(tmp_path).value)
     assert entry["exception"]["type"] == "RuntimeError"
     assert entry["exception"]["message"] == "provider exploded"
     assert "provider exploded" in entry["exception"]["traceback"]
@@ -1279,16 +1280,16 @@ async def test_terminal_command_can_persist_output_to_context(tmp_path: Path) ->
     storage = JsonlSessionStorage(tmp_path / "session.jsonl")
     session = await CodingSession.load(_config(tmp_path, FakeProvider([]), storage))
 
-    result = await session.run_terminal_command("printf hello", add_to_context=True)
+    result = await session.run_terminal_command("echo hello", add_to_context=True)
 
-    assert result.output == "hello"
+    assert result.output.strip() == "hello"
     assert result.added_to_context is True
     entries = await storage.read_all()
     messages = [entry.message for entry in entries if isinstance(entry, MessageEntry)]
     assert len(messages) == 1
     assert isinstance(messages[0], UserMessage)
     assert "Terminal command executed by the user." in messages[0].content
-    assert "printf hello" in messages[0].content
+    assert "echo hello" in messages[0].content
     assert "hello" in messages[0].content
 
 
@@ -1297,9 +1298,9 @@ async def test_terminal_command_can_run_without_context(tmp_path: Path) -> None:
     storage = JsonlSessionStorage(tmp_path / "session.jsonl")
     session = await CodingSession.load(_config(tmp_path, FakeProvider([]), storage))
 
-    result = await session.run_terminal_command("printf hidden", add_to_context=False)
+    result = await session.run_terminal_command("echo hidden", add_to_context=False)
 
-    assert result.output == "hidden"
+    assert result.output.strip() == "hidden"
     assert result.added_to_context is False
     entries = await storage.read_all()
     assert not any(isinstance(entry, MessageEntry) for entry in entries)
@@ -1434,7 +1435,7 @@ async def test_tree_can_branch_from_first_user_message_before_assistant_response
     await provider.started.wait()
 
     choices = await session.tree_choices()
-    with pytest.raises(RuntimeError, match="Tau is still working"):
+    with pytest.raises(RuntimeError, match="Je is still working"):
         await session.branch_to_entry(choices[0].entry_id)
 
     session.cancel()
@@ -3401,7 +3402,10 @@ async def test_session_loads_tau_native_system_prompt_files(tmp_path: Path) -> N
     assert "User base" not in session.system_prompt
     assert "Project instructions" in session.system_prompt
     assert "Current date:" in session.system_prompt
-    assert f"Current working directory: {tmp_path}" in session.system_prompt
+    assert (
+        f"Current working directory: {canonicalize_project_path(tmp_path).value.as_posix()}"
+        in session.system_prompt
+    )
     assert session.system_prompt_files == (
         project_tau / "SYSTEM.md",
         tau_home / "APPEND_SYSTEM.md",
@@ -3409,11 +3413,11 @@ async def test_session_loads_tau_native_system_prompt_files(tmp_path: Path) -> N
     )
     inspection = session.system_prompt_inspection
     assert "".join(source.content for source in inspection.sources) == session.system_prompt
-    assert [source.source for source in inspection.sources[:4]] == [
-        str(project_tau / "SYSTEM.md"),
-        str(tau_home / "APPEND_SYSTEM.md"),
-        str(project_tau / "APPEND_SYSTEM.md"),
-        str(tmp_path / "AGENTS.md"),
+    assert [Path(source.source) for source in inspection.sources[:4]] == [
+        project_tau / "SYSTEM.md",
+        tau_home / "APPEND_SYSTEM.md",
+        project_tau / "APPEND_SYSTEM.md",
+        tmp_path / "AGENTS.md",
     ]
     prompt_diagnostics = [
         item for item in session.resource_diagnostics if item.kind == "system-prompt"

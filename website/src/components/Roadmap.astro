@@ -1,4 +1,5 @@
 ---
+import { sitePath } from "../data";
 import { groups, site } from "../data";
 const phases = groups.flatMap((group) => group.phases);
 ---
@@ -93,7 +94,7 @@ const phases = groups.flatMap((group) => group.phases);
       Roadmap phases turn into build journals under <code>dev-notes/</code>,
       then into these docs. Follow along or open an issue with ideas.
     </p><div class="cta-row">
-      <a class="ghost" href="/internals/architecture/"
+      <a class="ghost" href={sitePath("/internals/architecture/")}
         >See the architecture <span class="arr">&rarr;</span></a
       ><a class="ghost" href={`${site.githubUrl}/issues`}
         >Suggest a phase <span class="arr">&rarr;</span></a

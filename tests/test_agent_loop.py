@@ -1,18 +1,11 @@
 import asyncio
 from collections.abc import AsyncIterator, Mapping
+from contextlib import aclosing
 from itertools import chain, repeat
 
 import pytest
 
 import je_agent.loop as loop_module
-from pi_event_helpers import (
-    assistant_done,
-    assistant_error,
-    assistant_start,
-    text_delta,
-    thinking_delta,
-    tool_call_end,
-)
 from je_agent import (
     AgentEvent,
     AgentMessage,
@@ -31,8 +24,103 @@ from je_agent import (
 )
 from je_agent.loop import run_agent_loop
 from je_agent.provider_events import ThinkingDeltaEvent
+from je_agent.tools import ToolUpdateCallback
 from je_agent.types import JSONValue
 from je_ai import CancellationToken, FakeProvider
+from pi_event_helpers import (
+    assistant_done,
+    assistant_error,
+    assistant_start,
+    text_delta,
+    thinking_delta,
+    tool_call_end,
+)
+
+
+@pytest.mark.anyio
+async def test_tool_progress_arrives_before_execution_finishes() -> None:
+    release = asyncio.Event()
+    finished = False
+
+    async def execute(
+        tool_call_id: str,
+        arguments: Mapping[str, JSONValue],
+        signal: CancellationToken | None = None,
+        on_update: ToolUpdateCallback | None = None,
+    ) -> AgentToolResult:
+        nonlocal finished
+        assert on_update is not None
+        partial = AgentToolResult(content="working")
+        on_update(partial)
+        partial.content = [TextContent(text="mutated after reporting")]
+        await release.wait()
+        finished = True
+        return AgentToolResult(content="done")
+
+    call = ToolCall(id="progress-1", name="work", arguments={})
+    provider = FakeProvider(
+        [
+            [assistant_done(AssistantMessage(content=[call]))],
+            [assistant_done(AssistantMessage(content="complete"))],
+        ]
+    )
+
+    async def consume() -> list[str]:
+        seen = []
+        async with aclosing(
+            run_agent_loop(
+                provider=provider,
+                model="fake",
+                system="test",
+                messages=[],
+                tools=[_tool("work", execute)],
+            )
+        ) as stream:
+            async for event in stream:
+                seen.append(event.type)
+                if isinstance(event, ToolExecutionUpdateEvent):
+                    assert event.partial_result.text == "working"
+                    assert not finished
+                    release.set()
+        return seen
+
+    seen = await asyncio.wait_for(consume(), timeout=2)
+    assert finished
+    assert seen.index("tool_execution_update") < seen.index("tool_execution_end")
+
+
+@pytest.mark.anyio
+async def test_closing_progress_stream_cancels_tool_and_runs_cleanup() -> None:
+    cleaned_up = asyncio.Event()
+
+    async def execute(
+        tool_call_id: str,
+        arguments: Mapping[str, JSONValue],
+        signal: CancellationToken | None = None,
+        on_update: ToolUpdateCallback | None = None,
+    ) -> AgentToolResult:
+        assert on_update is not None
+        try:
+            on_update(AgentToolResult(content="started"))
+            await asyncio.Event().wait()
+            return AgentToolResult(content="unreachable")
+        finally:
+            cleaned_up.set()
+
+    call = ToolCall(id="cancel-1", name="work", arguments={})
+    provider = FakeProvider([[assistant_done(AssistantMessage(content=[call]))]])
+    stream = run_agent_loop(
+        provider=provider,
+        model="fake",
+        system="test",
+        messages=[],
+        tools=[_tool("work", execute)],
+    )
+    async with aclosing(stream):
+        async for event in stream:
+            if isinstance(event, ToolExecutionUpdateEvent):
+                break
+    assert cleaned_up.is_set()
 
 
 async def _collect(stream: AsyncIterator[AgentEvent]) -> list[AgentEvent]:

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import shlex
+import sys
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
@@ -27,7 +28,14 @@ def normalize_dropped_paths(text: str) -> str | None:
         return _quote_path(whole)
 
     try:
-        tokens = shlex.split(stripped, posix=True)
+        # Preserve Windows path separators while still accepting escaped spaces
+        # and quoted paths from terminal drag-and-drop events.
+        shell_text = (
+            stripped.replace("\\", "\\\\").replace("\\\\ ", "\\ ")
+            if sys.platform == "win32"
+            else stripped
+        )
+        tokens = shlex.split(shell_text, posix=True)
     except ValueError:
         return None
     if not tokens:
@@ -50,15 +58,18 @@ def _token_to_path(token: str) -> str | None:
         if parsed.netloc not in ("", "localhost"):
             return None
         candidate = unquote(parsed.path)
+        if sys.platform == "win32" and len(candidate) > 2 and candidate[2] == ":":
+            candidate = candidate.removeprefix("/")
     path = Path(candidate)
     if not path.is_absolute() or not path.exists():
         return None
-    return candidate
+    return str(path)
 
 
 def _quote_path(path: str) -> str:
     """Quote *path* with double quotes when it contains whitespace."""
     if not any(char.isspace() for char in path):
         return path
-    escaped = path.replace("\\", "\\\\").replace('"', '\\"')
+    escaped = path if sys.platform == "win32" else path.replace("\\", "\\\\")
+    escaped = escaped.replace('"', '\\"')
     return f'"{escaped}"'

@@ -1,3 +1,7 @@
+---
+import { sitePath } from "../data";
+---
+
 <div class="wrap">
   <header class="hero hero-compact">
     <div class="hero-grid">
@@ -399,10 +403,10 @@
       the instinct.
     </p>
     <div class="cta-row">
-      <a class="ghost" href="/quickstart/"
+      <a class="ghost" href={sitePath("/quickstart/")}
         >Get started <span class="arr">&rarr;</span></a
       >
-      <a class="ghost" href="/internals/architecture/"
+      <a class="ghost" href={sitePath("/internals/architecture/")}
         >See the architecture <span class="arr">&rarr;</span></a
       >
       <a class="ghost" href="https://www.tauday.com/tau-manifesto"
@@ -420,4 +424,4 @@
   </section>
 </div>
 
-<script is:inline src="/landing.js"></script>
+<script is:inline src={sitePath("/landing.js")}></script>

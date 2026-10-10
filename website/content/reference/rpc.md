@@ -1,12 +1,12 @@
 ---
 title: RPC protocol
-description: Control Tau as a subprocess with Pi-compatible JSONL commands and events.
+description: Control Je as a subprocess with Pi-compatible JSONL commands and events.
 ---
 
-Run Tau as a headless subprocess:
+Run Je as a headless subprocess:
 
 ```bash
-tau --mode rpc [--provider NAME] [--model MODEL] [--cwd PATH] [--session ID]
+je --mode rpc [--provider NAME] [--model MODEL] [--cwd PATH] [--session ID]
 ```
 
 RPC mode reads one JSON object per LF-terminated line from stdin and writes responses and
@@ -59,7 +59,7 @@ tau.stdin.write(JSON.stringify({ id: "1", type: "prompt", message: "Hello" }) + 
 
 RPC and TUI compaction preserve recent entries and return or persist the first pre-existing
 retained entry as `firstKeptEntryId`, matching Pi. Session inspection emits modern compactions
-in Pi's native shape without Tau's former replacement-id bridge. Older Tau records can lack a
+in Pi's native shape without Je's former replacement-id bridge. Older Je records can lack a
 boundary; inspection exposes those honestly as `customType: "tau.compaction"` entries instead
 of fabricating Pi compaction metadata. Their legacy id lists remain usable for local replay but
 are not added to the RPC wire format. When available, projected compaction and branch-summary
@@ -67,12 +67,12 @@ entries include Pi-compatible `usage` data from the request that generated the s
 entries and heuristic fallback summaries omit the field.
 
 Session inspection projects persisted `custom_message` entries in Pi wire
-shape: `parentId`, `customType`, `content`, `details`, and `display`. Tau's local
+shape: `parentId`, `customType`, `content`, `details`, and `display`. Je's local
 session JSONL uses snake_case wrapper fields such as `parent_id` and
 `custom_type`; clients should rely on the RPC shape rather than the storage
 spelling.
 
-Tau mirrors Pi where its public `CodingSession` has equivalent behavior. Direct `bash` is
+Je mirrors Pi where its public `CodingSession` has equivalent behavior. Direct `bash` is
 supported, but `abort_bash` requires a future cancellable session API. Queue delivery modes,
 retry controls, cloning, image prompts, and the extension UI request/response subprotocol remain
 staged compatibility work. See `dev-notes/design/rpc-runtime-interchangeability-plan.md` for the

@@ -99,7 +99,7 @@ def test_update_tau_hands_windows_uv_tool_update_to_waiting_process(tmp_path: Pa
         "executable": "uv",
         "arguments": '"tool" "install" "je-ai@0.2.4"',
     }
-    assert options["creationflags"] == 0x00000208
+    assert options["creationflags"] == 0x08000200
     script = (handoff_dir / "update.ps1").read_text(encoding="utf-8")
     assert "Wait-Process -InputObject $ParentProcess -ErrorAction Stop" in script
     assert "NoProcessFoundForGivenId" in script
@@ -204,7 +204,12 @@ def _wait_for_text(path: Path, expected: str, timeout: float = 10) -> str:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if path.exists():
-            text = path.read_text(encoding="utf-8-sig")
+            try:
+                text = path.read_text(encoding="utf-8-sig")
+            except PermissionError:
+                # PowerShell briefly holds an exclusive handle while logging.
+                time.sleep(0.05)
+                continue
             if expected in text:
                 return text
         time.sleep(0.05)
@@ -415,6 +420,7 @@ def test_update_tau_does_not_fall_back_when_owner_update_fails(tmp_path: Path) -
 
     result = update_tau(
         runner=runner,
+        platform_name="linux",
         environment_prefix=tmp_path,
         inspect_distribution=False,
         latest_version_fetcher=lambda: "0.2.4",

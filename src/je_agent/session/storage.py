@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import os
+import sys
 import tempfile
 from collections.abc import Iterator, Sequence
 from contextlib import contextmanager, suppress
@@ -161,13 +162,13 @@ def _suppress_os_error() -> Iterator[None]:
 
 def _lock_file(file: BinaryIO, *, exclusive: bool) -> None:
     """Apply an advisory lock, with a clear unsupported-platform fallback."""
-    if os.name == "nt":
+    if sys.platform == "win32":
         import msvcrt
 
         # msvcrt has no shared lock; an exclusive lock is the safe behavior for
         # reads on Windows and still provides cross-process serialization.
         del exclusive
-        msvcrt.locking(file.fileno(), msvcrt.LK_LOCK, 1)  # type: ignore[attr-defined]
+        msvcrt.locking(file.fileno(), msvcrt.LK_LOCK, 1)
         return
     import fcntl
 
@@ -176,11 +177,11 @@ def _lock_file(file: BinaryIO, *, exclusive: bool) -> None:
 
 
 def _unlock_file(file: BinaryIO) -> None:
-    if os.name == "nt":
+    if sys.platform == "win32":
         import msvcrt
 
         file.seek(0)
-        msvcrt.locking(file.fileno(), msvcrt.LK_UNLCK, 1)  # type: ignore[attr-defined]
+        msvcrt.locking(file.fileno(), msvcrt.LK_UNLCK, 1)
         return
     import fcntl
 

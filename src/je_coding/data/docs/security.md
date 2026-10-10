@@ -1,6 +1,6 @@
 # Project trust and security
 
-Tau resolves trust for the canonical destination cwd before reading ambient
+Je resolves trust for the canonical destination cwd before reading ambient
 project Markdown/JSON or importing project extensions. Protected inputs include
 project skills, prompts, themes, system-prompt files, `AGENTS.md` context,
 extension candidates, and reserved project settings.
@@ -13,25 +13,25 @@ replacement. Trust is committed only after the staged session is adopted.
 
 ## Built-in local-backend boundary
 
-The bundled llama.cpp backend is trusted Tau package code. It loads before the
+The bundled llama.cpp backend is trusted Je package code. It loads before the
 project-trust decision, remains available with `--no-extensions`, and never
 creates a project trust prompt. Its provider/backend definitions are owned by
 the active extension-runtime generation. Endpoint settings and allowlisted model
 snapshots are user-level integration state, not project inputs; they live under
-`~/.tau/state/extensions/llama.cpp.json`.
+`~/.je/state/extensions/llama.cpp.json`.
 
 After the user confirms a backend, `/local` probes only the endpoint they
 entered, saved, supplied through `LLAMA_BASE_URL`, or accepted as the default. It
-does not scan processes, ports, or the local network. Tau does not install,
+does not scan processes, ports, or the local network. Je does not install,
 start, or stop llama.cpp and never writes or deletes model files. On a compatible
 router, an explicit confirmed action can ask the independent llama.cpp server to
 download a selected model.
 
 ## Credentials and safe state
 
-API keys are collected through secret fields. A stored key is kept in Tau's
+API keys are collected through secret fields. A stored key is kept in Je's
 private credential store and referenced by an opaque integration-owned name.
-`LLAMA_API_KEY` is an environment fallback. If neither is present, Tau omits
+`LLAMA_API_KEY` is an environment fallback. If neither is present, Je omits
 `Authorization`; it never synthesizes a fake local key. Stored credentials win
 over the environment value.
 

@@ -1,4 +1,5 @@
 ---
+import { sitePath } from "../data";
 import { sidebar, site } from "../data";
 interface Props {
   title: string;
@@ -8,7 +9,7 @@ interface Props {
 const { title, description, file } = Astro.props;
 const current = Astro.url.pathname;
 const flat = sidebar.flatMap((group) => group.items ?? []);
-const index = flat.findIndex((item) => item.path === current);
+const index = flat.findIndex((item) => sitePath(item.path) === current);
 const prev = flat[index - 1];
 const next = flat[index + 1];
 ---
@@ -25,9 +26,11 @@ const next = flat[index + 1];
                 {group.items.map((item) => (
                   <li>
                     <a
-                      href={item.path}
-                      class:list={{ active: current === item.path }}
-                      aria-current={current === item.path ? "page" : undefined}
+                      href={sitePath(item.path)}
+                      class:list={{ active: current === sitePath(item.path) }}
+                      aria-current={
+                        current === sitePath(item.path) ? "page" : undefined
+                      }
                     >
                       {item.label}
                     </a>
@@ -39,9 +42,9 @@ const next = flat[index + 1];
             <a
               class:list={[
                 "sidebar-toplink",
-                { active: current === (group.link ?? group.path) },
+                { active: current === sitePath(group.link ?? group.path) },
               ]}
-              href={group.link ?? group.path}
+              href={sitePath(group.link ?? group.path)}
             >
               {group.label}
             </a>
@@ -63,7 +66,7 @@ const next = flat[index + 1];
       index >= 0 && (
         <div class="docs-prevnext" data-pagefind-ignore>
           {prev ? (
-            <a class="prev" href={prev.path}>
+            <a class="prev" href={sitePath(prev.path)}>
               <span class="dir">&larr; Previous</span>
               {prev.label}
             </a>
@@ -71,7 +74,7 @@ const next = flat[index + 1];
             <span />
           )}
           {next && (
-            <a class="next" href={next.path}>
+            <a class="next" href={sitePath(next.path)}>
               <span class="dir">Next &rarr;</span>
               {next.label}
             </a>

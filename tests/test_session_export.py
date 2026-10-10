@@ -132,7 +132,7 @@ def test_render_session_html_uses_static_document_layout() -> None:
 
     html = render_session_html(entries, title="Layout Export")
 
-    assert '<p class="eyebrow">Tau session export</p>' in html
+    assert '<p class="eyebrow">Je session export</p>' in html
     assert '<main class="session-shell"' in html
     assert '<aside class="tree-rail">' in html
     assert '<section class="entry-stream" aria-label="Session entries">' in html

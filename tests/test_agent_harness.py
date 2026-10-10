@@ -3,7 +3,6 @@ from collections.abc import Mapping
 
 import pytest
 
-from pi_event_helpers import assistant_done, assistant_start, text_delta, tool_call_end
 from je_agent import (
     AgentHarness,
     AgentHarnessConfig,
@@ -18,6 +17,7 @@ from je_agent import (
 )
 from je_agent.types import JSONValue
 from je_ai import FakeProvider
+from pi_event_helpers import assistant_done, assistant_start, text_delta, tool_call_end
 
 
 def _texts(harness: AgentHarness) -> list[tuple[str, str]]:

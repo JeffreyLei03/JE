@@ -9,7 +9,6 @@ from typing import cast
 
 import pytest
 
-from pi_event_helpers import assistant_done, assistant_start
 from je_agent import AssistantMessage, ToolCall, UserMessage
 from je_agent.messages import AgentMessage, assistant_content, message_to_user
 from je_agent.session import (
@@ -53,6 +52,7 @@ from je_coding.extensions import (
 )
 from je_coding.project_trust import ProjectTrustRequest, ProjectTrustResolution, TrustChoice
 from je_coding.system_prompt import PromptSection
+from pi_event_helpers import assistant_done, assistant_start
 
 pytestmark = pytest.mark.anyio
 
@@ -964,7 +964,12 @@ def setup(tau):
         encoding="utf-8",
     )
     target_b.write_text("def setup(tau):\n    pass\n", encoding="utf-8")
-    entry.symlink_to(target_a)
+    try:
+        entry.symlink_to(target_a)
+    except OSError as exc:
+        if getattr(exc, "winerror", None) == 1314:
+            pytest.skip("Windows symlink creation requires Developer Mode or permission")
+        raise
     runtime = ExtensionRuntime()
 
     runtime.load(paths, extra_paths=(entry,), include_resource_dirs=False)

@@ -1,9 +1,9 @@
 ---
 title: Themes
-description: Restyle the Tau TUI with JSON theme files, from single colors to full custom palettes.
+description: Restyle the Je TUI with JSON theme files, from single colors to full custom palettes.
 ---
 
-Tau's TUI themes are JSON files. The built-in themes (`je-dark`, `je-light`,
+Je's TUI themes are JSON files. The built-in themes (`je-dark`, `je-light`,
 `high-contrast`) ship as JSON inside the package and load through the same
 parser as custom themes, so they double as reference examples:
 [`src/je_coding/tui/themes/`](https://github.com/huggingface/tau/tree/main/src/je_coding/tui/themes).
@@ -12,14 +12,14 @@ parser as custom themes, so they double as reference examples:
 
 Drop a `.json` file into one of the theme directories:
 
-- `~/.tau/themes/` — available in every project
-- `<project>/.tau/themes/` — project-local, wins over the user directory on
+- `~/.je/themes/` — available in every project
+- `<project>/.je/themes/` — project-local, wins over the user directory on
   name collisions
 
-Themes are discovered at startup; restart Tau after adding or editing a file.
-Invalid theme files are skipped with a startup notice — they never prevent Tau
+Themes are discovered at startup; restart Je after adding or editing a file.
+Invalid theme files are skipped with a startup notice — they never prevent Je
 from starting. Select a theme with `/theme <name>`, the `/theme` picker, or
-Textual's command palette. The selection is persisted in `~/.tau/tui.json` —
+Textual's command palette. The selection is persisted in `~/.je/tui.json` —
 see [Configuration](/reference/configuration/#tui-settings).
 
 ## Theme format

@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 from textual import events
 
-from je_coding.tui.app import PromptInput, TauTuiApp
+from je_coding.tui.app import JeTuiApp, PromptInput
 from je_coding.tui.file_drop import normalize_dropped_paths
 
 
@@ -66,7 +66,7 @@ class TestNormalizeDroppedPaths:
     def test_file_uri_is_converted_to_local_path(self, tmp_path: Path) -> None:
         file = tmp_path / "my file.png"
         file.touch()
-        uri = "file://" + str(file).replace(" ", "%20")
+        uri = file.as_uri()
 
         assert normalize_dropped_paths(uri) == f'"{file}"'
 
@@ -179,7 +179,7 @@ class TestUnfocusedDropRouting:
 
         file = tmp_path / "notes.txt"
         file.touch()
-        app = TauTuiApp(FakeSession())
+        app = JeTuiApp(FakeSession())
 
         async with app.run_test() as pilot:
             app.post_message(events.AppBlur())
@@ -198,7 +198,7 @@ class TestUnfocusedDropRouting:
 
         file = tmp_path / "notes.txt"
         file.touch()
-        app = TauTuiApp(FakeSession())
+        app = JeTuiApp(FakeSession())
 
         async with app.run_test() as pilot:
             prompt = app.query_one("#prompt", PromptInput)

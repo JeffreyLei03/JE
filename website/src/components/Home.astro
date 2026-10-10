@@ -1,4 +1,5 @@
 ---
+import { sitePath } from "../data";
 import { Code } from "astro:components";
 import { site } from "../data";
 const toolCode = `from je_agent.messages import TextContent
@@ -49,7 +50,7 @@ const frontendCode = `async for event in session.prompt(text):
           A coding agent you can <em>read in an afternoon.</em>
         </h1>
         <p class="lede">
-          <strong>Tau</strong> is a small, working coding agent in Python. It talks
+          <strong>Je</strong> is a small, working coding agent in Python. It talks
           to a model, reads and edits your files, and runs shell commands from your
           terminal &mdash; with no framework hiding how any of it works.
         </p>
@@ -136,28 +137,31 @@ const frontendCode = `async for event in session.prompt(text):
           type="button"
           role="tab"
           aria-selected="true"
-          data-cmd="curl -LsSf https://twotimespi.dev/install.sh | sh"
+          data-cmd="curl -LsSf https://raw.githubusercontent.com/JeffreyLei03/JE/main/website/static/install.sh | sh"
           >macOS &middot; Linux</button
         >
         <button
           type="button"
           role="tab"
           aria-selected="false"
-          data-cmd="irm https://twotimespi.dev/install.ps1 | iex"
+          data-cmd="irm https://raw.githubusercontent.com/JeffreyLei03/JE/main/website/static/install.ps1 | iex"
           >Windows</button
         >
         <button
           type="button"
           role="tab"
           aria-selected="false"
-          data-cmd="uv tool install tau-ai">uv</button
+          data-cmd="uv tool install git+https://github.com/JeffreyLei03/JE.git"
+          >uv</button
         >
       </div>
       <span class="install">
         <span
           ><span class="dollar">$</span>{" "}
           <span id="installCmd"
-            >curl -LsSf https://twotimespi.dev/install.sh | sh</span
+            >curl -LsSf
+            https://raw.githubusercontent.com/JeffreyLei03/JE/main/website/static/install.sh
+            | sh</span
           ></span
         >
         <button
@@ -168,7 +172,7 @@ const frontendCode = `async for event in session.prompt(text):
         >
       </span>
       <div class="cta-row">
-        <a class="ghost" href="/quickstart/"
+        <a class="ghost" href={sitePath("/quickstart/")}
           >Quickstart <span class="arr">&rarr;</span></a
         >
         <a class="ghost" href="#syllabus"
@@ -200,7 +204,7 @@ const frontendCode = `async for event in session.prompt(text):
           it.
         </p>
         <p>
-          <a class="ghost" href="/internals/agent-loop/"
+          <a class="ghost" href={sitePath("/internals/agent-loop/")}
             >Read the loop <span class="arr">&rarr;</span></a
           >
         </p>
@@ -670,43 +674,52 @@ const frontendCode = `async for event in session.prompt(text):
       <tbody>
         <tr>
           <td class="n">1</td>
-          <td><a href="/internals/agent-loop/">Events, the contract</a></td>
+          <td
+            ><a href={sitePath("/internals/agent-loop/")}
+              >Events, the contract</a
+            ></td
+          >
           <td><code>je_agent/events.py</code></td>
           <td class="num">87</td>
         </tr>
         <tr>
           <td class="n">2</td>
-          <td><a href="/internals/architecture/">Models become events</a></td>
+          <td
+            ><a href={sitePath("/internals/architecture/")}
+              >Models become events</a
+            ></td
+          >
           <td><code>je_ai/_provider_events.py</code></td>
           <td class="num">93</td>
         </tr>
         <tr>
           <td class="n">3</td>
-          <td><a href="/reference/tools/">What a tool is</a></td>
+          <td><a href={sitePath("/reference/tools/")}>What a tool is</a></td>
           <td><code>je_agent/tools.py</code></td>
           <td class="num">118</td>
         </tr>
         <tr>
           <td class="n">4</td>
-          <td><a href="/internals/agent-loop/">The loop</a></td>
+          <td><a href={sitePath("/internals/agent-loop/")}>The loop</a></td>
           <td><code>je_agent/loop.py</code></td>
           <td class="num">376</td>
         </tr>
         <tr>
           <td class="n">5</td>
-          <td><a href="/internals/architecture/">The harness</a></td>
+          <td><a href={sitePath("/internals/architecture/")}>The harness</a></td
+          >
           <td><code>je_agent/harness.py</code></td>
           <td class="num">259</td>
         </tr>
         <tr>
           <td class="n">6</td>
-          <td><a href="/guides/sessions/">Sessions on disk</a></td>
+          <td><a href={sitePath("/guides/sessions/")}>Sessions on disk</a></td>
           <td><code>je_agent/session/jsonl.py</code></td>
           <td class="num">171</td>
         </tr>
         <tr>
           <td class="n">7</td>
-          <td><a href="/reference/tools/">Real tools</a></td>
+          <td><a href={sitePath("/reference/tools/")}>Real tools</a></td>
           <td><code>je_coding/tools.py</code></td>
           <td class="num">1,218</td>
         </tr>
@@ -732,7 +745,9 @@ const frontendCode = `async for event in session.prompt(text):
           The name is a joke that stuck. &pi; is half a turn; &tau; = 2&pi; is
           the whole circle. Pi was the first half of the trip &mdash; Tau tries
           to go the rest of the way round, slowly, and show its work.{" "}
-          <a href="/why-tau/">More on &tau; than you asked for &rarr;</a>
+          <a href={sitePath("/why-tau/")}
+            >More on &tau; than you asked for &rarr;</a
+          >
         </p>
       </div>
       <figure
@@ -780,7 +795,7 @@ const frontendCode = `async for event in session.prompt(text):
     <div class="cta-row">
       <span class="install">
         <span
-          ><span class="dollar">$</span> curl -LsSf https://twotimespi.dev/install.sh
+          ><span class="dollar">$</span> curl -LsSf https://raw.githubusercontent.com/JeffreyLei03/JE/main/website/static/install.sh
           | sh</span
         >
         <button
@@ -790,17 +805,17 @@ const frontendCode = `async for event in session.prompt(text):
           aria-label="Copy install command">copy</button
         >
       </span>
-      <a class="ghost" href="/quickstart/"
+      <a class="ghost" href={sitePath("/quickstart/")}
         >Get started <span class="arr">&rarr;</span></a
       >
-      <a class="ghost" href={site.discordUrl} target="_blank" rel="noopener"
-        >Join the Discord <span class="arr">&rarr;</span></a
+      <a class="ghost" href={site.communityUrl} target="_blank" rel="noopener"
+        >Join the discussion <span class="arr">&rarr;</span></a
       >
     </div>
   </section>
 </div>
 
-<script is:inline src="/landing.js"></script>
+<script is:inline src={sitePath("/landing.js")}></script>
 
 <script is:inline>
   (function () {

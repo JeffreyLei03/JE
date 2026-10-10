@@ -97,7 +97,7 @@ def build_system_prompt_inspection(options: BuildSystemPromptOptions) -> SystemP
                 label="Je default prompt",
                 source="je_coding.system_prompt",
                 content=(
-                    "You are an expert coding assistant operating inside Tau, a coding agent "
+                    "You are an expert coding assistant operating inside Je, a coding agent "
                     "harness. You help users by reading files, executing commands, editing code, "
                     "and writing new files."
                     f"\n\nAvailable tools:\n{format_available_tools(options.tools)}"

@@ -1,26 +1,26 @@
 ---
 title: CLI reference
-description: Every Tau command-line command and flag.
+description: Every Je command-line command and flag.
 ---
 
-The `tau` command launches the interactive TUI by default; subcommands and flags
+The `je` command launches the interactive TUI by default; subcommands and flags
 cover everything else.
 
 ```text
-tau [OPTIONS] [PROMPT] [COMMAND] [ARGS]
+je [OPTIONS] [PROMPT] [COMMAND] [ARGS]
 ```
 
 - With no arguments, `tau` opens the interactive [TUI](/guides/tui/).
 - A positional `PROMPT` opens the TUI and submits it as the first turn.
 - `/local` is available in the TUI for registered local backends; print mode reports that setup is interactive-only.
 - `-p/--print` (or `--mode`) runs that same positional prompt in [print mode](/guides/print-mode/) instead of the TUI.
-- Put flags before the prompt — Tau treats everything after the last recognized flag as prompt text, including tokens that look like flags.
+- Put flags before the prompt — Je treats everything after the last recognized flag as prompt text, including tokens that look like flags.
 
-On TUI and text print-mode startup, Tau may show a non-blocking notice when a
-newer `tau-ai` release is available on PyPI. In the TUI, this notice is the first
-transcript item and appears in bright yellow. Run `tau update` to upgrade. Disable
-the check with `TAU_NO_UPDATE_CHECK=1`; utility commands such as `tau --version`,
-`tau update`, `tau sessions`, and `tau export` do not run it. After an upgrade,
+On TUI and text print-mode startup, Je may show a non-blocking notice when a
+newer `je-ai` release is available on PyPI. In the TUI, this notice is the first
+transcript item and appears in bright yellow. Run `je update` to upgrade. Disable
+the check with `TAU_NO_UPDATE_CHECK=1`; utility commands such as `je --version`,
+`je update`, `tau sessions`, and `tau export` do not run it. After an upgrade,
 the TUI also adds a one-time release-notes message to the transcript with the new
 features and fixes.
 
@@ -30,12 +30,12 @@ features and fixes.
 | --- | --- |
 | `tau` | Open the interactive TUI |
 | `tau "<prompt>"` | Open the TUI with an initial prompt |
-| `tau update` | Upgrade Tau with the installer that owns its environment. Windows uv-tool updates are handed off and begin after Tau exits; follow the printed log path for the final result. |
-| `tau update --models` | Force-refresh models.dev catalogs and cache them in `~/.tau/models-store.json` without upgrading Tau. |
-| `tau install <source> [--force]` | Install a trusted local or Git extension under `~/.tau/extensions/`; `--force` replaces an existing install. |
+| `je update` | Upgrade Je with the installer that owns its environment. Windows uv-tool updates are handed off and begin after Je exits; follow the printed log path for the final result. |
+| `je update --models` | Force-refresh models.dev catalogs and cache them in `~/.je/models-store.json` without upgrading Je. |
+| `tau install <source> [--force]` | Install a trusted local or Git extension under `~/.je/extensions/`; `--force` replaces an existing install. |
 | `tau sessions` | List indexed sessions (id, title, model, cwd) |
 | `tau export <ref> [dest] [--format html\|jsonl]` | Export a session id or JSONL path (HTML default) |
-| `tau --export <ref> [dest]` | Same as `tau export`, as a top-level flag |
+| `je --export <ref> [dest]` | Same as `tau export`, as a top-level flag |
 | `tau providers` | List configured providers and how each authenticates |
 | `tau [setup options] setup` | Create/update an OpenAI-compatible provider |
 
@@ -52,12 +52,12 @@ features and fixes.
 | `--session TEXT` | Resume a session id in the TUI or print mode |
 | `--new-session` | Start a new session instead of resuming the default |
 | `--session-id TEXT` | Set the exact id for a newly created print-mode session; errors if it already exists |
-| `--system-prompt TEXT_OR_PATH` | Replace Tau's default system-prompt base with literal text or an existing UTF-8 file |
+| `--system-prompt TEXT_OR_PATH` | Replace Je's default system-prompt base with literal text or an existing UTF-8 file |
 | `--append-system-prompt TEXT_OR_PATH` | Append literal text or an existing UTF-8 file (repeatable) |
 | `--auto-compact-threshold INT` | Auto-compact above this rough token estimate |
 | `-e, --extension PATH` | Load an [extension](/guides/extensions/) file or directory (repeatable) |
 | `--no-extensions` | Disable extension directory discovery (explicit `-e` paths still load) |
-| `--project-extensions` | Also load trusted `<project>/.tau/extensions`; project trust and this code opt-in are both required |
+| `--project-extensions` | Also load trusted `<project>/.je/extensions`; project trust and this code opt-in are both required |
 | `-a, --approve` | Trust protected project inputs for this invocation only |
 | `-na, --no-approve` | Decline protected project inputs for this invocation only |
 | `-v, --version` | Print the version and exit |
@@ -74,19 +74,19 @@ non-sandbox boundary.
 
 ### System prompt input
 
-`--system-prompt` replaces Tau's default base prompt. Repeat
-`--append-system-prompt` to add sections in command-line order; Tau separates each
+`--system-prompt` replaces Je's default base prompt. Repeat
+`--append-system-prompt` to add sections in command-line order; Je separates each
 resolved value with exactly one blank line. Put these flags before the positional
 prompt, like other recognized options:
 
 ```bash
-tau --system-prompt "You are a focused reviewer." \
+je --system-prompt "You are a focused reviewer." \
   --append-system-prompt ./team-rules.md \
   --append-system-prompt "Report risky changes first." \
   -p "review this repository"
 ```
 
-For either option, Tau reads the value as a UTF-8 file when that path exists.
+For either option, Je reads the value as a UTF-8 file when that path exists.
 Otherwise it uses the value verbatim, so a nonexistent path is literal prompt
 text. Existing directories, unreadable files, and invalid UTF-8 files stop
 startup with an error naming the option and path. `~` is expanded when checking
@@ -99,11 +99,11 @@ when used with `--session`, they configure the resumed session's next provider
 request. They are startup controls and are not stored in session history, so
 pass them again on a later resume when needed.
 
-Tau also discovers `SYSTEM.md` and `APPEND_SYSTEM.md` under the project or user
+Je also discovers `SYSTEM.md` and `APPEND_SYSTEM.md` under the project or user
 `.tau` directory. A CLI replacement wins over trusted project and user
 `SYSTEM.md` files. Append content is cumulative: user `APPEND_SYSTEM.md`, then
 trusted project `APPEND_SYSTEM.md`, then repeated CLI values. Use `/reload` after
-changing a file. These are Tau-specific configuration files, not `.agents`
+changing a file. These are Je-specific configuration files, not `.agents`
 resources. See
 [Configuration & files](/reference/configuration/#system-prompt-files)
 for paths, precedence, diagnostics, and the project-resource security warning.
@@ -111,11 +111,11 @@ for paths, precedence, diagnostics, and the project-resource security warning.
 ### Resume in print mode
 
 Use `--print` and `--session` together to append a non-interactive follow-up to
-an existing conversation. Tau loads the session's saved working directory,
+an existing conversation. Je loads the session's saved working directory,
 provider, model, and conversation history:
 
 ```bash
-tau --print --session <session-id> "Follow-up message"
+je --print --session <session-id> "Follow-up message"
 ```
 
 Explicit `--provider`, `--model`, and system-prompt options override the saved
@@ -123,10 +123,10 @@ startup choices for this invocation. After configuring a local backend in the
 TUI, pass its provider and exact discovered model explicitly in print mode:
 
 ```bash
-tau --provider llama.cpp --model <model-id> --print "summarize this project"
+je --provider llama.cpp --model <model-id> --print "summarize this project"
 ```
 
-Tau does not run `/local` setup or select a model implicitly headlessly. An
+Je does not run `/local` setup or select a model implicitly headlessly. An
 endpoint-keyed safe snapshot can let an explicit local startup continue while
 llama.cpp is temporarily down; a first-time explicit model still needs discovery.
 `--session` cannot be combined with
@@ -138,7 +138,7 @@ with an error naming its replacement (`--session`, `--print`, `--mode`, and
 
 ### Provider setup options
 
-Tau's setup mode registers an OpenAI-compatible provider. Put these flags before the final `setup` argument:
+Je's setup mode registers an OpenAI-compatible provider. Put these flags before the final `setup` argument:
 
 | Flag | Default | Description |
 | --- | --- | --- |
@@ -154,7 +154,7 @@ Tau's setup mode registers an OpenAI-compatible provider. Put these flags before
 Example:
 
 ```bash
-tau --provider local \
+je --provider local \
   --base-url http://localhost:11434/v1 \
   --api-key-env LOCAL_API_KEY \
   --model qwen \

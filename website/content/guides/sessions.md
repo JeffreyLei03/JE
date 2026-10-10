@@ -3,14 +3,14 @@ title: Sessions
 description: Resume past conversations, branch from any point in history, rename sessions, and export them.
 ---
 
-Every Tau conversation is a **session**, saved to disk so you can come back to
-it. Sessions are stored as append-only JSONL under `~/.tau/sessions/`, organized
+Every Je conversation is a **session**, saved to disk so you can come back to
+it. Sessions are stored as append-only JSONL under `~/.je/sessions/`, organized
 per working directory, so resume flows focus on the project you're in.
 
 ## Listing sessions
 
 ```bash
-tau sessions
+je sessions
 ```
 
 Each row shows the session id, title, model, and working directory.
@@ -20,7 +20,7 @@ Each row shows the session id, title, model, and working directory.
 From the shell:
 
 ```bash
-tau --session <session-id>
+je --session <session-id>
 ```
 
 From inside the TUI:
@@ -48,14 +48,14 @@ Archiving never deletes session files or project directories.
 
 The search field filters session names and models within the selected project.
 
-To deliberately start fresh instead of resuming, use `tau --new-session` (or
+To deliberately start fresh instead of resuming, use `je --new-session` (or
 `/new` in the TUI).
 
-When you quit the TUI and the session was persisted, Tau prints a reminder of
+When you quit the TUI and the session was persisted, Je prints a reminder of
 the exact command to resume it:
 
 ```text
-To resume this session: tau --session <session-id>
+To resume this session: je --session <session-id>
 ```
 
 ## Branching from history (`/tree`)
@@ -82,7 +82,7 @@ Labels render as `[label]` before the entry. They are per-entry bookmarks and
 remain attached to their entry across branches; they do not rename the session.
 Use `/name` for the separate session display title.
 
-If a summary request fails, Tau falls back to a deterministic summary.
+If a summary request fails, Je falls back to a deterministic summary.
 
 The active branch tip is the last session entry written. Plain **Enter**
 navigation is in-memory only: quitting before another action and reopening will
@@ -93,11 +93,11 @@ navigation survives a restart even before another message.
 
 ## Recovering older sessions
 
-Older Tau versions could leave malformed tool-call history when a run was
+Older Je versions could leave malformed tool-call history when a run was
 interrupted. Providers reject that history, so every prompt in the resumed
 session could fail with a 400 error about a missing tool call or tool output.
 
-Tau validates the active branch during resume and after `/tree` navigation. It
+Je validates the active branch during resume and after `/tree` navigation. It
 repairs missing, misplaced, duplicate, or orphaned tool results by appending a
 provider-safe branch while preserving the original JSONL entries. A durable
 session diagnostic records what changed. Repeating resume is idempotent and does
@@ -106,14 +106,14 @@ not append another repair when history is already valid.
 ## Renaming
 
 New sessions are automatically given a short name from the first message when
-Tau can generate one. Tau shows the confirmed message first—including the
+Je can generate one. Je shows the confirmed message first—including the
 expanded text from a prompt-template slash command—then performs naming without
 holding up that transcript update. The name appears anywhere session names are
 already shown, including the `/resume` picker and id completions.
 
 Auto-naming makes one high-level provider request. The provider adapter may retry
 transient failures according to its configured `max_retries`. If those attempts
-are exhausted, or the response is not a usable title, Tau does not start another
+are exhausted, or the response is not a usable title, Je does not start another
 naming request: the session continues normally and uses a short local fallback
 when possible.
 
@@ -121,7 +121,7 @@ when possible.
 /name My refactor session
 ```
 
-Use `/name` at any time to manually override the automatic name. Tau will not
+Use `/name` at any time to manually override the automatic name. Je will not
 replace a name you set yourself.
 
 ## Exporting
@@ -137,13 +137,13 @@ Export a session to a shareable file:
 Or from the shell:
 
 ```bash
-tau export <session-id>                     # HTML (default)
-tau export <session-id> session.html
-tau export <session-id> --format jsonl
+je export <session-id>                     # HTML (default)
+je export <session-id> session.html
+je export <session-id> --format jsonl
 ```
 
 The source can be an indexed session id **or** a path to a JSONL session file.
-After a successful `/export`, Tau shows the destination in the TUI transcript.
+After a successful `/export`, Je shows the destination in the TUI transcript.
 This status is display-only: it is not saved to session history or sent to the
 model as context.
 
@@ -156,7 +156,7 @@ labeled separately in the request table rather than blended into assistant turns
 Cache charts are
 interactive—hover for exact values and select a legend item to hide a
 series—and can be downloaded as static PNG images with white backgrounds. The
-export follows Tau's themes: je-light in light mode and je-dark in dark mode,
+export follows Je's themes: je-light in light mode and je-dark in dark mode,
 with charts recoloring live when you toggle the theme. When `/export` creates
 HTML from the live session, it also includes the current
 system prompt in a separate, collapsed **System Prompt** section. Review that
@@ -171,7 +171,7 @@ not contain it.
 
 New compaction entries store a `first_kept_entry_id` boundary: replay inserts the
 summary, then keeps that active-path entry and everything after it. This is a fixed-size,
-Pi-compatible replacement for older Tau files' `replaces_entry_ids` arrays. Older arrays
+Pi-compatible replacement for older Je files' `replaces_entry_ids` arrays. Older arrays
 remain readable and take precedence during replay, so exporting or resuming a legacy
 session does not change its message history. HTML entry details show the first-kept
 boundary for modern compactions and identify unavailable legacy boundaries.
@@ -188,7 +188,7 @@ nested accordions. The export header includes controls to:
   compactions, labels, and custom entries—to focus on user and assistant messages
 - download the session as a JSONL file—the complete entry data is embedded in
   the page, so the download works offline and includes every entry (including
-  historical `leaf` records from older Tau versions)
+  historical `leaf` records from older Je versions)
 
 Tool rows are titled `Tool: <name>` (for example, `Tool: read`), and the
 session tree labels tool entries with just the tool name for readability.
@@ -199,29 +199,29 @@ Extension-injected model context is stored as a first-class `custom_message`
 entry. Its `custom_type` identifies the extension, while `content`, `details`,
 and `display` preserve its payload and presentation choice. `display: false`
 keeps the content in model context but hides it from the TUI and the visible
-HTML transcript; the complete entry remains in JSONL exports. Older Tau files
-that stored these as a generic `message` with `role: "custom"`, or as a Tau-v1
+HTML transcript; the complete entry remains in JSONL exports. Older Je files
+that stored these as a generic `message` with `role: "custom"`, or as a Je-v1
 user message with `custom_type`, are normalized when loaded and replay the same
 context.
 
-Tau's persisted entry wrappers use snake_case names such as `parent_id` and
+Je's persisted entry wrappers use snake_case names such as `parent_id` and
 `custom_type`. The Pi-compatible RPC inspection API projects those fields as
 `parentId` and `customType`; see the [RPC reference](/reference/rpc/).
 
 ## Where sessions live
 
 ```text
-~/.tau/sessions/<cleaned-path>-<short-hash>/
+~/.je/sessions/<cleaned-path>-<short-hash>/
 ```
 
 For example, `/Users/you/repos/tau` becomes something like
-`repos-tau-a1b2c3`. The original JSONL is append-only. New Tau versions do not
+`repos-tau-a1b2c3`. The original JSONL is append-only. New Je versions do not
 write separate `leaf` pointer records; the last non-`leaf` entry in file order
 is the active tip. Older files containing `leaf` records remain readable, but
 those records do not override file-order tip selection. Compaction and
 branching change the *active* view, never the recorded history. A label change
 is stored as `{"type":"label","target_id":"<entry-id>","label":"checkpoint"}`;
-`null` or an empty label clears the target's bookmark. Pre-bookmark Tau files
+`null` or an empty label clears the target's bookmark. Pre-bookmark Je files
 whose label entries lack `target_id` load deterministically as a bookmark on the
 earliest branchable entry.
 
@@ -230,7 +230,7 @@ New compaction and branch-summary entries include optional `usage`, `provider`,
 summary. `response_provider` identifies the resolved backend when a routing
 service reports one. The `usage` field uses the same shape as assistant messages (`input`, `output`,
 `cacheRead`, `cacheWrite`, optional `cacheWrite1H` and `reasoning`, `totalTokens`,
-and `cost`). If more than one completion contributes to a summary, Tau stores
+and `cost`). If more than one completion contributes to a summary, Je stores
 the field-wise total. Older entries and heuristic branch-summary fallbacks omit
 `usage`; they continue to load normally and do not add a zero-cost request to
 usage analytics.

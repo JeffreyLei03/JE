@@ -1,16 +1,16 @@
 ---
 title: Extensions
-description: Extend Tau with plain Python — custom tools, slash commands, hooks, dialogs, and message rendering.
+description: Extend Je with plain Python — custom tools, slash commands, hooks, dialogs, and message rendering.
 ---
 
-Extensions are Python modules that customize a Tau session: they add tools,
+Extensions are Python modules that customize a Je session: they add tools,
 slash commands, and process-local provider definitions; observe the agent event
 stream; and intercept tool calls, tool results, and user input. The design
 follows Pi's extension system, adapted to Python.
 
 ## Quick start
 
-Create `~/.tau/extensions/greet.py`:
+Create `~/.je/extensions/greet.py`:
 
 ```python
 from je_agent.messages import TextContent
@@ -47,34 +47,34 @@ defining `setup(tau)`, which runs once at startup with the extension API.
 Install a trusted extension from Git with the same command shape as Pi:
 
 ```bash
-tau install git:github.com/owner/repository
-tau install git:github.com/owner/repository@v1.2.0
-tau install https://github.com/owner/repository.git
+je install git:github.com/owner/repository
+je install git:github.com/owner/repository@v1.2.0
+je install https://github.com/owner/repository.git
 ```
 
-Tau clones the repository into `~/.tau/extensions/<repository>` and loads it on
-the next Tau startup. A pinned ref may be a tag, branch, or commit. Replacing an
+Je clones the repository into `~/.je/extensions/<repository>` and loads it on
+the next Je startup. A pinned ref may be a tag, branch, or commit. Replacing an
 existing install requires an explicit opt-in:
 
 ```bash
-tau install git:github.com/owner/repository@v1.3.0 --force
+je install git:github.com/owner/repository@v1.3.0 --force
 ```
 
 Local files and package directories work too:
 
 ```bash
-tau install ./my_extension.py
-tau install ./my-extension
+je install ./my_extension.py
+je install ./my-extension
 ```
 
-A local file is copied into `~/.tau/extensions/`. A directory is copied and must
+A local file is copied into `~/.je/extensions/`. A directory is copied and must
 contain `extension.py` or declare `[tool.tau].extensions` in `pyproject.toml`, so
 it remains discoverable without `-e`. Local virtual environments, VCS metadata,
 and Python cache directories are not copied.
 
 The installer validates discovery metadata without importing the extension.
 It does not install Python dependencies, maintain a package registry, or provide
-remove/update commands yet. Install dependencies into Tau's Python environment
+remove/update commands yet. Install dependencies into Je's Python environment
 separately when an extension requires them. Extensions execute arbitrary Python
 with your user permissions, so review the source before installation.
 
@@ -82,13 +82,13 @@ with your user permissions, so review the source before installation.
 
 | Location | Loaded |
 |---|---|
-| `~/.tau/extensions/` | by default |
-| `<project>/.tau/extensions/` | only after project approval **and** `--project-extensions` |
-| any file or directory | with `tau -e PATH` (repeatable) |
+| `~/.je/extensions/` | by default |
+| `<project>/.je/extensions/` | only after project approval **and** `--project-extensions` |
+| any file or directory | with `je -e PATH` (repeatable) |
 
 ### Trusted built-in extensions
 
-Tau may bundle product capabilities as `BuiltInExtension` declarations. A
+Je may bundle product capabilities as `BuiltInExtension` declarations. A
 built-in is not a special provider or command branch: its synchronous
 `setup(tau)` receives the normal extension API and registers tools, commands,
 process-local providers, hooks, or later extension capabilities through the
@@ -96,7 +96,7 @@ same runtime.
 
 Built-ins load once per staged runtime, before user, explicit, and trusted
 project sources. They still load with `--no-extensions`, because that flag turns
-off filesystem discovery rather than capabilities shipped in Tau itself. Their
+off filesystem discovery rather than capabilities shipped in Je itself. Their
 code is trusted as installed package code and never counts as ambient project
 input, so a built-in alone cannot trigger project trust.
 
@@ -129,7 +129,7 @@ directory, so sibling modules stay importable with relative imports. The
 extension is named after the entry's parent directory (or after the file
 itself when it isn't named `extension.py`).
 
-One caveat: `tau -e` on an entry **file** loads it standalone — no
+One caveat: `je -e` on an entry **file** loads it standalone — no
 package, so relative imports fail. Once an extension has sibling
 modules, always pass a directory: the package directory itself, or the
 repo root when a manifest declares the entry.
@@ -187,7 +187,7 @@ def setup(tau):
     tau.context.inference_provider_mode        # "automatic" or "fixed"
     tau.context.session_id, tau.context.session_name
     tau.context.thinking_level, tau.context.system_prompt
-    tau.context.paths                 # resolved TauPaths snapshot
+    tau.context.paths                 # resolved JePaths snapshot
     tau.context.project_trusted       # bool: were this cwd's project inputs approved?
     tau.context.project_trust_resolution  # full ProjectTrustResolution, or None
     tau.context.is_running, tau.context.has_ui
@@ -206,7 +206,7 @@ def setup(tau):
 ```
 
 `context.available_providers` and `context.available_model_choices` expose the
-same effective runtime inventory used by Tau's model picker. Providers without
+same effective runtime inventory used by Je's model picker. Providers without
 usable credentials are omitted. Model choices include dynamic extension
 providers and runtime-refreshed, account-specific catalogs when available. Each
 choice is a frozen `ModelChoice(provider_name, model)`, so extensions can
@@ -215,10 +215,10 @@ session internals.
 
 `set_inference_provider(route)` lets provider-specific extensions select a
 Hugging Face inference-provider route for the active session. A provider name
-sets `context.inference_provider_mode` to `"fixed"`, so Tau honors the explicit
+sets `context.inference_provider_mode` to `"fixed"`, so Je honors the explicit
 selection and does not automatically fail over. Passing `None` selects
 `"automatic"` mode: the next successful response becomes a sticky route that
-Tau may replace after an exhausted retryable pre-output failure. Other providers
+Je may replace after an exhausted retryable pre-output failure. Other providers
 reject the operation. The current resolved route is available as
 `context.inference_provider`.
 
@@ -229,16 +229,16 @@ is bound — register handlers in `setup` and act on events instead.
 
 #### Resolved filesystem paths
 
-`tau.context.paths` is a read-only `TauPaths` snapshot for the active session.
-If the host supplies `TauResourcePaths.paths`, that object is authoritative and
-preserves custom `TauPaths.home` and `TauPaths.agents_home` locations. Otherwise
-Tau derives one as
-`TauPaths(home=resource_paths.root, agents_home=resource_paths.agents_root or ~/.agents)`.
-In other words, `root`/`home` controls Tau's user data and extension directory,
+`tau.context.paths` is a read-only `JePaths` snapshot for the active session.
+If the host supplies `JeResourcePaths.paths`, that object is authoritative and
+preserves custom `JePaths.home` and `JePaths.agents_home` locations. Otherwise
+Je derives one as
+`JePaths(home=resource_paths.root, agents_home=resource_paths.agents_root or ~/.agents)`.
+In other words, `root`/`home` controls Je's user data and extension directory,
 while `agents_root`/`agents_home` controls `.agents` resources; the project
 `cwd` remains separate. `ExtensionRuntime(paths=custom_paths)` exposes its
 constructor paths immediately, before `load`; a later `load` makes its
-`TauResourcePaths` snapshot authoritative.
+`JeResourcePaths` snapshot authoritative.
 
 The snapshot belongs to the extension generation. After `/reload` (and other
 fresh-generation replacement flows), a context captured from the outgoing
@@ -313,11 +313,11 @@ dormant with no models, and supplies exactly one runtime mechanism: an
 
 Authentication is explicit: `RequiredApiKey`, `OptionalApiKey`, or `NoAuth`.
 Stored credentials win over the configured environment variable. Optional or
-absent keys omit `Authorization`; Tau never synthesizes a local key. Static
+absent keys omit `Authorization`; Je never synthesizes a local key. Static
 transport/model headers cannot provide `Authorization`; custom schemes must be
 resolved by an auth strategy at runtime. Resolved keys, headers, and arbitrary
 auth provenance stay out of provider representations and diagnostics. Runtime
-creation replaces custom auth exceptions with a categorical host error; Tau's exact
+creation replaces custom auth exceptions with a categorical host error; Je's exact
 required-key strategy still reports its actionable missing-credential guidance.
 Nested JSON compatibility metadata is deeply frozen while registered and copied to ordinary
 JSON containers only when a runtime transport is created.
@@ -327,7 +327,7 @@ Discovery is snapshot-oriented. A `refresh_models` callback returns a complete
 Concurrent callers share work only when their layer and `allow_network` policy
 match, and each caller keeps its own timeout. Opposite network policies never
 alias. The last timeout and explicit cancellation leave the coalescing table before
-returning, so an immediate retry invokes fresh discovery. Tau requests task
+returning, so an immediate retry invokes fresh discovery. Je requests task
 cancellation once, then waits up to 0.25 seconds from that request without
 re-cancelling a callback's `finally` cleanup. Reload, session replacement, and final
 close await this cooperative drain. Once reload/replacement publishes its new state,
@@ -344,7 +344,7 @@ reachable until it actually finishes; it cannot publish after source replacement
 retirement. Timeout, malformed output, and other failures retain the current
 snapshot.
 
-Dynamic definitions are runtime overlays—not durable configuration. Tau never
+Dynamic definitions are runtime overlays—not durable configuration. Je never
 copies them into `catalog.toml`, `providers.json`, sessions, or generic extension
 storage. Provider source ownership comes from the canonical entry path assigned by
 the host, not the display name. The loader freezes all discovered source IDs before
@@ -479,9 +479,9 @@ tau.context.ui...` directly.)
 
 ### Sidebar sections
 
-`tau.context.ui.sidebar` lets an extension contribute a section to Tau's
+`tau.context.ui.sidebar` lets an extension contribute a section to Je's
 interactive session sidebar without querying private widget IDs or importing
-`TauTuiApp`. Register sections from `session_start`, after the frontend bridge
+`JeTuiApp`. Register sections from `session_start`, after the frontend bridge
 is attached:
 
 ```python
@@ -515,7 +515,7 @@ def setup(tau):
 ```
 
 - Feature-detect the `sidebar` attribute with `getattr` when supporting older
-  Tau versions. On current Tau, `sidebar.supported` is `False` in
+  Je versions. On current Je, `sidebar.supported` is `False` in
   print/headless mode and when `sidebar_position` is `"off"`; calls are safe
   no-ops without a visible sidebar.
 - `set_section(key, *, title, content)` adds or replaces this extension's key.
@@ -755,7 +755,7 @@ tau.send_custom_message(
   renderer raises or returns a non-string, the message falls back to its raw
   `content` — a broken renderer never crashes the UI.
 - Custom rendering works in the interactive TUI and the `-p` print transcript,
-  and survives `/resume`. Tau persists it as a first-class `custom_message`
+  and survives `/resume`. Je persists it as a first-class `custom_message`
   session entry whose `custom_type` and `details` can be inspected without
   parsing a generic message payload. In the TUI, a custom message appears once its user event is
   confirmed by the run (a moment after delivery), rather than instantly like a
@@ -770,10 +770,10 @@ requires packaging:
 2. **A folder with `extension.py`** — split helpers into sibling modules
    and import them relatively (`from . import helper`). No config.
 3. **A repo with a `src/` layout** — declare the entry in
-   `pyproject.toml` under `[tool.tau]` (see above). Tau reads only the
+   `pyproject.toml` under `[tool.tau]` (see above). Je reads only the
    `[tool.tau]` table; whether the repo is also an installable Python
    package is entirely your business (it helps IDEs resolve imports and
-   lets tests import modules directly, but Tau never installs or
+   lets tests import modules directly, but Je never installs or
    `pip`-imports your extension).
 
 Two rules keep all three shapes loadable:
@@ -782,8 +782,8 @@ Two rules keep all three shapes loadable:
   your extension under a synthetic package name (and never touches
   `sys.path`), so `import helper` won't resolve — `from . import helper`
   will, in every load mode.
-- **Feature-detect optional Tau APIs** (`getattr`/`try: import`) if you
-  want the extension to load on older Tau versions rather than fail at
+- **Feature-detect optional Je APIs** (`getattr`/`try: import`) if you
+  want the extension to load on older Je versions rather than fail at
   import time.
 
 **Testing an extension.** Load it through the real runtime rather than
@@ -791,11 +791,11 @@ importing your modules directly — that exercises discovery, the synthetic
 package import, and `setup` registration exactly as a session does:
 
 ```python
-from je_coding import TauResourcePaths
+from je_coding import JeResourcePaths
 from je_coding.extensions import ExtensionRuntime
 
 def test_loads(tmp_path):
-    paths = TauResourcePaths(
+    paths = JeResourcePaths(
         root=tmp_path / "tau", cwd=tmp_path / "project",
         agents_root=tmp_path / "agents",
     )
@@ -806,7 +806,7 @@ def test_loads(tmp_path):
 
 `extra_paths` takes your extension directory (or repo root with a
 manifest); `include_resource_dirs=False` keeps the test hermetic —
-nothing from `~/.tau/extensions` leaks in. To monkeypatch module globals
+nothing from `~/.je/extensions` leaks in. To monkeypatch module globals
 in tests, patch the loaded synthetic module (find it in `sys.modules` by
 the `tau_extension_` prefix), not your package's import identity — the
 runtime only sees the former.
@@ -827,20 +827,20 @@ A larger, real-world extension lives in its own repository:
 ports [pi-subagents](https://github.com/tintinweb/pi-subagents) — an `agent`
 tool that spawns autonomous subagents in-process with their own tools and
 system prompts, foreground and background modes, agent types defined in
-`.tau/agents/*.md`, `get_subagent_result` and `steer_subagent` tools, an
+`.je/agents/*.md`, `get_subagent_result` and `steer_subagent` tools, an
 `/agents` command, and a custom renderer for completion notifications. It is
 also the reference for the `[tool.tau]` manifest shape above (a `src/` layout
 package that feature-detects newer API seams).
 
 ```bash
 git clone git@github.com:rian-dolphin/tau-subagents.git
-tau -e ./tau-subagents
+je -e ./tau-subagents
 # then: "Use a subagent to summarize this repository's architecture."
 ```
 
 ## Not yet supported
 
-Compared to Pi's extension system, Tau does not yet include a complete package
+Compared to Pi's extension system, Je does not yet include a complete package
 manager (the installer has no registry, dependency installation, remove, or
 package-update commands), custom entry renderers (non-context cards),
 declarative keyboard-shortcut registration, CLI flag registration,

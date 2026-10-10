@@ -1,6 +1,6 @@
-# Tau CLI and commands
+# Je CLI and commands
 
-Tau supports print mode, Pi-compatible JSONL RPC mode, and a Textual interactive
+Je supports print mode, Pi-compatible JSONL RPC mode, and a Textual interactive
 TUI. `tau` opens the TUI by default. Print mode is selected with `-p/--print` or
 `--mode` and uses the same staged session/provider preparation as the TUI. The
 CLI entry point is `je_coding.cli:app`.
@@ -14,7 +14,7 @@ implicitly. Configure llama.cpp through `/local`, then use its exact provider
 and model explicitly in headless mode:
 
 ```bash
-tau --provider llama.cpp --model <server-reported-id> --print "summarize this project"
+je --provider llama.cpp --model <server-reported-id> --print "summarize this project"
 ```
 
 The built-in provider is loaded before explicit provider/model validation, so
@@ -55,14 +55,14 @@ opening an interactive login or local setup flow.
 ## Model catalog refresh
 
 ```bash
-tau update --models
+je update --models
 ```
 
 This forces ETag revalidation of models.dev and the live NVIDIA model filter,
-then atomically caches the transformed catalog at `~/.tau/models-store.json`.
+then atomically caches the transformed catalog at `~/.je/models-store.json`.
 Opening `/model` performs the same refresh in the background, subject to a
 four-hour freshness window. Cached/bundled models remain available on failure;
-set `TAU_OFFLINE=1` to disable catalog network access.
+set `JE_OFFLINE=1` to disable catalog network access.
 
 ## Safety boundary
 

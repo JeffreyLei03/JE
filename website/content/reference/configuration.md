@@ -1,33 +1,33 @@
 ---
 title: Configuration & files
-description: Where Tau stores state, and the shape of its config files.
+description: Where Je stores state, and the shape of its config files.
 ---
 
-Tau keeps durable state in your home directory (`~/.tau/`) and reads
+Je keeps durable state in your home directory (`~/.je/`) and reads
 project-local resources from your working directory. This page is a reference for
 those locations and file formats.
 
-## Tau home
+## Je home
 
-Tau stores user-level configuration and state in `~/.tau/` by default. Set
-`TAU_HOME` to select a different home for one invocation or shell profile:
+Je stores user-level configuration and state in `~/.je/` by default. Set
+`JE_HOME` to select a different home for one invocation or shell profile:
 
 ```bash
-TAU_HOME="$HOME/.tau-personal" tau
+JE_HOME="$HOME/.tau-personal" tau
 ```
 
 A non-empty override must be an absolute path after optional `~` expansion. An
-unset or empty value keeps the `~/.tau` default. Tau does not interpolate
+unset or empty value keeps the `~/.tau` default. Je does not interpolate
 variables inside the value, so let your shell expand `$HOME` as in the example.
 Symlink paths are preserved rather than resolved.
 
-Every Tau-owned user path shown as `~/.tau/...` in this documentation follows
-`TAU_HOME`, including credentials, sessions, provider preferences, settings,
+Every Je-owned user path shown as `~/.je/...` in this documentation follows
+`JE_HOME`, including credentials, sessions, provider preferences, settings,
 trust decisions, extensions, logs, local-backend state, and model/update caches.
 The override does not relocate `~/.agents`, project-level `.tau`/`.agents`
 resources, explicit extension paths, or credentials supplied through environment
 variables. It is an application-profile boundary, not a security sandbox.
-Embedding applications that supply an explicit `TauPaths` keep using those
+Embedding applications that supply an explicit `JePaths` keep using those
 paths regardless of the environment.
 
 For profiles containing OAuth credentials, create the directories with private
@@ -40,11 +40,11 @@ install -d -m 700 "$HOME/.tau-personal" "$HOME/.tau-work"
 
 On Windows, create the directories first and use the platform's access-control
 tools if other local users can read your profile. PowerShell can select a home
-for the current process with `$env:TAU_HOME = "$HOME\.tau-personal"` before
+for the current process with `$env:JE_HOME = "$HOME\.tau-personal"` before
 launching `tau`.
 
 ```text
-<tau-home>/              # ~/.tau unless TAU_HOME is set
+<tau-home>/              # ~/.tau unless JE_HOME is set
 ├── catalog.toml        # optional provider/model catalog overlay
 ├── providers.json      # provider/model preferences
 ├── models-store.json   # refreshed models.dev catalog cache
@@ -64,56 +64,56 @@ launching `tau`.
 └── logs/               # diagnostics
 ```
 
-Tau also reads user-level `.agents` resources: `~/.agents/skills/`,
+Je also reads user-level `.agents` resources: `~/.agents/skills/`,
 `~/.agents/prompts/`, `~/.agents/AGENTS.md`.
 
 `settings.json` may contain `"defaultProjectTrust": "ask" | "always" |
 "never"`. It is user-global only; a project cannot choose its own trust
 policy. The default is `ask`. Interactive `ask` opens the trust modal; headless
-`ask` safely declines. `trust.json` is managed atomically by Tau; do not add
+`ask` safely declines. `trust.json` is managed atomically by Je; do not add
 relative paths or unknown fields. See [Project trust](/guides/project-trust/).
 
 Startup update checks cache their latest PyPI result in
-`~/.tau/cache/update-check.json` and refresh at most once per day. Set
-`TAU_NO_UPDATE_CHECK=1` to disable the check; Tau also skips it when `CI` is set.
+`~/.je/cache/update-check.json` and refresh at most once per day. Set
+`TAU_NO_UPDATE_CHECK=1` to disable the check; Je also skips it when `CI` is set.
 
 `models-store.json` caches an ETag-revalidated models.dev catalog newer than the
 bundled snapshot. `/model` refreshes it in the background at most every four
-hours; `tau update --models` forces revalidation. Set `TAU_OFFLINE=1` to disable
+hours; `je update --models` forces revalidation. Set `JE_OFFLINE=1` to disable
 catalog network access. User `catalog.toml` overrides still apply after the cache.
 
 `codex-models-store.json` contains only parsed model metadata and the active
-Codex account ID. Tau loads it at startup, then refreshes it when `/model` or
+Codex account ID. Je loads it at startup, then refreshes it when `/model` or
 `/scoped-models` opens; a snapshot from a different account is ignored. It never
 contains OAuth tokens.
 
 ## System prompt files
 
-Tau can replace or extend its generated system prompt with Tau-native Markdown
+Je can replace or extend its generated system prompt with Je-native Markdown
 files:
 
 ```text
-~/.tau/SYSTEM.md                 # user replacement
-~/.tau/APPEND_SYSTEM.md          # user append
-<project>/.tau/SYSTEM.md         # project replacement
-<project>/.tau/APPEND_SYSTEM.md  # project append
+~/.je/SYSTEM.md                 # user replacement
+~/.je/APPEND_SYSTEM.md          # user append
+<project>/.je/SYSTEM.md         # project replacement
+<project>/.je/APPEND_SYSTEM.md  # project append
 ```
 
 Replacement inputs use precedence: explicit CLI input, then the project
 `SYSTEM.md`, then the user `SYSTEM.md`. Append inputs compose instead of
-shadowing one another: Tau adds the user `APPEND_SYSTEM.md`, then the project
+shadowing one another: Je adds the user `APPEND_SYSTEM.md`, then the project
 `APPEND_SYSTEM.md`, then every explicit `--append-system-prompt` value in CLI
 order. Replacement content still receives all append text, project instructions,
 eligible skills, the current date, and the working directory. Empty files are
 valid contributions.
 
-Run `/reload` after adding, changing, or removing a file. Tau rebuilds the prompt
+Run `/reload` after adding, changing, or removing a file. Je rebuilds the prompt
 for the next model request without adding it to session history. `/session`
 resource diagnostics identify selected append files and selected, shadowed, or
 CLI-overridden replacement files. A selected file that cannot be inspected or
 decoded as UTF-8 stops startup or reload rather than silently falling back.
 
-System prompt files are Tau-specific and are not discovered from `.agents`.
+System prompt files are Je-specific and are not discovered from `.agents`.
 Project files load only after the destination cwd is trusted. User files and
 explicit CLI values remain available when project inputs are declined. Trust is
 an input-loading guard, not a sandbox; inspect trusted prompt files because they
@@ -121,7 +121,7 @@ can replace or extend the model's highest-priority instructions.
 
 ## Network proxies
 
-Tau uses `httpx` for provider requests, OAuth token refreshes, and startup update
+Je uses `httpx` for provider requests, OAuth token refreshes, and startup update
 checks, so it honors standard proxy environment variables such as `HTTP_PROXY`,
 `HTTPS_PROXY`, `ALL_PROXY`, and `NO_PROXY`.
 
@@ -134,44 +134,44 @@ export ALL_PROXY=socks5://127.0.0.1:1080
 export ALL_PROXY=socks5h://127.0.0.1:1080
 ```
 
-Tau also accepts the generic `socks://` form that some systems and tools set in
-the environment. Before creating its own HTTP clients, Tau normalizes
+Je also accepts the generic `socks://` form that some systems and tools set in
+the environment. Before creating its own HTTP clients, Je normalizes
 `socks://...` to `socks5://...` because `httpx` does not recognize the generic
 scheme directly.
 
 This matters for users behind corporate proxies, VPNs, local tunnels, or
-privacy/network-routing setups: without SOCKS support and normalization, Tau can
+privacy/network-routing setups: without SOCKS support and normalization, Je can
 fail before making a model API request with an error like
 `Unknown scheme for proxy URL URL('socks://...')`.
 
 ## Providers
 
-Tau separates provider metadata from runtime preferences:
+Je separates provider metadata from runtime preferences:
 
 - `src/je_coding/data/catalog.toml` ships the built-in provider/model catalog.
-- `~/.tau/catalog.toml` optionally adds personal providers or overlays built-ins.
-- `~/.tau/providers.json` stores runtime preferences such as the default provider,
+- `~/.je/catalog.toml` optionally adds personal providers or overlays built-ins.
+- `~/.je/providers.json` stores runtime preferences such as the default provider,
   default model, scoped models, headers, and timeout/retry settings.
 
 The built-in llama.cpp backend stores only its normalized endpoint and safe
-server-reported model snapshot at `~/.tau/state/extensions/llama.cpp.json`.
+server-reported model snapshot at `~/.je/state/extensions/llama.cpp.json`.
 Optional credentials remain in `credentials.json` or `LLAMA_API_KEY`; dynamic
 llama.cpp provider definitions are not written to `catalog.toml` or
 `providers.json`. Scoped llama.cpp entries in `providers.json` contain only the
 stable `llama.cpp` provider ID and exact model ID; stale entries do not create
-availability or router work. For Hugging Face GGUF search, Tau reads `HF_TOKEN`
+availability or router work. For Hugging Face GGUF search, Je reads `HF_TOKEN`
 or standard Hugging Face token files but never stores or forwards that token to
 the llama.cpp server. The independent server needs its own `HF_TOKEN` for gated
 downloads. See the [local inference guide](/guides/local-inference/).
 
-Tau intentionally reads catalog overlays only from the user-level
-`~/.tau/catalog.toml`. There is no project-level `.tau/catalog.toml`, so cloning a
+Je intentionally reads catalog overlays only from the user-level
+`~/.je/catalog.toml`. There is no project-level `.je/catalog.toml`, so cloning a
 repository cannot silently redirect a provider's `base_url` or credentials to an
 unexpected service.
 
 ### Provider catalog overlays
 
-Add reusable custom provider definitions to `~/.tau/catalog.toml`:
+Add reusable custom provider definitions to `~/.je/catalog.toml`:
 
 ```toml
 schema_version = 1
@@ -203,15 +203,15 @@ metadata fields—including the complete `cost_tiers` array—replace the built-
 value. A model's `compat` wins over the provider's, so a built-in per-model value
 overrides a provider-level overlay — override at the model level to change it.
 
-`removed_models` is an additive provider-scoped tombstone list. Tau applies it
+`removed_models` is an additive provider-scoped tombstone list. Je applies it
 last and removes matching model-list, metadata, context-window, thinking, and
 default references after merging. Bundled tombstones therefore prevent stale
-user overlays from restoring models that Tau previously advertised for the wrong
+user overlays from restoring models that Je previously advertised for the wrong
 provider. They do not affect the same model ID on another provider.
 
 ### OpenAI prompt-cache compat keys
 
-Tau enables OpenAI cache affinity automatically only for `api.openai.com` and the
+Je enables OpenAI cache affinity automatically only for `api.openai.com` and the
 dedicated Codex OAuth provider. OpenAI-compatible gateways can opt in per provider
 or model:
 
@@ -253,10 +253,10 @@ The thinking fields (`thinking_levels`, `thinking_models`,
 `thinking_levels` is present.
 
 `catalog.toml` does not store runtime request options such as custom HTTP
-headers, timeouts, or retry settings. Put those in `~/.tau/providers.json` on the
+headers, timeouts, or retry settings. Put those in `~/.je/providers.json` on the
 matching provider entry.
 
-Invalid catalog files fail loudly. Tau rejects unknown keys, empty required
+Invalid catalog files fail loudly. Je rejects unknown keys, empty required
 strings, empty model names, unsupported provider kinds, default models that are
 not listed in `models`, `thinking_models` or `context_windows` entries for
 unknown models, and non-positive or non-integer context-window values.
@@ -285,7 +285,7 @@ TTL cache writes, which Anthropic bills higher. When `cacheWrite1h` is absent,
 
 ### Provider preferences
 
-Provider preferences live in `~/.tau/providers.json`:
+Provider preferences live in `~/.je/providers.json`:
 
 ```json
 {
@@ -308,7 +308,7 @@ Provider preferences live in `~/.tau/providers.json`:
 ```
 
 - `provider_preferences` keys must refer to providers from the effective catalog
-  (`src/je_coding/data/catalog.toml` plus `~/.tau/catalog.toml`).
+  (`src/je_coding/data/catalog.toml` plus `~/.je/catalog.toml`).
 - `headers` is optional (string→string). For example, Hugging Face organization
   billing can be configured with `"headers": { "X-HF-Bill-To": "my-org" }` on
   the `huggingface` provider preference. `thinking_defaults` remembers the
@@ -317,18 +317,18 @@ Provider preferences live in `~/.tau/providers.json`:
   `"inference_providers": { "zai-org/GLM-5.2": "deepinfra" }`. Each key must be
   a configured model and each value an explicit provider suffix advertised by
   Hugging Face—not the `fastest`, `cheapest`, or `preferred` routing policies.
-  Tau snapshots the selected suffix into new session metadata as a fixed route,
+  Je snapshots the selected suffix into new session metadata as a fixed route,
   retains it on resume, and sends only the suffixed wire model; ordinary model
-  identity and catalog metadata remain unsuffixed. Without a preference, Tau
+  identity and catalog metadata remain unsuffixed. Without a preference, Je
   starts in automatic mode and records the `x-inference-provider` reported by
   the first successful response as a sticky but recoverable route. After a
-  retryable pre-output HTTP failure exhausts provider-level retries, Tau clears
+  retryable pre-output HTTP failure exhausts provider-level retries, Je clears
   that automatic pin, retries the interrupted turn once through Hugging Face
   automatic routing, and stores the successful replacement. Explicitly configured
   routes never fail over. `/session` reports both mode and current route; changing
   the active session route is available through the external
   [`tau-huggingface`](https://github.com/alejandro-ao/tau-huggingface) extension;
-  clone it and launch Tau with `tau -e ./tau-huggingface`, then use `/hf route`.
+  clone it and launch Je with `je -e ./tau-huggingface`, then use `/hf route`.
   `timeout_seconds` defaults to `60` (> 0); `max_retries`
   defaults to `2`; `max_retry_delay_seconds` defaults to `1` (both ≥ 0).
   Retries cover transient HTTP statuses (`408`, `409`, `425`, `429`, `5xx`),
@@ -341,7 +341,7 @@ Provider preferences live in `~/.tau/providers.json`:
   treated as fixed, preventing an upgrade from overriding a potentially explicit
   user selection.
 - API keys and OAuth credentials are **not** stored here — they live in
-  `~/.tau/credentials.json` (private but not encrypted). OAuth objects may contain
+  `~/.je/credentials.json` (private but not encrypted). OAuth objects may contain
   provider metadata such as a GitHub Enterprise domain and are refreshed
   automatically. Resolution order: stored credential, then the env
   var named by `api_key_env`.
@@ -354,12 +354,12 @@ Provider preferences live in `~/.tau/providers.json`:
   capabilities—model lists, context windows, transports, metadata, and thinking
   support—always come from the current effective catalog.
 - Older `providers.json` files that contain full `providers` entries are migrated
-  automatically on first load. Tau keeps the original as `providers.json.bak`,
-  moves custom provider definitions to `~/.tau/catalog.toml`, and rewrites
+  automatically on first load. Je keeps the original as `providers.json.bak`,
+  moves custom provider definitions to `~/.je/catalog.toml`, and rewrites
   built-in providers from the current catalog while preserving safe preferences.
   This prevents old model or thinking metadata from hiding capabilities added by
-  a Tau upgrade.
-- Tau ignores unrecognized preference fields for cross-version compatibility,
+  a Je upgrade.
+- Je ignores unrecognized preference fields for cross-version compatibility,
   but rejects an unsupported `schema_version` rather than risking a destructive
   rewrite with the wrong format.
 - Custom models declare thinking support in `catalog.toml` with
@@ -374,16 +374,16 @@ See the [Providers & models guide](/guides/providers-and-models/) for usage.
 
 ## Shell settings
 
-Tau runs shell commands in a **non-interactive** shell — both terminal-input
+Je runs shell commands in a **non-interactive** shell — both terminal-input
 commands (`! gst`, `!! ll`) and the agent's `bash` tool. Non-interactive shells
-don't load your aliases from `~/.zshrc` or `~/.bashrc`, and Tau deliberately
+don't load your aliases from `~/.zshrc` or `~/.bashrc`, and Je deliberately
 never reads those files (they can hold tokens and side effects).
 
 To make your own aliases available, opt in with a `shellCommandPrefix` in
-`~/.tau/settings.json` that loads a small Tau-specific alias file:
+`~/.je/settings.json` that loads a small Je-specific alias file:
 
 ```bash
-# ~/.tau/shell-aliases.bash
+# ~/.je/shell-aliases.bash
 alias gst='git status'
 alias ga='git add'
 alias gc='git commit'
@@ -391,7 +391,7 @@ alias gc='git commit'
 
 ```json
 {
-  "shellCommandPrefix": "shopt -s expand_aliases\nsource ~/.tau/shell-aliases.bash"
+  "shellCommandPrefix": "shopt -s expand_aliases\nsource ~/.je/shell-aliases.bash"
 }
 ```
 
@@ -403,12 +403,12 @@ Then start a new session and try `! gst`. Notes:
 - Changing `settings.json` affects **new** sessions; an already-running session
   keeps the prefix it started with.
 - The snake_case key `shell_command_prefix` is also accepted.
-- Unrecognized fields are ignored for compatibility with newer Tau versions;
+- Unrecognized fields are ignored for compatibility with newer Je versions;
   recognized fields remain strictly validated.
 
 ## TUI settings
 
-The built-in frontend reads optional settings from `~/.tau/tui.json`:
+The built-in frontend reads optional settings from `~/.je/tui.json`:
 
 ```json
 {
@@ -436,15 +436,15 @@ The built-in frontend reads optional settings from `~/.tau/tui.json`:
 ```
 
 Built-in themes: `je-dark` (default), `je-light`, `high-contrast`. Custom
-themes are JSON files in `~/.tau/themes/` or a project's `.tau/themes/` — see
+themes are JSON files in `~/.je/themes/` or a project's `.je/themes/` — see
 [Themes](/guides/themes/). Set one with `/theme`.
-Textual's native theme picker is mapped to the same Tau themes and persists
+Textual's native theme picker is mapped to the same Je themes and persists
 the same `theme` setting. A configured theme that cannot be found falls back
 to `je-dark` with a startup notice, without overwriting the setting. Keys use
-Textual syntax; omitted keys keep their defaults. Tau ignores unrecognized
-settings and keybinding names so a `tui.json` written by a newer Tau version does
+Textual syntax; omitted keys keep their defaults. Je ignores unrecognized
+settings and keybinding names so a `tui.json` written by a newer Je version does
 not prevent an older version from starting. Recognized settings remain strict:
-Tau rejects invalid values, empty keys, and duplicate assignments.
+Je rejects invalid values, empty keys, and duplicate assignments.
 
 - `sidebar_position`: `"right"` (default), `"left"`, or `"off"`. Controls
   placement of the session metadata sidebar. `"off"` hides the sidebar entirely;
@@ -452,21 +452,21 @@ Tau rejects invalid values, empty keys, and duplicate assignments.
   `/sidebar` temporarily toggles visibility without writing this setting; a
   temporarily shown `"off"` sidebar uses the default right position and the
   saved setting is honored again after restart.
-- `turn_notification`: `"desktop"` (default), `"bell"`, or `"off"`. When Tau's
+- `turn_notification`: `"desktop"` (default), `"bell"`, or `"off"`. When Je's
   terminal surface is unfocused and the agent becomes fully idle, `"desktop"`
   selects OSC 9 for Ghostty, iTerm2, and MinTTY, or Kitty's OSC 99 protocol for
   Kitty. Unknown terminals receive no sequence rather than an incompatible one.
   `"bell"` explicitly emits the standard terminal bell so the terminal can mark
   the tab or request attention instead; depending on terminal settings, BEL may
   play a sound. Desktop notifications can also use the operating system's
-  configured notification sound. No notification is emitted while Tau has focus.
+  configured notification sound. No notification is emitted while Je has focus.
 
 Full list in [Keyboard shortcuts](/reference/keybindings/).
 
 ## Sessions
 
 ```text
-~/.tau/sessions/<cleaned-path>-<short-hash>/
+~/.je/sessions/<cleaned-path>-<short-hash>/
 ```
 
 Each working directory gets its own subdirectory; transcripts are append-only

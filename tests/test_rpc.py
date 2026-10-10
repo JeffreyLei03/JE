@@ -7,7 +7,6 @@ from types import SimpleNamespace
 import pytest
 from typer.testing import CliRunner
 
-from pi_event_helpers import assistant_done, assistant_start, text_delta
 from je_agent import AssistantMessage, Usage, UserMessage
 from je_agent.session import (
     CompactionEntry,
@@ -30,6 +29,7 @@ from je_coding import (
 from je_coding import cli as cli_module
 from je_coding.provider_config import ProviderModelMetadata
 from je_coding.rpc import RpcServer
+from pi_event_helpers import assistant_done, assistant_start, text_delta
 
 
 async def _session(tmp_path: Path, provider: FakeProvider) -> CodingSession:
@@ -433,14 +433,14 @@ async def test_rpc_auto_compaction_control_updates_pi_state(tmp_path: Path) -> N
 @pytest.mark.anyio
 async def test_rpc_direct_bash_matches_pi_result_shape(tmp_path: Path) -> None:
     session = await _session(tmp_path, FakeProvider([]))
-    stdin = StringIO('{"id":"bash","type":"bash","command":"printf ok"}\n')
+    stdin = StringIO('{"id":"bash","type":"bash","command":"echo ok"}\n')
     stdout = StringIO()
 
     await RpcServer(session, stdin=stdin, stdout=stdout).run()
 
     response = json.loads(stdout.getvalue())
-    assert response["data"] == {
-        "output": "ok",
+    assert response["data"]["output"].strip() == "ok"
+    assert {key: value for key, value in response["data"].items() if key != "output"} == {
         "exitCode": 0,
         "cancelled": False,
         "truncated": False,

@@ -29,7 +29,7 @@ function Find-Uv {
 
 $uv = Find-Uv
 if (-not $uv) {
-    Write-Host "Tau uses uv to manage its isolated Python environment."
+    Write-Host "Je uses uv to manage its isolated Python environment."
     Write-Host "uv was not found, so the official uv installer will be run now."
 
     $installer = Invoke-RestMethod $UvInstallerUrl
@@ -37,32 +37,32 @@ if (-not $uv) {
 
     $uv = Find-Uv
     if (-not $uv) {
-        throw "uv was installed but its executable could not be found. Open a new terminal and run: uv tool install tau-ai"
+        throw "uv was installed but its executable could not be found. Open a new terminal and run: uv tool install git+https://github.com/JeffreyLei03/JE.git"
     }
 }
 
-Write-Host "Installing Tau with $uv ..."
-& $uv tool install tau-ai
+Write-Host "Installing Je with $uv ..."
+& $uv tool install git+https://github.com/JeffreyLei03/JE.git
 if ($LASTEXITCODE -ne 0) {
-    throw "uv could not install Tau."
+    throw "uv could not install Je."
 }
 
 $toolBin = (& $uv tool dir --bin | Select-Object -Last 1).Trim()
 if ($LASTEXITCODE -ne 0) {
     throw "uv could not locate its tool executable directory."
 }
-$tau = Join-Path $toolBin "tau.exe"
-if (-not (Test-Path -LiteralPath $tau -PathType Leaf)) {
-    throw "Tau was installed but $tau was not found."
+$je = Join-Path $toolBin "je.exe"
+if (-not (Test-Path -LiteralPath $je -PathType Leaf)) {
+    throw "Je was installed but $je was not found."
 }
 
-& $tau --version
+& $je --version
 if ($LASTEXITCODE -ne 0) {
-    throw "Tau was installed but could not be started."
+    throw "Je was installed but could not be started."
 }
-Write-Host "Tau is installed. Run: tau"
+Write-Host "Je is installed. Run: je"
 
 $pathEntries = $env:PATH -split ";"
 if ($toolBin -notin $pathEntries) {
-    Write-Host "Restart PowerShell if 'tau' is not found; $toolBin must be on PATH."
+    Write-Host "Restart PowerShell if 'je' is not found; $toolBin must be on PATH."
 }

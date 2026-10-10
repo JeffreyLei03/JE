@@ -1,3 +1,4 @@
+import sys
 from stat import S_IMODE
 
 import pytest
@@ -12,7 +13,8 @@ def test_file_credential_store_round_trips_and_sets_private_permissions(tmp_path
     store.set("openai", "test-key")
 
     assert store.get("openai") == "test-key"
-    assert S_IMODE(path.stat().st_mode) == 0o600
+    if sys.platform != "win32":
+        assert S_IMODE(path.stat().st_mode) == 0o600
 
 
 def test_file_credential_store_deletes_key(tmp_path) -> None:

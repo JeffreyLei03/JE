@@ -4,7 +4,7 @@
     var b = document.getElementById(id);
     if(!b) return;
     b.addEventListener("click", function(){
-      navigator.clipboard && navigator.clipboard.writeText("curl -LsSf https://twotimespi.dev/install.sh | sh");
+      navigator.clipboard && navigator.clipboard.writeText("curl -LsSf https://raw.githubusercontent.com/JeffreyLei03/JE/main/website/static/install.sh | sh");
       var t = b.textContent; b.textContent = "copied";
       setTimeout(function(){ b.textContent = t; }, 1400);
     });

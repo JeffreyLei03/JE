@@ -9,7 +9,8 @@ Je 是一个面向终端的现代化自主 AI 编码助手框架。本项目致�
 Je 严格遵循三层分层解耦架构，保证底层核心引擎与上层终端界面的完全独立：
 
 ```text
-je_coding  →  je_agent  →  je_ai
+je_coding → je_agent
+je_coding → je_ai → je_agent
 ```
 
 ```text
@@ -20,7 +21,7 @@ TUI / CLI     = 前端消费层（事件流驱动）
 
 ### 1. `je_ai`：统一模型流式层
 - **职责**：抽象和适配各类 LLM 提供商（OpenAI、Anthropic、Ollama、DeepSeek、Hugging Face 等），将其流式协议统一转换为框架中立的类型化事件。
-- **边界约束**：纯协议转换，不包含业务逻辑，不依赖具体工具定义或上层状态。
+- **边界约束**：纯协议转换，不包含业务逻辑，依赖 je_agent 的供应商中立消息、工具及 Provider 契约，不依赖应用层状态。
 
 ### 2. `je_agent`：便携式通用 Agent 引擎
 - **职责**：Agent 的“核心大脑”，包含消息管理（Messages）、类型化工具抽象（Tools）、事件流定义（Events）、执行主循环（Agent Loop）、状态调度（AgentHarness）以及基础会话存储。
@@ -70,3 +71,5 @@ Je 规范化使用 `.je` 作为配置与资源目录：
   - 核心消息、事件、配置均推荐使用强类型 `dataclass(slots=True)` 或 Pydantic 模型。
   - 显式管理异步（`async`/`await`）边界，避免阻塞操作混入异步循环。
   - 测试驱动：优先使用 Fake Provider 和 Fake Tools 编写高确定性的单元测试。
+
+代码导入方向由 `je_agent` 定义消息、事件、工具与 `ModelProvider` 契约，`je_ai` 实现该契约，`je_coding` 组装两者。运行时则由 Harness 调用注入的 Provider。核心运行时不依赖 UI；`je_agent.session` 同时提供可选的本地 JSONL 存储实现。

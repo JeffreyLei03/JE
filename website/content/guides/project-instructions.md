@@ -1,10 +1,10 @@
 ---
 title: Project instructions (AGENTS.md)
-description: Give Tau standing instructions about your project with AGENTS.md files.
+description: Give Je standing instructions about your project with AGENTS.md files.
 ---
 
 An **`AGENTS.md`** file is how you give the agent durable, project-specific
-context: conventions to follow, commands to run, things to avoid. Tau discovers
+context: conventions to follow, commands to run, things to avoid. Je discovers
 these files automatically and includes them in the system prompt for every turn,
 wrapped in `<project_context>` tags.
 
@@ -19,25 +19,25 @@ Anything you'd otherwise repeat to the agent every session:
 
 Keep it focused — it's part of the prompt budget for every turn.
 
-## Where Tau looks
+## Where Je looks
 
-Tau discovers instruction files in this order. User files are always eligible;
+Je discovers instruction files in this order. User files are always eligible;
 project files are included only after the active cwd's [project-trust decision]
 (/guides/project-trust/):
 
 ```text
-~/.tau/AGENTS.md
+~/.je/AGENTS.md
 ~/.agents/AGENTS.md
 <project root>/AGENTS.md
 <project root>/.../<cwd>/AGENTS.md   # ancestor dirs between root and cwd
-<cwd>/.tau/AGENTS.md
+<cwd>/.je/AGENTS.md
 <cwd>/.agents/AGENTS.md
 ```
 
 The **project root** is the nearest ancestor directory containing a marker such
 as `.git`, `pyproject.toml`, `uv.lock`, `setup.py`, or `package.json`.
 
-This layering lets you keep personal global instructions in `~/.tau/` or
+This layering lets you keep personal global instructions in `~/.je/` or
 `~/.agents/`, project-wide rules in the repo's `AGENTS.md`, and narrower rules in
 a subdirectory closer to where you're working.
 
@@ -49,5 +49,5 @@ project triggers trust resolution rather than silently inheriting the old empty
 snapshot.
 
 > [!NOTE]
-> Tau itself uses an `AGENTS.md` at the repo root — a real example of the format
+> Je itself uses an `AGENTS.md` at the repo root — a real example of the format
 > in practice.

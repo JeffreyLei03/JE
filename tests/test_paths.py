@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from je_coding.paths import JePaths, TauPaths
+from je_coding.paths import JePaths
 
 
 def test_je_paths_user_locations(tmp_path: Path) -> None:

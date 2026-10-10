@@ -19,7 +19,8 @@ Je 保持可复用的 Agent 核心引擎与具体编码应用场景、交互界�
 ## 依赖关系与数据流向
 
 ```text
-je_coding  →  je_agent  →  je_ai
+je_coding → je_agent
+je_coding → je_ai → je_agent
 ```
 
 终端与 UI 层作为事件观察者消费核心发出的事件，核心层不直接执行 UI 渲染。
@@ -31,3 +32,5 @@ AgentHarness  = 通用可复用大脑
 CodingSession = 编码场景环境与上下文
 TUI / CLI     = 前端消费与展示形态
 ```
+
+代码导入方向由 `je_agent` 定义消息、事件、工具与 `ModelProvider` 契约，`je_ai` 实现该契约，`je_coding` 组装两者。运行时则由 Harness 调用注入的 Provider。核心运行时不依赖 UI；`je_agent.session` 同时提供可选的本地 JSONL 存储实现。
