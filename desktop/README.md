@@ -58,7 +58,14 @@ npm run smoke -- "D:\projects\JE\desktop\release\JE Desktop 0.1.0.exe"
 详细设计见 `../docs/desktop-design.md`。这是一版可用的桌面工作台，未实现 VS Code 扩展协议、语言服务器、完整调试器与交互式 PTY。
 
 ## 界面验收
+ 
+### 1. 桌面端首页 (Welcome)
+开箱即用的欢迎界面，提供快捷项目探索、测试补充与代码审查入口，以及模型、工具和工作空间状态栏：
 
-下图来自同一套桌面 renderer 的浏览器验收，展示真实项目代码与 DeepSeek 的只读工具任务。
+![JE Desktop 首页](screenshots/je-desktop-home.png)
 
-![JE 桌面工作台](screenshots/je-desktop-workbench.png)
+### 2. 双分栏工作台与任务产出 (Workbench & Output)
+展示实时生成代码与 Monaco 编辑器分栏联动，右侧常驻 Tools 执行轨迹与 Agent Context：
+
+![JE 桌面工作台](screenshots/je-desktop-task.png)
+

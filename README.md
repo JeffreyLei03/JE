@@ -14,11 +14,11 @@ Je 是一个面向专业开发者、轻量且高度可扩展的终端 AI 编程�
 
 JE Desktop 提供会话、文件树、Monaco 编辑器、聊天与代码分栏、Git 更改、终端命令输出，以及常驻的 Skills/Prompts/Tools 资源栏。通过 RPC 复用 JE 引擎，并与终端版共享模型配置和会话。
 
-![JE Desktop 工作台：会话、代码编辑器与资源侧栏](desktop/screenshots/je-desktop-workbench.png)
+![JE Desktop 首页：开箱即用的欢迎界面与操作入口](desktop/screenshots/je-desktop-home.png)
 
 真实任务产出：JE 从零生成「赛博朋克 3D 霓虹公路 (Cyberpunk Synthwave Highway)」纯原生交互应用，交付 3D 透视曲率赛道、尾灯流光拖影粒子与 Web Audio 引擎声浪/合成器音乐。
 
-![JE Desktop 真实任务：HTML 动画代码与模型完成结果](desktop/screenshots/je-desktop-task.png)
+![JE Desktop 真实任务：双分栏代码生成与模型完成结果](desktop/screenshots/je-desktop-task.png)
 
 [观看桌面端任务视频与代码产出](https://jeffreylei03.github.io/JE/#desktop)
 
