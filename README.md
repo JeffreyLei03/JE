@@ -68,8 +68,9 @@ flowchart TD
 
 ### 4. 开放无绑定的模型中立性 (Vendor-Neutral Provider)
 底层统一抽象了大模型调用规范，开箱支持：
-- 云端旗舰大模型（OpenAI GPT-4o、Claude 3.5 Sonnet、DeepSeek-V3/R1）。
-- 本地私有化推理（通过 Ollama 或 vLLM 驱动开源模型），完全离线亦可自主编码。
+- **新一代及旗舰大模型**：DeepSeek 全系列（V3/R1、`deepseek-v4-flash`、`deepseek-v4-pro`）、OpenAI（GPT-4o、GPT-5/6 系列、Codex 专版）、Claude（Sonnet 4/Opus 5 系列）、Kimi（K2.7-Code/K3）、GLM-5 等。
+- **任意兼容规范接口**：任何兼容 OpenAI `/chat/completions` 或 `/v1/responses` 协议的提供商（Together、Fireworks、Vercel AI Gateway、OpenCode 等）。
+- **本地私有化推理**：通过 Ollama 或 vLLM 驱动本地开源模型，完全离线亦可自主编码。
 
 ### 5. 极速轻量与即插即用 (Zero-Bloat Engineering)
 抛弃沉重的重型框架（如 LangChain、AutoGPT 等重构层级），基于纯原生 Python 3.12 异步高并发特性构建，依赖极简、启动毫秒级、内存占用极低。
