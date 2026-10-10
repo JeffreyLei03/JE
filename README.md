@@ -51,29 +51,34 @@ flowchart TD
 
 ---
 
-## 💡 核心亮点设计 (Key Highlights)
+## 💡 核心架构亮点 (Core Engineering Highlights)
 
-### 1. 纯事件驱动的主脑架构 (Pure Event-Driven Agent)
-`je_agent` 不直接依赖任何渲染代码（不依赖 Rich、不依赖 Textual）。Agent 内部执行流（思考、工具调用、模型回复、错误捕获）均以**强类型事件流 (`AgentEvent`)** 的形式向上抛出。前端无论是 Textual TUI、Web 前端还是 CLI 脚本，只需简单消费事件即可无缝渲染，实现了 UI 与核心逻辑的彻底解耦。
+围绕现代 AI Agent 工业级落地的核心诉求（高内聚执行流、可观测性、安全性拦截与低延迟流式吞吐），Je 在 **Agent Runtime（运行时）** 层面进行了深度架构设计：
 
-### 2. 只追加树状会话持久化 (Append-Only Tree Session)
-会话记录不是简单的平面聊天日志，而是基于 **JSONL 的只追加树状历史存储 (Tree-structured History)**：
-- **零破坏性存储**：每一次提问、回答与工具执行均作为不可变节点按需追加，永不重写已有文件。
-- **自由分叉与时光倒流**：支持像 Git 分支一样从任意历史节点派生新对话分支，会话恢复（`/resume`）绝对无损。
+### 1. 全异步细粒度事件流运行时 (Async Event-Driven Runtime)
+`je_agent` 核心引擎采用**完全异步生成器 (`AsyncIterator[AgentEvent]`)** 贯穿整个 ReAct 主执行循环：
+- **微观全生命周期感知**：标准化定义了从 `AgentStart`、`TurnStart`、`MessageUpdate` 到 `ToolExecutionStart/Update/End` 的强类型事件流，打字机文本、CoT 思考过程（Thinking Delta）与工具执行进度均实现**零缓冲实时流式推送**。
+- **纯粹的前后端契约解耦**：Agent 核心大脑不包含任何终端绘制或特定前端绑定代码（无 UI 污染）。上层无论是消费为 Rich 命令行输出、Textual 响应式 TUI，还是通过 WebSocket/SSE 接入 Web 端，只需监听事件流即可直接驱动，具备工业级 SDK 嵌入能力。
 
-### 3. 高精度原子化文件编辑系统 (Atomic Precision Editing)
-专为代码修改设计的智能编辑工具链：
-- **唯一性锚定 (`edit`)**：严格要求定位文本具有唯一上下文特征，杜绝模糊匹配改错代码。
-- **原子化执行与自动回滚**：编辑操作在内存缓冲中执行校验，任意异常即刻回滚，确保本地工作区源码绝不处于中间破坏状态。
+### 2. 双向生命周期 Hook 与动态方向控制 (Lifecycle Hooks & Dynamic Steering)
+在 Agent 自主推理执行主循环（`run_agent_loop`）中内置了严格的企业级安全与动态干预机制：
+- **工具调用前置拦截 (`before_tool_call`)**：支持执行前风控校验、权限鉴权（如写盘/Shell 敏感命令审批）或参数动态篡改重写；若判定高危可直接熔断中断（Block），从底层确保 Agent 代码执行的确定性与安全性。
+- **工具调用后置修饰 (`after_tool_call`)**：执行完成后可无缝注入结果清洗、脱敏过滤或自动异常捕获补偿。
+- **动态消息导向与自主跟随 (`get_steering_messages` & `get_follow_up_messages`)**：支持外部在执行轮次间隙动态注入插队指导消息（Steering），无需中断 Agent 状态机即可实现用户动态干预与任务纠偏。
 
-### 4. 开放无绑定的模型中立性 (Vendor-Neutral Provider)
-底层统一抽象了大模型调用规范，开箱支持：
-- **新一代及旗舰大模型**：DeepSeek 全系列（V3/R1、`deepseek-v4-flash`、`deepseek-v4-pro`）、OpenAI（GPT-4o、GPT-5/6 系列、Codex 专版）、Claude（Sonnet 4/Opus 5 系列）、Kimi（K2.7-Code/K3）、GLM-5 等。
-- **任意兼容规范接口**：任何兼容 OpenAI `/chat/completions` 或 `/v1/responses` 协议的提供商（Together、Fireworks、Vercel AI Gateway、OpenCode 等）。
-- **本地私有化推理**：通过 Ollama 或 vLLM 驱动本地开源模型，完全离线亦可自主编码。
+### 3. 基于不可变树的只追加会话存储 (Append-Only Tree-Structured History)
+彻底告别传统 Agent 常见的“粗暴覆写式”扁平聊天记录：
+- **零丢失与不可变状态机**：交互历史以 JSONL 只追加（Append-Only）方式落盘，每个节点记录完整的推理、工具调用及时间戳元数据，杜绝并发竞态下的数据损坏。
+- **会话分叉与时空回溯 (Branching & Resuming)**：支持从任意历史节点无损衍生出新分支，轻松实现会话快速恢复（`/resume`）、多方案分叉实验与上下文精简压缩。
 
-### 5. 极速轻量与即插即用 (Zero-Bloat Engineering)
-抛弃沉重的重型框架（如 LangChain、AutoGPT 等重构层级），基于纯原生 Python 3.12 异步高并发特性构建，依赖极简、启动毫秒级、内存占用极低。
+### 4. 生产级韧性与弹性降级 (Production Resilience & Context Repair)
+- **上下文自动修复 (`repair_tool_history`)**：在网络抖动或模型突发异常导致工具执行中断时，运行时自动校验并修复消息上下文链条（补齐对应 ToolResult 占位），防止脏上下文引发大模型二次崩溃。
+- **超时熔断与取消级联 (`CancellationToken`)**：支持用户端一键秒级取消正在执行的推理或长耗时工具，级联终止底层 HTTP 异步连接与系统子进程。
+
+### 5. 即插即用的全生态模型适配 (Plug-and-Play Model Matrix)
+屏蔽各厂商 API 的细微差异，支持无缝切换与平滑演进：
+- **全面适配主流与新一代大模型**：深层调优并支持 DeepSeek 系列（V3/R1 及 `deepseek-v4-flash/pro`）、OpenAI 系列（GPT-4o、新一代 `gpt-5/6`、Codex 专版）、Claude（Sonnet 4/Opus 5 系列）、Kimi（K2.7/K3）、GLM 等。
+- **一键切换服务商**：无缝对接官方接口、聚合网关（Together、Fireworks、OpenCode）以及企业内网私有部署的 Ollama / vLLM 推理服务，只需一行配置，无需重写任何业务代码。
 
 ---
 
