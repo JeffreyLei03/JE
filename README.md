@@ -15,32 +15,32 @@ Je 是一个面向专业开发者、轻量且高度可扩展的终端 AI 编程�
 Je 秉承**极简、高内聚、低耦合**的工程哲学，严格遵循三层分层解耦架构：
 
 ```mermaid
-graph TD
-    subgraph UI ["🖥 前端交互层 (Presentation Layer)"]
+flowchart TD
+    subgraph UI[前端交互层 Presentation Layer]
         TUI["Textual TUI (富交互界面)"]
         CLI["Print Mode (命令行无头模式)"]
     end
 
-    subgraph Coding ["📦 je_coding (工程适配环境)"]
+    subgraph Coding[je_coding 工程适配环境]
         Session["CodingSession (编码会话)"]
         Tools["CodingTools (read / write / edit / bash)"]
         Context["ContextLoader (AGENTS.md / .je/skills)"]
     end
 
-    subgraph Core ["⚡ je_agent (可复用核心大脑)"]
+    subgraph Core[je_agent 可复用核心大脑]
         Harness["AgentHarness (调度线束引擎)"]
         Loop["AgentLoop (ReAct 自治推理主循环)"]
         Tree["SessionTree (不可变/只追加树状存储)"]
     end
 
-    subgraph AI ["🌐 je_ai (统一模型通信层)"]
+    subgraph AI[je_ai 统一模型通信层]
         Provider["ProviderAdapter (适配 OpenAI / Claude / Ollama)"]
         Stream["EventStream (统一异步流式分发)"]
     end
 
-    UI -->|"订阅事件流 / 发送用户输入"| Coding
-    Coding -->|"组装工具与上下文"| Core
-    Core -->|"调度模型并驱动自治循环"| AI
+    UI -->|订阅事件流 / 发送输入| Coding
+    Coding -->|组装工具与工程上下文| Core
+    Core -->|调度模型并驱动自治循环| AI
 ```
 
 | 分层命名 | 核心定位 | 主要职责与边界 |
