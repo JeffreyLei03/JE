@@ -195,6 +195,7 @@ from je_coding.tui.widgets import (
 )
 
 _textual_theme_for_je_theme = textual_theme_for_tui_theme
+_textual_theme_for_tau_theme = textual_theme_for_tui_theme
 _theme_css_variables = theme_css_variables
 
 type BindingEntry = Binding | tuple[str, str] | tuple[str, str, str]
