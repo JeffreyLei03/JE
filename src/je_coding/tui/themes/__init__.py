@@ -445,10 +445,19 @@ def theme_css_variables(theme: TuiTheme) -> dict[str, str]:
         "je-markdown-inline-code": theme.markdown_inline_code,
         "je-markdown-code-block-background": theme.markdown_code_block_background,
         "je-markdown-link": theme.markdown_link,
+        "je-markdown-bullet": theme.markdown_bullet,
+        "footer-background": theme.chrome_background,
+        "footer-foreground": theme.chrome_text,
+        "footer-description-background": theme.chrome_background,
+        "footer-description-foreground": theme.chrome_text,
+        "footer-key-background": theme.chrome_background,
+        "footer-key-foreground": theme.accent,
+        "footer-item-background": theme.chrome_background,
     }
     # 兼容现有 tau 变量
     for k, v in list(css_vars.items()):
-        css_vars[k.replace("je-", "tau-")] = v
+        if k.startswith("je-"):
+            css_vars[k.replace("je-", "tau-")] = v
     return css_vars
 
 def _legacy_vars(theme):

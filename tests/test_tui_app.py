@@ -105,8 +105,7 @@ from je_coding.system_prompt import (
     format_system_prompt_inspection,
 )
 from je_coding.tools import create_coding_tools
-from je_coding.tui import app as tui_app
-from je_coding.tui.adapter import TuiEventAdapter
+from je_coding.version import current_version
 from je_coding.tui.app import (
     COMPLETION_MAX_VISIBLE_LINES,
     PASTE_DISPLAY_THRESHOLD,
@@ -971,7 +970,7 @@ def test_session_sidebar_brand_includes_current_version() -> None:
 
     console.print(_sidebar_brand(theme=TAU_DARK_THEME))
 
-    assert "τ = 2π  0.4.7" in console.export_text()
+    assert f"τ = 2π  {current_version()}" in console.export_text()
 
 
 def test_session_sidebar_uses_prominent_title_and_accented_section_headers() -> None:
