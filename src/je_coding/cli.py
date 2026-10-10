@@ -375,17 +375,17 @@ def main(
     ] = False,
     version: Annotated[
         bool,
-        typer.Option("--version", "-v", help="Show Tau's version and exit."),
+        typer.Option("--version", "-v", help="Show Je's version and exit."),
     ] = False,
     models: Annotated[
         bool,
-        typer.Option("--models", help="With `tau update`, refresh model catalogs only."),
+        typer.Option("--models", help="With `je update`, refresh model catalogs only."),
     ] = False,
 ) -> None:
-    """Run the Tau CLI."""
+    """Run the Je CLI."""
     current_version = _current_version()
     if version:
-        typer.echo(f"tau {current_version}")
+        typer.echo(f"je {current_version}")
         raise typer.Exit()
 
     try:
