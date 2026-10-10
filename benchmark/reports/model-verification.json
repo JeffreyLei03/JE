@@ -1,0 +1,10 @@
+{
+  "requested_version": "DeepSeek-V4.1-Flash",
+  "api_model": "deepseek-flash",
+  "available_models": [
+    "deepseek-flash",
+    "deepseek-v4-pro"
+  ],
+  "verified_at": "2026-10-10T11:16:59.536714+00:00",
+  "source": "https://deepseek.com/news/deepseek-v4-1-flash/"
+}

@@ -1,6 +1,7 @@
 ---
 import { site, sitePath, version } from "../data";
 import capture from "../../static/images/demo/capture.json";
+import DesktopShowcase from "./DesktopShowcase.astro";
 const frames = [
   {
     file: "01-prompt.jpg",
@@ -36,13 +37,13 @@ const frames = [
         让编码 Agent<br />的每一步，<br /><span>清晰可见。</span>
       </h1>
       <p class="hero-description">
-        JE 是一个面向终端的 AI 编码助手。<br
+        JE 是一个面向本地项目的 AI 编码助手。<br
         />从模型流式响应到工具执行，把复杂的运行过程<br
           class="desktop-break"
         />变成可阅读、可追踪、可继续的工作流。
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="#demo"
+        <a class="button button-primary" href="#desktop"
           >查看真实运行 <span aria-hidden="true">↗</span></a
         >
         <a class="text-link" href={sitePath("/quickstart/")}
@@ -50,25 +51,25 @@ const frames = [
         >
       </div>
       <div class="hero-tags">
-        <span>Python</span><span>Textual</span><span>Streaming AI</span>
+        <span>Python</span><span>Electron / React</span><span>Streaming AI</span>
       </div>
     </div>
     <div class="hero-object" aria-label="JE 项目与运行界面预览">
       <div class="object-label">
-        <span>TERMINAL, RECONSIDERED.</span><span>v{version}</span>
+        <span>ONE ENGINE. TWO INTERFACES.</span><span>v{version}</span>
       </div>
       <div class="je-monogram" aria-hidden="true">JE<span>_</span></div>
-      <a class="hero-capture" href="#demo" aria-label="查看 JE 实际运行演示">
+      <a class="hero-capture hero-desktop-capture" href="#desktop" aria-label="查看 JE 桌面端真实任务录像">
         <div class="capture-bar">
-          <span><i></i><i></i><i></i></span><span>JE / REAL SESSION</span><span
+          <span><i></i><i></i><i></i></span><span>JE DESKTOP / REAL OUTPUT</span><span
             >↗</span
           >
         </div>
         <img
-          src={sitePath("/images/demo/02-result.jpg")}
-          alt="JE 在 DeepSeek 模型下完成编码任务的真实运行截图"
-          width="1040"
-          height="720"
+          src={sitePath("/media/desktop/poster.jpg")}
+          alt="JE 原生桌面端：真实模型生成赛博朋克 3D 霓虹公路交互应用"
+          width="1480"
+          height="960"
           fetchpriority="high"
         />
       </a>
@@ -79,7 +80,7 @@ const frames = [
   </section>
 
   <div class="project-strip shell" aria-label="项目能力">
-    <div><small>INTERFACE</small><span>终端交互 / 无头 CLI</span></div>
+    <div><small>INTERFACE</small><span>桌面工作台 / 终端 / CLI</span></div>
     <div><small>RUNTIME</small><span>流式事件 / 工具调用</span></div>
     <div><small>CONTINUITY</small><span>本地会话 / 上下文恢复</span></div>
     <a href={site.githubUrl}
@@ -87,15 +88,17 @@ const frames = [
     >
   </div>
 
+  <DesktopShowcase />
+
   <section class="demo-section" id="demo" aria-labelledby="demo-title">
     <div class="shell">
       <div class="section-heading">
-        <p class="eyebrow">01 / THE AGENT IN ACTION</p><span
+        <p class="eyebrow">02 / THE TERMINAL EXPERIENCE</p><span
           class="section-note">REAL MODEL. REAL TOOLS. REAL OUTPUT.</span
         >
       </div>
       <div class="section-intro">
-        <h2 id="demo-title">先看它如何工作。</h2><p>
+        <h2 id="demo-title">同一个引擎，终端也轻盈。</h2><p>
           一次真实的编码任务，三个可以检查的时刻。<br />截图来自 JE 的 Textual
           运行界面。
         </p>
@@ -170,7 +173,7 @@ const frames = [
     aria-labelledby="engineering-title"
   >
     <div class="section-heading">
-      <p class="eyebrow">02 / ENGINEERING UNDER THE SURFACE</p><span
+      <p class="eyebrow">03 / ENGINEERING UNDER THE SURFACE</p><span
         class="section-note">SMALL BOUNDARIES. CLEAR RESPONSIBILITIES.</span
       >
     </div>
@@ -200,7 +203,7 @@ const frames = [
       <a class="architecture-layer" href={sitePath("/guides/tui/")}
         ><span class="layer-number">03 / EXPERIENCE</span><h3>
           je_coding<span>↗</span>
-        </h3><p>组装工程上下文、持久化会话与 Textual 终端体验。</p><span
+        </h3><p>组装工程上下文与持久化会话，通过事件流服务终端和桌面界面。</p><span
           class="layer-chip">Context → session → UI</span
         ></a
       >
@@ -240,7 +243,7 @@ const frames = [
     id="explore"
     aria-labelledby="explore-title"
   >
-    <p class="eyebrow">03 / KEEP EXPLORING</p><h2 id="explore-title">
+    <p class="eyebrow">04 / KEEP EXPLORING</p><h2 id="explore-title">
       从使用，到理解。
     </h2>
     <div class="explore-grid">

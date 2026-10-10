@@ -386,6 +386,128 @@ small,
   background: linear-gradient(180deg, #111514, var(--ground));
   border-bottom: var(--rule);
 }
+.generated-preview {
+  margin: 36px 0 0;
+  overflow: hidden;
+  border: 1px solid var(--grid);
+  border-radius: 10px;
+  background: #101513;
+}
+.generated-preview figcaption {
+  padding: 16px 22px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font: 11px/1.6 var(--mono);
+  color: var(--ink-soft);
+}
+.generated-preview figcaption a { color: var(--accent); }
+.generated-preview iframe {
+  display: block;
+  width: 100%;
+  height: 760px;
+  border: 0;
+  background: #bfe3f2;
+}
+@media (max-width: 760px) {
+  .generated-preview iframe { height: 540px; }
+}
+.hero-desktop-capture img {
+  height: auto;
+  aspect-ratio: 37 / 24;
+  object-fit: contain;
+}
+.desktop-showcase {
+  padding-block: 100px;
+  border-bottom: var(--rule);
+  background: radial-gradient(ellipse at 60% 25%, #b5f6c308, transparent 65%);
+}
+.desktop-film {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--grid-strong);
+  border-radius: 10px;
+  background: #161c19;
+  box-shadow: 0 22px 90px #0004;
+}
+.film-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 16px 22px;
+  color: var(--ink-faint);
+  font: 9px var(--mono);
+  letter-spacing: .05em;
+}
+.desktop-film video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 37 / 24;
+  background: #f7f8fa;
+}
+.desktop-film figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 15px 22px;
+  font-size: 11px;
+  color: var(--ink-faint);
+}
+.desktop-film figcaption a { white-space: nowrap; color: var(--accent); }
+.film-chapters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: var(--rule);
+}
+.film-chapters button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 10px;
+  text-align: left;
+  background: none;
+  color: var(--ink);
+  border: 0;
+  font-size: 12px;
+}
+.film-chapters button:hover { color: var(--accent); }
+.film-chapters small { color: var(--ink-faint); font: 10px var(--mono); }
+.film-chapters button > span:last-child { margin-left: auto; }
+.film-status { margin: 0; font-size: 12px; color: var(--accent); }
+.film-status:not(:empty) { padding-top: 15px; }
+.desktop-outcomes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 35px;
+  padding-top: 48px;
+}
+.outcome-number { color: var(--ink-faint); font: 10px var(--mono); }
+.desktop-outcomes h3 { font-size: 18px; margin: 18px 0 12px; }
+.desktop-outcomes p { font-size: 12px; min-height: 75px; margin-bottom: 20px; }
+.desktop-outcomes .text-link { font-size: 11px; }
+.report-outcome table { width: 100%; margin: 14px 0 20px; font: 10px var(--mono); }
+.report-outcome th, .report-outcome td { padding: 6px 0; text-align: left; border-bottom: var(--rule); }
+.report-outcome th { font-weight: 400; color: var(--ink-faint); }
+.report-outcome th:last-child, .report-outcome td:last-child { text-align: right; }
+.report-outcome td:last-child { color: var(--accent); }
+.desktop-details { display: flex; align-items: center; flex-wrap: wrap; gap: 18px 30px; margin-top: 40px; padding-top: 25px; border-top: var(--rule); }
+.desktop-details p { font-size: 11px; margin: 0; color: var(--ink-faint); flex-basis: 100%; }
+.desktop-details .text-link { font-size: 11px; }
+@media (max-width: 760px) {
+  .desktop-showcase { padding-block: 64px; }
+  .desktop-showcase .section-note { display: none; }
+  .film-topline { padding: 12px; font-size: 8px; }
+  .film-topline > span:last-child { display: none; }
+  .desktop-film figcaption { padding: 12px; flex-wrap: wrap; gap: 8px; font-size: 10px; }
+  .film-chapters button { padding: 16px 3px; gap: 8px; font-size: 10px; }
+  .film-chapters button > span:last-child { display: none; }
+  .desktop-outcomes { grid-template-columns: 1fr; gap: 32px; padding-top: 35px; }
+  .desktop-outcomes p { min-height: 0; margin-bottom: 14px; }
+  .report-outcome table { font-size: 12px; }
+  .desktop-details { margin-top: 32px; gap: 14px; }
+}
 .section-heading {
   display: flex;
   justify-content: space-between;

@@ -1,0 +1,130 @@
+[
+  {
+    "path": "benchmark/runs/je/01_csv/solution.py",
+    "sha256": "b3f76ab7b997f1858c22bbbd11bfe2b5f23d338703784020b57ba1ee3f033366"
+  },
+  {
+    "path": "benchmark/runs/je/01_csv/test_solution.py",
+    "sha256": "976fc6dc562c7e9f6de6b07033839b07d8c8e7aad91409e857e9b99e40acfe44"
+  },
+  {
+    "path": "benchmark/runs/je/02_intervals/solution.py",
+    "sha256": "25269f38b9e707732a2de63c2a9f43af6b0914f421f365fcc172597d2351d0b8"
+  },
+  {
+    "path": "benchmark/runs/je/02_intervals/test_solution.py",
+    "sha256": "20719d82c6a155ffded02a8eaa86552dd61c54f330d537a7d96d11e7530ef02b"
+  },
+  {
+    "path": "benchmark/runs/je/03_dag/solution.py",
+    "sha256": "b34151c24742f554e55122edc0b113ee6c2174a93eedb8dab40ddb63234f68a1"
+  },
+  {
+    "path": "benchmark/runs/je/03_dag/test_solution.py",
+    "sha256": "8f16dd663ac382e4e439d96fadcf5eeb5f680b9d4038207be7d764fd77f50590"
+  },
+  {
+    "path": "benchmark/runs/je/04_cache/solution.py",
+    "sha256": "1cc4bf4da148fe785ac7f5d54ed4fd082f3f13fc947abef8ac7ce0493030703d"
+  },
+  {
+    "path": "benchmark/runs/je/04_cache/test_solution.py",
+    "sha256": "5dcc452c05b2d674b5aaa5277bd64a813a725db00f3e05c16af2f630dad4f574"
+  },
+  {
+    "path": "benchmark/runs/je/05_async/solution.py",
+    "sha256": "ebbf3c5f97707966c9f55b1bd86dfbfa4cc7488de69d8ec44890aad3769d865b"
+  },
+  {
+    "path": "benchmark/runs/je/05_async/test_solution.py",
+    "sha256": "2a0363be837a5b5e19d8d388e67db4d6fad9ca608a6ae6a713de1eac6cc0686e"
+  },
+  {
+    "path": "benchmark/runs/je/06_sqlite/solution.py",
+    "sha256": "47b814d63ff9d3f51252f451592551af5f89c8b5a39cb7f9ca3b9690c7d25e99"
+  },
+  {
+    "path": "benchmark/runs/je/06_sqlite/test_solution.py",
+    "sha256": "ccc6785dba3ddd1e5909a8b3e808d9db4c56b3c991b7ebad249dc0affed563c5"
+  },
+  {
+    "path": "benchmark/runs/je/07_jsonl/solution.py",
+    "sha256": "9475eb85aba89fcc98aa7e3df76edbb21d2429b6572a4898fc592e6c8154d464"
+  },
+  {
+    "path": "benchmark/runs/je/07_jsonl/test_solution.py",
+    "sha256": "110d581859916cf626fce40f627a70f87cc671b789fb0a712b65e4bad5417251"
+  },
+  {
+    "path": "benchmark/runs/je/08_zip/solution.py",
+    "sha256": "ac22c3457436687c5399829539000d4a689d7700e1c6e903d3233d1275679cbc"
+  },
+  {
+    "path": "benchmark/runs/je/08_zip/test_solution.py",
+    "sha256": "33cf9c46937e89e50aac7bf3bd5494932514b925261dadea7ba97281389e84df"
+  },
+  {
+    "path": "benchmark/runs/je/09_search/solution.py",
+    "sha256": "248a32d33cae04ce77ecef45e2636811f16b1e635ff938c64d94c33f5cc4a3cd"
+  },
+  {
+    "path": "benchmark/runs/je/09_search/test_solution.py",
+    "sha256": "2b40f176b4c2c11de3e4bc6c17584c4784b840f42bf1da6d288f1555e293ab25"
+  },
+  {
+    "path": "benchmark/runs/je/10_retry/solution.py",
+    "sha256": "0a5da89473a0b285d8872b1d16178a89e0012fb634f8ff83408a09051d03102a"
+  },
+  {
+    "path": "benchmark/runs/je/10_retry/test_solution.py",
+    "sha256": "71db6bbb3d7198cafc6d4634c2a9f73f9bc59d5ea9244535e0b76505930524b9"
+  },
+  {
+    "path": "benchmark/tasks.json",
+    "sha256": "82292ebe30e5160e2832618795867734fed6378a70987728654f82cba298ac5f"
+  },
+  {
+    "path": "benchmark/evaluator.py",
+    "sha256": "3a57adbc06a1e696e6ecb54c30746edd5946eea041cf20078cae184a7b639703"
+  },
+  {
+    "path": "benchmark/baseline/01_csv/solution.py",
+    "sha256": "5e204053add787cf94df8a4422e796daa97ac016d406223333c05cff9f8823f5"
+  },
+  {
+    "path": "benchmark/baseline/02_intervals/solution.py",
+    "sha256": "97fa4bb82a8b3d7cc7fd939c5387b8c1f59d74aa25ad8ae1eb7b1d7ad2e7edc9"
+  },
+  {
+    "path": "benchmark/baseline/03_dag/solution.py",
+    "sha256": "686b99f6059d8a8eb859f224a96bec549c4f4823a6d9d88b3048cbf0554acbd7"
+  },
+  {
+    "path": "benchmark/baseline/04_cache/solution.py",
+    "sha256": "79a3c7e9102bda46fe7fb251ee54e6408e2e0256cc4702e5c3af084cb6018ec3"
+  },
+  {
+    "path": "benchmark/baseline/05_async/solution.py",
+    "sha256": "4c965dba14ce46fbedde78dfe72ebce302a0521bc3d5b5a8b87e5e3714287d3f"
+  },
+  {
+    "path": "benchmark/baseline/06_sqlite/solution.py",
+    "sha256": "52d0948c1ca9c526f87fc0402fdd0d647bfddbae4a6b02d54d406cdcc6a6d18f"
+  },
+  {
+    "path": "benchmark/baseline/07_jsonl/solution.py",
+    "sha256": "1ece320ba9a6ab634d160858ba801125638debef0bdef6ff9064fa16e9df0bc1"
+  },
+  {
+    "path": "benchmark/baseline/08_zip/solution.py",
+    "sha256": "e1e430e9df24b4cb74b9793ec9317e464d1b3e59e7829856a69d0dcfcacbdffc"
+  },
+  {
+    "path": "benchmark/baseline/09_search/solution.py",
+    "sha256": "3e478a8d3b363e28986d5f5d7482e63cbf035c3132f9f4c11b5c515d4745f904"
+  },
+  {
+    "path": "benchmark/baseline/10_retry/solution.py",
+    "sha256": "120a8f3d47aee8fc518fef05d0876f0833e7c23c3b3a374496bd415a36dc1678"
+  }
+]

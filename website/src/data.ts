@@ -5,7 +5,7 @@ import { parse as toml } from "smol-toml";
 export const site = {
   title: "JE — Jeffrey's coding agent project",
   description:
-    "JE, a terminal coding agent by Jeffrey. Explore real model runs, tool execution, and the engineering behind the interface.",
+    "JE, a local coding agent by Jeffrey. Explore its desktop workbench, terminal interface, real task videos, and generated code.",
   githubUrl: "https://github.com/JeffreyLei03/JE",
   communityUrl: "https://github.com/JeffreyLei03/JE/discussions",
   editRepoUrl: "https://github.com/JeffreyLei03/JE/edit/main/website/content",

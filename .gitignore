@@ -22,6 +22,7 @@ desktop/release/
 desktop/engine-dist/
 desktop/engine-build/
 desktop/*.spec
+benchmark/runs/
 
 # System files
 .DS_Store

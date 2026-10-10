@@ -1,0 +1,32 @@
+{
+  "id": "04_cache",
+  "model": "deepseek-flash",
+  "status": "completed",
+  "error": null,
+  "wall_seconds": 22.853,
+  "turns": 6,
+  "tool_calls": 7,
+  "tool_errors": 0,
+  "requests": 6,
+  "usage": {
+    "input": 2756,
+    "output": 5592,
+    "cacheRead": 32384,
+    "cacheWrite": 0,
+    "cacheWrite1H": null,
+    "reasoning": 2191,
+    "totalTokens": 40732,
+    "cost": {
+      "input": 0.0,
+      "output": 0.0,
+      "cacheRead": 0.0,
+      "cacheWrite": 0.0,
+      "total": 0.0
+    }
+  },
+  "response_models": [
+    "deepseek-flash"
+  ],
+  "billed_cost_usd": null,
+  "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+}

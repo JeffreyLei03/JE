@@ -1,0 +1,36 @@
+{
+  "playback_note": "真实桌面会话录屏 + 极速试驾实况",
+  "task": "从零构建「赛博朋克 3D 霓虹极速公路」纯前端单文件交互应用",
+  "model": "deepseek-v4-flash",
+  "started_at": "2026-10-10T12:57:12Z",
+  "duration_seconds": 32.4,
+  "chapters": [
+    {
+      "time": 0,
+      "label": "任务下发与需求理解"
+    },
+    {
+      "time": 5,
+      "label": "推理思考与工具自愈"
+    },
+    {
+      "time": 10,
+      "label": "文件树与 Monaco 编辑器"
+    },
+    {
+      "time": 15,
+      "label": "Canvas 与 Web Audio 审计"
+    },
+    {
+      "time": 20,
+      "label": "240 MPH 极速试驾与实机交互"
+    }
+  ],
+  "verification": {
+    "html_syntax": "passed",
+    "canvas_webgl": "passed",
+    "zero_dependency": true,
+    "web_audio_api": true,
+    "60fps_render": true
+  }
+}

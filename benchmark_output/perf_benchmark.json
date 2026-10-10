@@ -1,0 +1,243 @@
+{
+  "summary": {
+    "model": "mock-model",
+    "generated_at": "2026-10-10T10:49:38.309615+00:00",
+    "conversations": 6,
+    "requests": 6,
+    "errors": 0,
+    "success_rate": 1.0,
+    "wall_time_seconds": 0.4084742999984883,
+    "ttft_ms": {
+      "count": 6,
+      "mean": 73.5605166652628,
+      "p50": 76.95640000747517,
+      "p90": 77.3903499939479,
+      "p99": 77.42432499071583,
+      "minimum": 66.31160000688396,
+      "maximum": 77.42809999035671
+    },
+    "latency_ms": {
+      "count": 6,
+      "mean": 135.70771667097384,
+      "p50": 139.695899997605,
+      "p90": 139.95330000761896,
+      "p99": 139.97661000175867,
+      "minimum": 127.46180000249296,
+      "maximum": 139.97920000110753
+    },
+    "tokens_per_second": {
+      "count": 6,
+      "mean": 36.91399298917168,
+      "p50": 35.79207422227754,
+      "p90": 39.22370056879477,
+      "p99": 39.227065266832476,
+      "minimum": 35.71959262490741,
+      "maximum": 39.22743912217
+    },
+    "tool_rtt_ms": {
+      "count": 0,
+      "mean": 0.0,
+      "p50": 0.0,
+      "p90": 0.0,
+      "p99": 0.0,
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "input_tokens": 48,
+    "output_tokens": 30,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "total_tokens": 78,
+    "total_cost_usd": 0.000108,
+    "tool_calls": 0
+  },
+  "config": {
+    "model": "mock-model",
+    "system": "You are a helpful AI assistant.",
+    "prompts": [
+      "请简要说明你如何规划一次端到端的代码重构任务。"
+    ],
+    "tools": [],
+    "max_turns": 4,
+    "concurrency": 3,
+    "rounds": 6,
+    "warmup_rounds": 1,
+    "pricing": {
+      "input_per_million": 1.0,
+      "output_per_million": 2.0,
+      "cache_read_per_million": 0.0,
+      "cache_write_per_million": 0.0
+    },
+    "timeout_seconds": null
+  },
+  "conversations": [
+    {
+      "label": "conversation-1",
+      "prompts": [
+        "请简要说明你如何规划一次端到端的代码重构任务。"
+      ],
+      "duration_ms": 127.6644000026863,
+      "error": null,
+      "requests": [
+        {
+          "turn": 1,
+          "ttft_ms": 66.35799998184666,
+          "duration_ms": 127.46180000249296,
+          "generation_ms": 61.103800020646304,
+          "input_tokens": 8,
+          "output_tokens": 5,
+          "cache_read_tokens": 0,
+          "cache_write_tokens": 0,
+          "total_tokens": 13,
+          "tokens_per_second": 39.22743912217,
+          "cost_usd": 1.8e-05,
+          "stop_reason": "stop",
+          "tool_calls": 0,
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "tool_calls": []
+    },
+    {
+      "label": "conversation-2",
+      "prompts": [
+        "请简要说明你如何规划一次端到端的代码重构任务。"
+      ],
+      "duration_ms": 127.59190000360832,
+      "error": null,
+      "requests": [
+        {
+          "turn": 1,
+          "ttft_ms": 66.31160000688396,
+          "duration_ms": 127.48610001290217,
+          "generation_ms": 61.17450000601821,
+          "input_tokens": 8,
+          "output_tokens": 5,
+          "cache_read_tokens": 0,
+          "cache_write_tokens": 0,
+          "total_tokens": 13,
+          "tokens_per_second": 39.21996201541954,
+          "cost_usd": 1.8e-05,
+          "stop_reason": "stop",
+          "tool_calls": 0,
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "tool_calls": []
+    },
+    {
+      "label": "conversation-3",
+      "prompts": [
+        "请简要说明你如何规划一次端到端的代码重构任务。"
+      ],
+      "duration_ms": 140.02869999967515,
+      "error": null,
+      "requests": [
+        {
+          "turn": 1,
+          "ttft_ms": 77.35259999753907,
+          "duration_ms": 139.84920000075363,
+          "generation_ms": 62.49660000321455,
+          "input_tokens": 8,
+          "output_tokens": 5,
+          "cache_read_tokens": 0,
+          "cache_write_tokens": 0,
+          "total_tokens": 13,
+          "tokens_per_second": 35.75279658355611,
+          "cost_usd": 1.8e-05,
+          "stop_reason": "stop",
+          "tool_calls": 0,
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "tool_calls": []
+    },
+    {
+      "label": "conversation-4",
+      "prompts": [
+        "请简要说明你如何规划一次端到端的代码重构任务。"
+      ],
+      "duration_ms": 140.03609999781474,
+      "error": null,
+      "requests": [
+        {
+          "turn": 1,
+          "ttft_ms": 77.35249999677762,
+          "duration_ms": 139.9274000141304,
+          "generation_ms": 62.574900017352775,
+          "input_tokens": 8,
+          "output_tokens": 5,
+          "cache_read_tokens": 0,
+          "cache_write_tokens": 0,
+          "total_tokens": 13,
+          "tokens_per_second": 35.732815727978085,
+          "cost_usd": 1.8e-05,
+          "stop_reason": "stop",
+          "tool_calls": 0,
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "tool_calls": []
+    },
+    {
+      "label": "conversation-5",
+      "prompts": [
+        "请简要说明你如何规划一次端到端的代码重构任务。"
+      ],
+      "duration_ms": 140.06530001643114,
+      "error": null,
+      "requests": [
+        {
+          "turn": 1,
+          "ttft_ms": 77.42809999035671,
+          "duration_ms": 139.97920000110753,
+          "generation_ms": 62.551100010750815,
+          "input_tokens": 8,
+          "output_tokens": 5,
+          "cache_read_tokens": 0,
+          "cache_write_tokens": 0,
+          "total_tokens": 13,
+          "tokens_per_second": 35.71959262490741,
+          "cost_usd": 1.8e-05,
+          "stop_reason": "stop",
+          "tool_calls": 0,
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "tool_calls": []
+    },
+    {
+      "label": "conversation-6",
+      "prompts": [
+        "请简要说明你如何规划一次端到端的代码重构任务。"
+      ],
+      "duration_ms": 139.7162999783177,
+      "error": null,
+      "requests": [
+        {
+          "turn": 1,
+          "ttft_ms": 76.56030001817271,
+          "duration_ms": 139.5425999944564,
+          "generation_ms": 62.982299976283684,
+          "input_tokens": 8,
+          "output_tokens": 5,
+          "cache_read_tokens": 0,
+          "cache_write_tokens": 0,
+          "total_tokens": 13,
+          "tokens_per_second": 35.83135186099897,
+          "cost_usd": 1.8e-05,
+          "stop_reason": "stop",
+          "tool_calls": 0,
+          "status": "ok",
+          "error": null
+        }
+      ],
+      "tool_calls": []
+    }
+  ]
+}

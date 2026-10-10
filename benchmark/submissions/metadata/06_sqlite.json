@@ -1,0 +1,32 @@
+{
+  "id": "06_sqlite",
+  "model": "deepseek-flash",
+  "status": "completed",
+  "error": null,
+  "wall_seconds": 49.63,
+  "turns": 7,
+  "tool_calls": 8,
+  "tool_errors": 0,
+  "requests": 7,
+  "usage": {
+    "input": 2905,
+    "output": 11192,
+    "cacheRead": 60416,
+    "cacheWrite": 0,
+    "cacheWrite1H": null,
+    "reasoning": 7820,
+    "totalTokens": 74513,
+    "cost": {
+      "input": 0.0,
+      "output": 0.0,
+      "cacheRead": 0.0,
+      "cacheWrite": 0.0,
+      "total": 0.0
+    }
+  },
+  "response_models": [
+    "deepseek-flash"
+  ],
+  "billed_cost_usd": null,
+  "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+}

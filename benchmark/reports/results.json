@@ -1,0 +1,1099 @@
+{
+  "generated_at": "2026-10-10T11:26:04.150796+00:00",
+  "je_git_sha": "9e85cfff5876cc6a779d4161c27cbff165ffe73e",
+  "python": "3.12.14 (main, Sep  1 2026, 14:17:39) [MSC v.1944 64 bit (AMD64)]",
+  "model": "deepseek-flash",
+  "summary": {
+    "codex": {
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100
+    },
+    "je": {
+      "completion": 92.5,
+      "accuracy": 96.32,
+      "performance": 80
+    }
+  },
+  "tasks": [
+    {
+      "id": "01_csv",
+      "title": "CSV 金额汇总",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 119.8056,
+      "checks": {
+        "passed": 18,
+        "total": 18,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 3,
+            "total": 3
+          },
+          "3": {
+            "passed": 9,
+            "total": 9
+          },
+          "4": {
+            "passed": 3,
+            "total": 3
+          }
+        },
+        "failures": [],
+        "runtime_ms": 124.3001
+      },
+      "measurement_runtime_ms": [
+        124.3001,
+        119.8056,
+        113.7246
+      ]
+    },
+    {
+      "id": "01_csv",
+      "title": "CSV 金额汇总",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 59.6457,
+      "checks": {
+        "passed": 18,
+        "total": 18,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 3,
+            "total": 3
+          },
+          "3": {
+            "passed": 9,
+            "total": 9
+          },
+          "4": {
+            "passed": 3,
+            "total": 3
+          }
+        },
+        "failures": [],
+        "runtime_ms": 59.0109
+      },
+      "measurement_runtime_ms": [
+        59.0109,
+        59.6457,
+        61.3889
+      ],
+      "execution": {
+        "id": "01_csv",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 17.85,
+        "turns": 6,
+        "tool_calls": 6,
+        "tool_errors": 0,
+        "requests": 6,
+        "usage": {
+          "input": 2682,
+          "output": 3997,
+          "cacheRead": 26112,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 1607,
+          "totalTokens": 32791,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "02_intervals",
+      "title": "区间合并缺陷修复",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 33.9007,
+      "checks": {
+        "passed": 14,
+        "total": 14,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 3,
+            "total": 3
+          },
+          "3": {
+            "passed": 6,
+            "total": 6
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [],
+        "runtime_ms": 33.9007
+      },
+      "measurement_runtime_ms": [
+        33.9007,
+        34.7358,
+        32.8615
+      ]
+    },
+    {
+      "id": "02_intervals",
+      "title": "区间合并缺陷修复",
+      "actor": "je",
+      "completion": 75.0,
+      "accuracy": 78.57,
+      "performance": 0,
+      "runtime_ms": null,
+      "checks": {
+        "passed": 11,
+        "total": 14,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 3,
+            "total": 3
+          },
+          "3": {
+            "passed": 3,
+            "total": 6
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [
+          "invalid [(False, 3)]: TypeError: interval start must be an int, got False",
+          "invalid [(1.0, 3)]: TypeError: interval start must be an int, got 1.0",
+          "invalid [(1,)]: TypeError: interval must be an iterable of exactly two integers, got (1,)"
+        ],
+        "runtime_ms": null
+      },
+      "measurement_runtime_ms": [],
+      "execution": {
+        "id": "02_intervals",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 18.64,
+        "turns": 8,
+        "tool_calls": 8,
+        "tool_errors": 0,
+        "requests": 8,
+        "usage": {
+          "input": 3428,
+          "output": 3785,
+          "cacheRead": 38784,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 1045,
+          "totalTokens": 45997,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "03_dag",
+      "title": "确定性依赖调度",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 10.1293,
+      "checks": {
+        "passed": 11,
+        "total": 11,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 4,
+            "total": 4
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [],
+        "runtime_ms": 9.1518
+      },
+      "measurement_runtime_ms": [
+        9.1518,
+        10.1293,
+        10.2934
+      ]
+    },
+    {
+      "id": "03_dag",
+      "title": "确定性依赖调度",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 9.0951,
+      "checks": {
+        "passed": 11,
+        "total": 11,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 4,
+            "total": 4
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [],
+        "runtime_ms": 9.078
+      },
+      "measurement_runtime_ms": [
+        9.078,
+        9.2655,
+        9.0951
+      ],
+      "execution": {
+        "id": "03_dag",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 17.323,
+        "turns": 9,
+        "tool_calls": 10,
+        "tool_errors": 0,
+        "requests": 9,
+        "usage": {
+          "input": 3981,
+          "output": 3444,
+          "cacheRead": 44800,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 713,
+          "totalTokens": 52225,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "04_cache",
+      "title": "TTL 与 LRU 缓存",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 39.6254,
+      "checks": {
+        "passed": 12,
+        "total": 12,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 3,
+            "total": 3
+          },
+          "4": {
+            "passed": 5,
+            "total": 5
+          }
+        },
+        "failures": [],
+        "runtime_ms": 38.4555
+      },
+      "measurement_runtime_ms": [
+        38.4555,
+        40.6024,
+        39.6254
+      ]
+    },
+    {
+      "id": "04_cache",
+      "title": "TTL 与 LRU 缓存",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 20.4194,
+      "checks": {
+        "passed": 12,
+        "total": 12,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 3,
+            "total": 3
+          },
+          "4": {
+            "passed": 5,
+            "total": 5
+          }
+        },
+        "failures": [],
+        "runtime_ms": 20.2427
+      },
+      "measurement_runtime_ms": [
+        20.2427,
+        20.6451,
+        20.4194
+      ],
+      "execution": {
+        "id": "04_cache",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 22.853,
+        "turns": 6,
+        "tool_calls": 7,
+        "tool_errors": 0,
+        "requests": 6,
+        "usage": {
+          "input": 2756,
+          "output": 5592,
+          "cacheRead": 32384,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 2191,
+          "totalTokens": 40732,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "05_async",
+      "title": "有界异步映射",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 5.1575,
+      "checks": {
+        "passed": 9,
+        "total": 9,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 5,
+            "total": 5
+          },
+          "3": {
+            "passed": 1,
+            "total": 1
+          },
+          "4": {
+            "passed": 1,
+            "total": 1
+          }
+        },
+        "failures": [],
+        "runtime_ms": 5.9993
+      },
+      "measurement_runtime_ms": [
+        5.9993,
+        5.1158,
+        5.1575
+      ]
+    },
+    {
+      "id": "05_async",
+      "title": "有界异步映射",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 5.6125,
+      "checks": {
+        "passed": 9,
+        "total": 9,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 5,
+            "total": 5
+          },
+          "3": {
+            "passed": 1,
+            "total": 1
+          },
+          "4": {
+            "passed": 1,
+            "total": 1
+          }
+        },
+        "failures": [],
+        "runtime_ms": 5.6125
+      },
+      "measurement_runtime_ms": [
+        5.6125,
+        5.7656,
+        5.5599
+      ],
+      "execution": {
+        "id": "05_async",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 24.26,
+        "turns": 7,
+        "tool_calls": 7,
+        "tool_errors": 0,
+        "requests": 7,
+        "usage": {
+          "input": 2698,
+          "output": 5286,
+          "cacheRead": 33408,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 2711,
+          "totalTokens": 41392,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "06_sqlite",
+      "title": "原子 SQLite 迁移",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 58.7203,
+      "checks": {
+        "passed": 6,
+        "total": 6,
+        "groups": {
+          "1": {
+            "passed": 1,
+            "total": 1
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 1,
+            "total": 1
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [],
+        "runtime_ms": 58.7203
+      },
+      "measurement_runtime_ms": [
+        58.7203,
+        57.9528,
+        58.9362
+      ]
+    },
+    {
+      "id": "06_sqlite",
+      "title": "原子 SQLite 迁移",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 84.6813,
+      "checks": {
+        "passed": 6,
+        "total": 6,
+        "groups": {
+          "1": {
+            "passed": 1,
+            "total": 1
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 1,
+            "total": 1
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [],
+        "runtime_ms": 86.8263
+      },
+      "measurement_runtime_ms": [
+        86.8263,
+        84.0009,
+        84.6813
+      ],
+      "execution": {
+        "id": "06_sqlite",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 49.63,
+        "turns": 7,
+        "tool_calls": 8,
+        "tool_errors": 0,
+        "requests": 7,
+        "usage": {
+          "input": 2905,
+          "output": 11192,
+          "cacheRead": 60416,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 7820,
+          "totalTokens": 74513,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "07_jsonl",
+      "title": "流式 JSONL 命令行工具",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 103.7799,
+      "checks": {
+        "passed": 7,
+        "total": 7,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 1,
+            "total": 1
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [],
+        "runtime_ms": 103.7799
+      },
+      "measurement_runtime_ms": [
+        103.7799,
+        100.4401,
+        107.5576
+      ]
+    },
+    {
+      "id": "07_jsonl",
+      "title": "流式 JSONL 命令行工具",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 101.5175,
+      "checks": {
+        "passed": 7,
+        "total": 7,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 2,
+            "total": 2
+          },
+          "3": {
+            "passed": 1,
+            "total": 1
+          },
+          "4": {
+            "passed": 2,
+            "total": 2
+          }
+        },
+        "failures": [],
+        "runtime_ms": 101.5175
+      },
+      "measurement_runtime_ms": [
+        101.5175,
+        100.8227,
+        101.7542
+      ],
+      "execution": {
+        "id": "07_jsonl",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 15.873,
+        "turns": 6,
+        "tool_calls": 6,
+        "tool_errors": 0,
+        "requests": 6,
+        "usage": {
+          "input": 2623,
+          "output": 3818,
+          "cacheRead": 25088,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 529,
+          "totalTokens": 31529,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "08_zip",
+      "title": "安全 ZIP 解压",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 921.2532,
+      "checks": {
+        "passed": 13,
+        "total": 13,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 5,
+            "total": 5
+          },
+          "3": {
+            "passed": 2,
+            "total": 2
+          },
+          "4": {
+            "passed": 4,
+            "total": 4
+          }
+        },
+        "failures": [],
+        "runtime_ms": 923.5005
+      },
+      "measurement_runtime_ms": [
+        923.5005,
+        918.436,
+        921.2532
+      ]
+    },
+    {
+      "id": "08_zip",
+      "title": "安全 ZIP 解压",
+      "actor": "je",
+      "completion": 50.0,
+      "accuracy": 84.62,
+      "performance": 0,
+      "runtime_ms": null,
+      "checks": {
+        "passed": 11,
+        "total": 13,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 4,
+            "total": 5
+          },
+          "3": {
+            "passed": 2,
+            "total": 2
+          },
+          "4": {
+            "passed": 3,
+            "total": 4
+          }
+        },
+        "failures": [
+          "unsafe x\\bad: AssertionError: expected True, got False",
+          "parent file conflict: FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'C:\\\\Users\\\\onepl\\\\AppData\\\\Local\\\\Temp\\\\tmpk9st4mil\\\\out\\\\a'"
+        ],
+        "runtime_ms": null
+      },
+      "measurement_runtime_ms": [],
+      "execution": {
+        "id": "08_zip",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 50.122,
+        "turns": 16,
+        "tool_calls": 16,
+        "tool_errors": 0,
+        "requests": 16,
+        "usage": {
+          "input": 7043,
+          "output": 10556,
+          "cacheRead": 165632,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 5081,
+          "totalTokens": 183231,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "09_search",
+      "title": "确定性文本检索",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 120.1866,
+      "checks": {
+        "passed": 15,
+        "total": 15,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 3,
+            "total": 3
+          },
+          "3": {
+            "passed": 5,
+            "total": 5
+          },
+          "4": {
+            "passed": 4,
+            "total": 4
+          }
+        },
+        "failures": [],
+        "runtime_ms": 120.1866
+      },
+      "measurement_runtime_ms": [
+        120.1866,
+        118.0232,
+        122.22
+      ]
+    },
+    {
+      "id": "09_search",
+      "title": "确定性文本检索",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 133.0382,
+      "checks": {
+        "passed": 15,
+        "total": 15,
+        "groups": {
+          "1": {
+            "passed": 3,
+            "total": 3
+          },
+          "2": {
+            "passed": 3,
+            "total": 3
+          },
+          "3": {
+            "passed": 5,
+            "total": 5
+          },
+          "4": {
+            "passed": 4,
+            "total": 4
+          }
+        },
+        "failures": [],
+        "runtime_ms": 129.6862
+      },
+      "measurement_runtime_ms": [
+        129.6862,
+        140.6982,
+        133.0382
+      ],
+      "execution": {
+        "id": "09_search",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 19.006,
+        "turns": 7,
+        "tool_calls": 7,
+        "tool_errors": 0,
+        "requests": 7,
+        "usage": {
+          "input": 3042,
+          "output": 3704,
+          "cacheRead": 32384,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 1074,
+          "totalTokens": 39130,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    },
+    {
+      "id": "10_retry",
+      "title": "分轮重试作业队列",
+      "actor": "codex",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 15.3255,
+      "checks": {
+        "passed": 11,
+        "total": 11,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 1,
+            "total": 1
+          },
+          "3": {
+            "passed": 3,
+            "total": 3
+          },
+          "4": {
+            "passed": 5,
+            "total": 5
+          }
+        },
+        "failures": [],
+        "runtime_ms": 15.3255
+      },
+      "measurement_runtime_ms": [
+        15.3255,
+        15.7061,
+        14.6841
+      ]
+    },
+    {
+      "id": "10_retry",
+      "title": "分轮重试作业队列",
+      "actor": "je",
+      "completion": 100.0,
+      "accuracy": 100.0,
+      "performance": 100,
+      "runtime_ms": 18.6489,
+      "checks": {
+        "passed": 11,
+        "total": 11,
+        "groups": {
+          "1": {
+            "passed": 2,
+            "total": 2
+          },
+          "2": {
+            "passed": 1,
+            "total": 1
+          },
+          "3": {
+            "passed": 3,
+            "total": 3
+          },
+          "4": {
+            "passed": 5,
+            "total": 5
+          }
+        },
+        "failures": [],
+        "runtime_ms": 18.0377
+      },
+      "measurement_runtime_ms": [
+        18.0377,
+        18.6489,
+        20.4536
+      ],
+      "execution": {
+        "id": "10_retry",
+        "model": "deepseek-flash",
+        "status": "completed",
+        "error": null,
+        "wall_seconds": 13.702,
+        "turns": 6,
+        "tool_calls": 6,
+        "tool_errors": 0,
+        "requests": 6,
+        "usage": {
+          "input": 2650,
+          "output": 3149,
+          "cacheRead": 25088,
+          "cacheWrite": 0,
+          "cacheWrite1H": null,
+          "reasoning": 833,
+          "totalTokens": 30887,
+          "cost": {
+            "input": 0.0,
+            "output": 0.0,
+            "cacheRead": 0.0,
+            "cacheWrite": 0.0,
+            "total": 0.0
+          }
+        },
+        "response_models": [
+          "deepseek-flash"
+        ],
+        "billed_cost_usd": null,
+        "cost_note": "Usage.cost zeros are unpriced telemetry, not a billing receipt."
+      }
+    }
+  ]
+}
