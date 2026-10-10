@@ -1,4 +1,4 @@
-"""Canonical filesystem paths for Tau user and project data."""
+"""Canonical filesystem paths for Je user and project data."""
 
 from __future__ import annotations
 
@@ -9,33 +9,36 @@ from os import environ
 from pathlib import Path
 
 
-def _default_tau_home() -> Path:
-    """Return the configured Tau home, falling back to ``~/.tau``."""
-    value = environ.get("TAU_HOME")
+def _default_je_home() -> Path:
+    """Return the configured Je home, falling back to ``~/.je`` (or legacy ``TAU_HOME``)."""
+    value = environ.get("JE_HOME") or environ.get("TAU_HOME")
     if value is None or value == "":
-        return Path.home() / ".tau"
+        return Path.home() / ".je"
 
     try:
         path = Path(value).expanduser()
     except RuntimeError as exc:
         raise ValueError(
-            "TAU_HOME could not expand '~'; use an absolute path or an existing user home"
+            "JE_HOME could not expand '~'; use an absolute path or an existing user home"
         ) from exc
     if not path.is_absolute():
-        raise ValueError("TAU_HOME must be an absolute path after '~' expansion")
+        raise ValueError("JE_HOME must be an absolute path after '~' expansion")
     return path
 
 
-@dataclass(frozen=True, slots=True)
-class TauPaths:
-    """Resolved Tau filesystem locations.
+_default_tau_home = _default_je_home
 
-    Tau keeps durable application data under ``TAU_HOME`` (``~/.tau`` by
+
+@dataclass(frozen=True, slots=True)
+class JePaths:
+    """Resolved Je filesystem locations.
+
+    Je keeps durable application data under ``JE_HOME`` (``~/.je`` by
     default) while also loading project-local resources from the active working
     directory.
     """
 
-    home: Path = field(default_factory=_default_tau_home)
+    home: Path = field(default_factory=_default_je_home)
     agents_home: Path = field(default_factory=lambda: Path.home() / ".agents")
 
     @property
@@ -45,7 +48,7 @@ class TauPaths:
 
     @property
     def logs_dir(self) -> Path:
-        """Return Tau's user-level diagnostic log directory."""
+        """Return Je's user-level diagnostic log directory."""
         return self.home / "logs"
 
     @property
@@ -80,22 +83,22 @@ class TauPaths:
 
     @property
     def user_skills_dir(self) -> Path:
-        """Return Tau's user-level skills directory."""
+        """Return Je's user-level skills directory."""
         return self.home / "skills"
 
     @property
     def user_prompts_dir(self) -> Path:
-        """Return Tau's user-level prompt templates directory."""
+        """Return Je's user-level prompt templates directory."""
         return self.home / "prompts"
 
     @property
     def user_themes_dir(self) -> Path:
-        """Return Tau's user-level TUI themes directory."""
+        """Return Je's user-level TUI themes directory."""
         return self.home / "themes"
 
     @property
     def user_extensions_dir(self) -> Path:
-        """Return Tau's user-level extension directory."""
+        """Return Je's user-level extension directory."""
         return self.home / "extensions"
 
     @property
@@ -108,25 +111,33 @@ class TauPaths:
         """Return the user-level `.agents/prompts` directory."""
         return self.agents_home / "prompts"
 
+    def project_je_dir(self, cwd: Path) -> Path:
+        """Return the project-local Je resource directory."""
+        je_dir = cwd / ".je"
+        if je_dir.exists():
+            return je_dir
+        tau_dir = cwd / ".tau"
+        return tau_dir if tau_dir.exists() else je_dir
+
     def project_tau_dir(self, cwd: Path) -> Path:
-        """Return the project-local Tau resource directory."""
-        return cwd / ".tau"
+        """Compatibility alias for project_je_dir."""
+        return self.project_je_dir(cwd)
 
     def project_agents_dir(self, cwd: Path) -> Path:
         """Return the project-local `.agents` resource directory."""
         return cwd / ".agents"
 
     def project_skills_dir(self, cwd: Path) -> Path:
-        """Return the project-local Tau skills directory."""
-        return self.project_tau_dir(cwd) / "skills"
+        """Return the project-local Je skills directory."""
+        return self.project_je_dir(cwd) / "skills"
 
     def project_prompts_dir(self, cwd: Path) -> Path:
-        """Return the project-local Tau prompt templates directory."""
-        return self.project_tau_dir(cwd) / "prompts"
+        """Return the project-local Je prompt templates directory."""
+        return self.project_je_dir(cwd) / "prompts"
 
     def project_themes_dir(self, cwd: Path) -> Path:
-        """Return the project-local Tau TUI themes directory."""
-        return self.project_tau_dir(cwd) / "themes"
+        """Return the project-local Je TUI themes directory."""
+        return self.project_je_dir(cwd) / "themes"
 
     def project_agents_skills_dir(self, cwd: Path) -> Path:
         """Return the project-local `.agents/skills` directory."""
@@ -148,6 +159,9 @@ class TauPaths:
         path = self.project_session_dir(cwd) / "default.jsonl"
         path.parent.mkdir(parents=True, exist_ok=True)
         return path
+
+
+TauPaths = JePaths
 
 
 def _slugify_path(path: Path, *, max_length: int = 72) -> str:

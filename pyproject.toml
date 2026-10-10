@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/your-username/je"
+Repository = "https://github.com/JeffreyLei03/je"
 
 [project.scripts]
 je = "je_coding.cli:app"

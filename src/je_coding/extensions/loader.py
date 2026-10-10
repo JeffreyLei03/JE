@@ -79,6 +79,7 @@ def extension_dirs(
     """
     dirs: list[Path] = []
     if include_project_dir and paths.cwd is not None and paths.project_resources_enabled:
+        dirs.append(paths.cwd / ".je" / "extensions")
         dirs.append(paths.cwd / ".tau" / "extensions")
     if include_user_dir:
         dirs.append(paths.root / "extensions")
@@ -125,6 +126,7 @@ def discover_extensions(
     if include_resource_dirs:
         directories: list[tuple[Path, ExtensionSource]] = []
         if include_project_dir and paths.cwd is not None and paths.project_resources_enabled:
+            directories.append((paths.cwd / ".je" / "extensions", "project"))
             directories.append((paths.cwd / ".tau" / "extensions", "project"))
         if include_user_dir:
             directories.append((paths.root / "extensions", "user"))
@@ -273,8 +275,12 @@ def _manifest_entries(
         )
         return []
     tool_table = data.get("tool")
+    je_table = tool_table.get("je") if isinstance(tool_table, dict) else None
     tau_table = tool_table.get("tau") if isinstance(tool_table, dict) else None
-    declared = tau_table.get("extensions") if isinstance(tau_table, dict) else None
+    declared = (
+        (je_table.get("extensions") if isinstance(je_table, dict) else None)
+        or (tau_table.get("extensions") if isinstance(tau_table, dict) else None)
+    )
     if declared is None:
         return []
     if not isinstance(declared, list) or not all(isinstance(item, str) for item in declared):
@@ -282,7 +288,7 @@ def _manifest_entries(
             ResourceDiagnostic(
                 kind="extension",
                 path=manifest,
-                message="`tool.tau.extensions` must be a list of file paths",
+                message="`tool.je.extensions` (or `tool.tau.extensions`) must be a list of file paths",
                 severity="error",
             )
         )

@@ -180,7 +180,7 @@ class ProtectedResourceDetector:
         found: dict[str, list[Path]] = {category: [] for category in _RESOURCE_CATEGORIES}
         # Project settings are not supported by a Tau loader, so they cannot
         # trigger trust until that loader exists.
-        for namespace in (".tau", ".agents"):
+        for namespace in (".je", ".tau", ".agents"):
             self._glob(
                 found,
                 "skills",
@@ -195,11 +195,12 @@ class ProtectedResourceDetector:
                 "*.md",
                 predicate=is_prompt_template_candidate,
             )
-        self._glob(found, "themes", root / ".tau" / "themes", "*.json")
-        self._file(found, "system-prompts", root / ".tau" / "SYSTEM.md")
-        self._file(found, "system-prompts", root / ".tau" / "APPEND_SYSTEM.md")
+        for ns in (".je", ".tau"):
+            self._glob(found, "themes", root / ns / "themes", "*.json")
+            self._file(found, "system-prompts", root / ns / "SYSTEM.md")
+            self._file(found, "system-prompts", root / ns / "APPEND_SYSTEM.md")
+            self._extensions(found, root / ns / "extensions")
         self._context(found, root)
-        self._extensions(found, root / ".tau" / "extensions")
         counts = {
             category: len(found[category]) for category in _RESOURCE_CATEGORIES if found[category]
         }

@@ -362,7 +362,7 @@ def main(
         bool,
         typer.Option(
             "--project-extensions",
-            help="Also load trusted project .tau/extensions (additional code opt-in).",
+            help="Also load trusted project .je/extensions (additional code opt-in).",
         ),
     ] = False,
     approve: Annotated[

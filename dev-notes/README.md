@@ -1,38 +1,21 @@
-# Tau dev notes (contributor build-log)
+# Je 开发设计笔记与架构日志 (Dev Notes)
 
-These are the internal, phase-by-phase build journals and design records for Tau.
-They are **not** published on the docs site — they live here for contributors who
-want to trace how the system was assembled.
+这里是 **Je** 项目内部的开发日志、架构决策记录（ADR）与核心系统设计文档。
+这些文档旨在帮助中文开发者与贡献者清晰理解系统的构建全貌与设计细节。
 
-User-facing documentation lives in `website/content/` and is published at
-<https://twotimespi.dev/>.
+---
 
-## Contents
+## 目录索引 (Contents)
 
-- `design/` — high-level design docs written alongside the build:
-  - `00-roadmap.md` — phased roadmap
-  - `01-architecture.md` — the three-layer split
-  - `02-agent-loop.md` — agent loop responsibilities
-  - `03-tools.md` — built-in tool design
-  - `04-sessions.md` — session tree / persistence design
-  - `05-core-types-and-events.md` — provider-neutral types and events
-  - `project-trust.md` — researched, implementation-ready project-trust design
-    (design only; enforcement is not implemented)
-  - `agent-loop.md`, `harness.md` — harness/loop reference notes
-- `architecture/` — per-phase implementation notes (`phase-1` … `phase-24`, plus
-  hardening and feature notes). Each answers: what was added, why it exists, how
-  later phases use it.
-- `adr/` — architecture decision records.
-- `catalog-model-safety.md` — checklist for adding providers and models to the built-in catalog safely.
-- `google-stream-completion.md` — why native Google streams require an explicit
-  `finishReason` before Tau reports successful completion.
-- `startup-thinking-level-fallback.md` — why startup resolves a valid thinking
-  level per model instead of assuming the global `medium` default.
-- `models-dev-catalog.md` — Pi-compatible build-time models.dev catalog
-  generation, offline fallback, and snapshot refresh workflow.
-- `llama-cpp-phase-5.md` — built-in llama.cpp connection, safe state, `/local`,
-  failure handling, and Phase 5 validation.
-- `architecture/phase-6-local-inference-hardening.md` — second-backend contract
-  validation, lifecycle hardening, migration, and security decisions.
-
-The roadmap is tracked in [GitHub issue #1](https://github.com/huggingface/tau/issues/1).
+- **`design/` — 核心系统高层设计文档**：
+  - `00-roadmap.md` — 分阶段迭代路线图
+  - `01-architecture.md` — 三层分层解耦架构设计
+  - `02-agent-loop.md` — Agent 执行循环与状态机职责
+  - `03-tools.md` — 内置编码工具体系设计
+  - `04-sessions.md` — 会话树、分支及持久化机制
+  - `05-core-types-and-events.md` — 供应商中立的类型与事件契约
+  - `project-trust.md` — 工作区受信任机制设计
+- **`architecture/` — 具体实现与演进笔记**：
+  - 各阶段功能落地的详细笔记与演进记录（`phase-1` … `phase-24`）。
+- **`adr/` — 架构决策记录 (Architecture Decision Records)**：
+  - 核心选型考量与技术架构决策。

@@ -1,37 +1,33 @@
 ---
-title: "01 — Architecture"
+title: "01 — 架构设计 (Architecture)"
 ---
 
-Tau keeps the reusable agent core separate from the coding-agent application and from any UI.
+Je 保持可复用的 Agent 核心引擎与具体编码应用场景、交互界面之间的清晰解耦。
 
-## Layers
+## 分层设计 (Layers)
 
-### `je_ai`
+### 1. `je_ai` (大模型交互层)
+负责具体大模型供应商的流式请求与响应交互。将不同供应商（OpenAI、Anthropic、Ollama、DeepSeek 等）的异构响应协议转换为 Je 统一的无状态、平台中立事件流。
 
-Owns provider-specific model streaming. It will translate provider responses into Tau's provider-neutral events.
+### 2. `je_agent` (核心智能体大脑)
+拥有便携式智能体引擎的核心能力：消息体系（Messages）、工具接口（Tools）、事件协议（Events）、执行循环（Agent Loop）、AgentHarness 调度器及会话存储基元。
+**该包绝不引入** CLI、Rich、Textual 或任何应用级资源加载逻辑。
 
-### `je_agent`
+### 3. `je_coding` (编码应用与环境)
+承载具体的终端编程助理应用程序：CLI 命令集合、内置编码工具（文件读写/编辑/Shell 执行）、工作区指令规范（`AGENTS.md`、`.je/` 资源）、技能（Skills）、提示词模板、磁盘持久化会话以及 UI 适配层。
 
-Owns the portable agent brain: messages, tools, events, the agent loop, harness, and session primitives.
-This package must not import CLI, Rich, Textual, or application resource loading code.
-
-### `je_coding`
-
-Owns the coding-agent application: CLI commands, built-in coding tools, project instructions, skills,
-prompt templates, sessions on disk, and UI adapters.
-
-## Dependency direction
+## 依赖关系与数据流向
 
 ```text
-je_coding -> je_agent -> je_ai
+je_coding  →  je_agent  →  je_ai
 ```
 
-UI packages consume emitted events. The core does not render UI directly.
+终端与 UI 层作为事件观察者消费核心发出的事件，核心层不直接执行 UI 渲染。
 
-## Guiding split
+## 概念边界
 
 ```text
-AgentHarness = reusable brain
-AgentSession = coding-agent environment
-TUI = one possible frontend
+AgentHarness  = 通用可复用大脑
+CodingSession = 编码场景环境与上下文
+TUI / CLI     = 前端消费与展示形态
 ```

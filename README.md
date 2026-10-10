@@ -41,7 +41,7 @@ TUI / CLI     = Frontend Consumers
 Clone the repository and run with `uv`:
 
 ```bash
-git clone https://github.com/<your-username>/je.git
+git clone https://github.com/JeffreyLei03/je.git
 cd je
 uv sync --dev
 ```

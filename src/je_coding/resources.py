@@ -191,7 +191,12 @@ def _discover_system_prompt_file(
 ) -> tuple[str | None, Path | None]:
     candidates: list[tuple[str, Path]] = []
     if paths.cwd is not None and paths.project_resources_enabled:
-        candidates.append(("project", paths.cwd / ".tau" / filename))
+        if (paths.cwd / ".je" / filename).exists():
+            candidates.append(("project", paths.cwd / ".je" / filename))
+        elif (paths.cwd / ".tau" / filename).exists():
+            candidates.append(("project", paths.cwd / ".tau" / filename))
+        else:
+            candidates.append(("project", paths.cwd / ".je" / filename))
     candidates.append(("user", paths.root / filename))
 
     existing: list[tuple[str, Path]] = []
@@ -256,7 +261,12 @@ def _discover_append_system_prompt_files(
     """Read every append file in broad-to-specific order."""
     candidates: list[tuple[str, Path]] = [("user", paths.root / "APPEND_SYSTEM.md")]
     if paths.cwd is not None and paths.project_resources_enabled:
-        candidates.append(("project", paths.cwd / ".tau" / "APPEND_SYSTEM.md"))
+        if (paths.cwd / ".je" / "APPEND_SYSTEM.md").exists():
+            candidates.append(("project", paths.cwd / ".je" / "APPEND_SYSTEM.md"))
+        elif (paths.cwd / ".tau" / "APPEND_SYSTEM.md").exists():
+            candidates.append(("project", paths.cwd / ".tau" / "APPEND_SYSTEM.md"))
+        else:
+            candidates.append(("project", paths.cwd / ".je" / "APPEND_SYSTEM.md"))
 
     contents: list[str] = []
     selected_paths: list[Path] = []
