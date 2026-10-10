@@ -49,8 +49,8 @@ def test_update_tau_uses_uv_tool_for_uv_owned_tool_environment(tmp_path: Path) -
     )
 
     assert result.succeeded is True
-    assert result.command == ("uv", "tool", "install", "tau-ai@0.2.4")
-    assert calls == [("uv", "tool", "install", "tau-ai@0.2.4")]
+    assert result.command == ("uv", "tool", "install", "je-ai@0.2.4")
+    assert calls == [("uv", "tool", "install", "je-ai@0.2.4")]
 
 
 def test_update_tau_hands_windows_uv_tool_update_to_waiting_process(tmp_path: Path) -> None:
@@ -82,7 +82,7 @@ def test_update_tau_hands_windows_uv_tool_update_to_waiting_process(tmp_path: Pa
 
     assert result.succeeded is True
     assert result.deferred is True
-    assert result.command == ("uv", "tool", "install", "tau-ai@0.2.4")
+    assert result.command == ("uv", "tool", "install", "je-ai@0.2.4")
     assert "scheduled" in result.stdout
     assert str(handoff_dir / "update.log") in result.stdout
     assert len(launches) == 1
@@ -97,7 +97,7 @@ def test_update_tau_hands_windows_uv_tool_update_to_waiting_process(tmp_path: Pa
     )
     assert json.loads(base64.b64decode(detached_command[-1])) == {
         "executable": "uv",
-        "arguments": '"tool" "install" "tau-ai@0.2.4"',
+        "arguments": '"tool" "install" "je-ai@0.2.4"',
     }
     assert options["creationflags"] == 0x00000208
     script = (handoff_dir / "update.ps1").read_text(encoding="utf-8")
@@ -154,7 +154,7 @@ def test_windows_handoff_reports_staging_write_failure_and_removes_owned_directo
     monkeypatch.setattr(Path, "write_text", fail_script_write)
 
     result = updater._handoff_windows_update(
-        ("uv", "tool", "install", "tau-ai@1.0"),
+        ("uv", "tool", "install", "je-ai@1.0"),
         launcher=lambda *args, **kwargs: object(),
         executable_finder=lambda name: "powershell.exe",
         parent_pid=4242,
@@ -176,7 +176,7 @@ def test_windows_handoff_reports_launch_failure_and_preserves_caller_directory(
         raise OSError("process creation denied")
 
     result = updater._handoff_windows_update(
-        ("uv", "tool", "install", "tau-ai@1.0"),
+        ("uv", "tool", "install", "je-ai@1.0"),
         launcher=fail_launch,
         executable_finder=lambda name: "powershell.exe",
         parent_pid=4242,
@@ -336,7 +336,7 @@ def test_windows_helper_wait_failure_is_fail_closed(tmp_path: Path, powershell: 
 
     assert completed.returncode != 0
     assert not marker.exists()
-    assert "Could not wait for Tau process" in log_path.read_text(encoding="utf-8-sig")
+    assert "Could not wait for Je process" in log_path.read_text(encoding="utf-8-sig")
 
 
 def test_update_tau_reports_uv_latest_version_lookup_failure(tmp_path: Path) -> None:
@@ -350,7 +350,7 @@ def test_update_tau_reports_uv_latest_version_lookup_failure(tmp_path: Path) -> 
     )
 
     assert result.succeeded is False
-    assert result.failures == ("Could not determine the latest Tau version from PyPI.",)
+    assert result.failures == ("Could not determine the latest Je version from PyPI.",)
 
 
 def test_update_tau_uses_pipx_for_pipx_owned_environment(tmp_path: Path) -> None:
@@ -362,7 +362,7 @@ def test_update_tau_uses_pipx_for_pipx_owned_environment(tmp_path: Path) -> None
         inspect_distribution=False,
     )
 
-    assert result.command == ("pipx", "upgrade", "tau-ai")
+    assert result.command == ("pipx", "upgrade", "je-ai")
 
 
 def test_update_tau_reuses_uv_pip_for_uv_installed_distribution(tmp_path: Path) -> None:
@@ -381,7 +381,7 @@ def test_update_tau_reuses_uv_pip_for_uv_installed_distribution(tmp_path: Path) 
         "--python",
         "/env/bin/python",
         "--upgrade",
-        "tau-ai",
+        "je-ai",
     )
 
 
@@ -400,7 +400,7 @@ def test_update_tau_uses_current_environment_pip_for_pip_install(tmp_path: Path)
         "pip",
         "install",
         "--upgrade",
-        "tau-ai",
+        "je-ai",
     )
 
 
@@ -421,8 +421,8 @@ def test_update_tau_does_not_fall_back_when_owner_update_fails(tmp_path: Path) -
     )
 
     assert result.succeeded is False
-    assert result.failures == ("uv tool install tau-ai@0.2.4: uv failed",)
-    assert calls == [("uv", "tool", "install", "tau-ai@0.2.4")]
+    assert result.failures == ("uv tool install je-ai@0.2.4: uv failed",)
+    assert calls == [("uv", "tool", "install", "je-ai@0.2.4")]
 
 
 def test_update_tau_refuses_direct_url_install(tmp_path: Path) -> None:

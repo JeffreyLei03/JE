@@ -1,4 +1,4 @@
-"""Load Tau's provider catalog from packaged and user TOML files."""
+"""模型供应商与接口目录配置加载器。"""
 
 from __future__ import annotations
 

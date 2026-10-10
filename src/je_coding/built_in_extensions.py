@@ -1,4 +1,4 @@
-"""Trusted extension declarations bundled with Tau."""
+"""Je 内置安全扩展注册与管理。"""
 
 from __future__ import annotations
 

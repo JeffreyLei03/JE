@@ -1,4 +1,4 @@
-"""Persisted runtime refresh for the models.dev catalog snapshot."""
+"""模型元数据本地快照与缓存存储。"""
 
 from __future__ import annotations
 

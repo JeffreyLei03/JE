@@ -1,4 +1,4 @@
-"""Prompt autocomplete helpers for Tau's Textual TUI."""
+"""终端自动补全与命令提示引擎。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Accessible Textual adapter for Tau-owned project-trust requests."""
+"""工作区信任确认交互弹窗。"""
 
 from __future__ import annotations
 

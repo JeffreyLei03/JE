@@ -1,4 +1,4 @@
-"""Persistent coding-session wrapper built on AgentHarness."""
+"""Je 智能编程会话运行环境与上下文管理。"""
 
 from __future__ import annotations
 
@@ -174,7 +174,7 @@ SESSION_NAME_SYSTEM_PROMPT = (
     "You write concise coding-agent session names. Reply with only a short title, "
     "maximum four words, no quotes, no punctuation-only output."
 )
-TREE_RUNNING_MESSAGE = "Tau is still working. Press Escape to interrupt before using /tree."
+TREE_RUNNING_MESSAGE = "Je is still working. Press Escape to interrupt before using /tree."
 
 
 async def _await_cleanup_completion[CleanupResult](
@@ -203,7 +203,7 @@ async def _finish_adopted_runtime_close(runtime: ExtensionRuntime) -> None:
     """Finish outgoing cleanup after publication without failing adoption."""
     task = asyncio.create_task(
         runtime.aclose(),
-        name="tau-adopted-extension-runtime-close",
+        name="je-adopted-extension-runtime-close",
     )
     await _await_cleanup_completion(task)
     # Publication is already committed. Cleanup cancellation/failure must not
@@ -216,7 +216,7 @@ async def _finish_aborted_session_close(session: CodingSession) -> None:
     """Discharge an unpublished session's resources without masking its abort."""
     task = asyncio.create_task(
         session.aclose(),
-        name="tau-aborted-coding-session-close",
+        name="je-aborted-coding-session-close",
     )
     await _await_cleanup_completion(task)
     # The pre-publication failure remains primary, but every owned provider was
@@ -1504,7 +1504,7 @@ class CodingSession:
         """Reject replacement-like operations until an active turn is drained."""
         if self._harness.is_running:
             raise RuntimeError(
-                f"Cannot {operation} while Tau is working. "
+                f"Cannot {operation} while Je is working. "
                 "Press Escape to interrupt and wait for it to finish."
             )
 
@@ -1850,7 +1850,7 @@ class CodingSession:
     def preview_model_choice(self, choice: ModelChoice) -> None:
         """Select a model for the next turn without constructing or persisting a provider."""
         if self._harness.is_running:
-            raise RuntimeError("Cannot switch models while Tau is working")
+            raise RuntimeError("Cannot switch models while Je is working")
         if choice not in self.available_model_choices:
             raise ProviderConfigError(
                 f"Model is not available: {choice.provider_name}:{choice.model}"
@@ -3157,7 +3157,7 @@ class CodingSession:
         if close_task is None:
             close_task = asyncio.create_task(
                 self._close_owned_resources(),
-                name="tau-coding-session-close",
+                name="je-coding-session-close",
             )
             self._close_task = close_task
 
@@ -4466,12 +4466,12 @@ def _resolve_export_destination(
                 destination_dir=cwd,
                 format=format,
             )
-        return cwd / f"tau-session.{format}"
+        return cwd / f"je-session.{format}"
 
     resolved = destination if destination.is_absolute() else cwd / destination
     if resolved.suffix:
         return resolved
-    name = session_path.stem if session_path is not None else "tau-session"
+    name = session_path.stem if session_path is not None else "je-session"
     return default_session_export_artifact_path(
         Path(name),
         destination_dir=resolved,
@@ -4486,7 +4486,7 @@ def _session_export_title(session: CodingSession) -> str:
         record = manager.get_session(session_id)
         if record is not None and record.title:
             return record.title
-    return f"Tau session {session_id}" if session_id is not None else "Tau Session Export"
+    return f"Je session {session_id}" if session_id is not None else "Tau Session Export"
 
 
 @dataclass(frozen=True, slots=True)

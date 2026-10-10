@@ -1,4 +1,4 @@
-"""Lifetime activity and usage totals for an active session branch."""
+"""会话执行时长与 Token 消耗统计分析。"""
 
 from __future__ import annotations
 

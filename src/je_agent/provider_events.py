@@ -1,4 +1,4 @@
-"""Pi-compatible assistant stream events owned by the portable agent layer."""
+"""核心智能体层流式响应事件抽象定义。"""
 
 from __future__ import annotations
 

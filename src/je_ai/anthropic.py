@@ -1,4 +1,4 @@
-"""Anthropic Messages API provider."""
+"""Anthropic Messages API 模型提供商适配模块。"""
 
 from __future__ import annotations
 
@@ -556,7 +556,7 @@ def _apply_message_cache_breakpoints(
 def _previous_request_boundary(messages: list[dict[str, JSONValue]]) -> int | None:
     """Return the index where the previous request's message list ended.
 
-    Tau's transcript is append-only and every request stops immediately before the
+    Je's transcript is append-only and every request stops immediately before the
     assistant message it produces, so the last user message preceding the final
     assistant turn is where the previous request's tail breakpoint was placed.
 
@@ -737,7 +737,7 @@ def _usage_from_message_start(raw: object) -> Usage:
     """Build a Usage from the ``message_start`` event's ``message.usage``.
 
     Ports Pi's anthropic-messages.ts message_start handling. Cost is left unset
-    (None) because Tau has no per-model pricing table.
+    (None) because Je has no per-model pricing table.
     """
     data = raw if isinstance(raw, Mapping) else {}
     cache_creation = data.get("cache_creation")

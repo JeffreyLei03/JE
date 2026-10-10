@@ -1,4 +1,4 @@
-"""Pi-compatible provider-neutral content and transcript message models."""
+"""供应商中立的会话消息与多模态内容模型。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Provider-neutral OAuth contracts used by Tau's coding application."""
+"""OAuth 认证相关数据类型与接口模型。"""
 
 from __future__ import annotations
 

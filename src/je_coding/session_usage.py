@@ -1,4 +1,4 @@
-"""Token-usage analytics for Tau sessions, rendered as an HTML dashboard."""
+"""会话模型开销与用量统计追踪。"""
 
 from __future__ import annotations
 

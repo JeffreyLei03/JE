@@ -1,4 +1,4 @@
-"""Markdown resource path and frontmatter helpers."""
+"""Je 技能、提示词与工程规则资源加载器。"""
 
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ class ResourceDiagnostic:
 
 
 @dataclass(frozen=True, slots=True)
-class TauResourcePaths:
+class JeResourcePaths:
     """Filesystem locations for Tau markdown resources.
 
     By default Tau loads Tau-native resources from the configured Tau home and
@@ -385,3 +385,6 @@ def derive_description(content: str) -> str | None:
 def metadata_to_json(metadata: dict[str, str]) -> dict[str, JSONValue]:
     """Convert string metadata into JSON-like values."""
     return dict(metadata)
+
+
+TauResourcePaths = JeResourcePaths

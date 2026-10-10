@@ -1,12 +1,4 @@
-"""OpenAI-compatible chat completions provider.
-
-Most OpenAI-compatible models are served over `/chat/completions`. Newer
-reasoning models (e.g. ``gpt-5.5``/``gpt-5.4`` and the ``*-codex`` family)
-reject the combination of function tools and ``reasoning_effort`` on that
-endpoint and require ``/v1/responses`` instead. This adapter routes those
-models to the Responses API at request time while leaving every other model on
-the original chat-completions path unchanged.
-"""
+"""兼容 OpenAI 接口规范的通用大模型提供商适配模块。"""
 
 from __future__ import annotations
 
@@ -1296,7 +1288,7 @@ def _parse_chunk_usage(raw: Mapping[str, Any]) -> Usage:
     Ports Pi's openai-completions.ts parseChunkUsage: ``cached_tokens`` are
     cache reads, writes are subtracted from the prompt to leave the fresh input,
     and ``completion_tokens`` already includes reasoning tokens. Cost is left
-    unset (None) because Tau has no per-model pricing table.
+    unset (None) because Je has no per-model pricing table.
     """
     prompt_tokens = _int_or_zero(raw.get("prompt_tokens"))
     prompt_details = raw.get("prompt_tokens_details")
@@ -1332,7 +1324,7 @@ def _usage_from_responses_event(chunk: Mapping[str, Any]) -> Usage | None:
 
     Mirrors the Codex adapter's ``_usage_from_response``: cache reads and
     writes are subtracted from ``input_tokens`` to leave fresh input. Cost is
-    left unset because Tau has no per-model pricing table.
+    left unset because Je has no per-model pricing table.
     """
     response = chunk.get("response")
     if not isinstance(response, Mapping):

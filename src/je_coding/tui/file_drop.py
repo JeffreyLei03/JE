@@ -1,23 +1,4 @@
-"""Detect and normalize files dragged into the terminal.
-
-Terminals do not deliver OS drag-and-drop as a dedicated event. When a file is
-dropped onto the terminal window, the terminal emulator types the file's path
-into the running program instead. Because Textual enables bracketed-paste mode,
-that typed path usually arrives as a single :class:`textual.events.Paste`
-message.
-
-The exact text depends on the terminal:
-
-- most terminals shell-escape paths (``/tmp/my\\ file.png``) and separate
-  multiple dropped files with spaces;
-- some quote paths with spaces (``"/tmp/my file.png"``);
-- some VTE-based terminals emit ``file://`` URIs;
-- a few emit the bare path, even when it contains spaces.
-
-This module recognizes pasted text that consists solely of one or more existing
-absolute paths and normalizes it to clean, space-separated filesystem paths,
-quoting any path that contains whitespace.
-"""
+"""终端文件拖拽上传与路径感知。"""
 
 from __future__ import annotations
 

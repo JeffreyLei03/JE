@@ -1,4 +1,4 @@
-"""Provider-neutral streaming events emitted by model adapters."""
+"""模型适配器发出的平台中立流式事件定义。"""
 
 from __future__ import annotations
 

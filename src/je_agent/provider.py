@@ -1,4 +1,4 @@
-"""Provider contract owned by Tau's portable agent layer."""
+"""Je 核心智能体层拥有的模型提供商接口契约。"""
 
 from __future__ import annotations
 

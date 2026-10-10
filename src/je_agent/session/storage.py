@@ -1,4 +1,4 @@
-"""Locked, append-only session storage implementations."""
+"""带文件锁的只追加会话存储实现。"""
 
 from __future__ import annotations
 

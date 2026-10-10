@@ -1,4 +1,4 @@
-"""In-memory session state reconstruction."""
+"""内存中会话状态与线性分支重建逻辑。"""
 
 from __future__ import annotations
 
@@ -156,7 +156,7 @@ def _apply_compaction(
 ) -> list[tuple[str, AgentMessage]]:
     summary_row = (entry.id, UserMessage(content=_format_compaction_summary(entry.summary)))
 
-    # Tau originally persisted arbitrary replacement-id sets. Explicit legacy
+    # Je originally persisted arbitrary replacement-id sets. Explicit legacy
     # fields take precedence, including an empty list, so old sessions retain
     # their exact replay behavior.
     if "replaces_entry_ids" in entry.model_fields_set:

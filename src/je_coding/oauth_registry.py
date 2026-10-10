@@ -1,4 +1,4 @@
-"""Built-in and extension-ready OAuth provider registry."""
+"""全局 OAuth 提供商注册表。"""
 
 from __future__ import annotations
 

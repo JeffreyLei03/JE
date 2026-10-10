@@ -1,4 +1,4 @@
-"""Generation-local layered registry for extension-defined providers."""
+"""扩展自定义模型提供商注册中心。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Shared retry helpers for provider adapters."""
+"""模型提供商请求通用重试机制。"""
 
 from __future__ import annotations
 

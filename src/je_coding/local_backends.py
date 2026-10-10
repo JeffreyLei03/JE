@@ -1,10 +1,4 @@
-"""Provider-neutral local-backend contracts and generation-local registry.
-
-Backends describe protocol work and structured data.  They never construct UI
-widgets or receive a frontend object.  The registry owns source/generation
-identity, cancellation, and stale-result containment; the host owns rendering
-and session/model selection.
-"""
+"""本地大模型推理后端管理与状态探测。"""
 
 from __future__ import annotations
 

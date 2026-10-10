@@ -1,4 +1,4 @@
-"""Canonical filesystem paths for Je user and project data."""
+"""Je 用户与工程工作区标准文件路径定义。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Install Tau extensions from local paths or Git repositories."""
+"""Je 扩展包安装器与依赖解析器。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Thinking-mode primitives for Tau coding sessions."""
+"""大模型深度思考（Thinking）预算与模式控制。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Session export helpers for human-readable transcript views."""
+"""会话历史 HTML/JSONL 导出渲染引擎。"""
 
 from __future__ import annotations
 
@@ -88,7 +88,7 @@ def export_session_html(
     entries: Sequence[SessionEntry],
     output_path: Path,
     *,
-    title: str = "Tau Session Export",
+    title: str = "Je Session Export",
     source: str | None = None,
     system_prompt: str | None = None,
 ) -> Path:
@@ -110,7 +110,7 @@ def export_session_artifact(
     entries: Sequence[SessionEntry],
     output_path: Path,
     *,
-    title: str = "Tau Session Export",
+    title: str = "Je Session Export",
     source: str | None = None,
     format: str | None = None,
     system_prompt: str | None = None,
@@ -149,7 +149,7 @@ def _jsonl_filename(title: str, source: str | None) -> str:
         if stem:
             return f"{stem}.jsonl"
     slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")
-    return f"{slug or 'tau-session'}.jsonl"
+    return f"{slug or 'je-session'}.jsonl"
 
 
 def _export_theme_css(theme: TuiTheme) -> str:
@@ -177,7 +177,7 @@ def _export_theme_css(theme: TuiTheme) -> str:
 def render_session_html(
     entries: Sequence[SessionEntry],
     *,
-    title: str = "Tau Session Export",
+    title: str = "Je Session Export",
     source: str | None = None,
     system_prompt: str | None = None,
 ) -> str:
@@ -779,7 +779,7 @@ def render_session_html(
 <body>
   <header>
     <div class="header-top">
-      <p class="eyebrow">Tau session export</p>
+      <p class="eyebrow">Je session export</p>
       <button
         type="button"
         class="theme-toggle"
@@ -881,7 +881,7 @@ def render_session_html(
       var root = document.documentElement;
       var stored = null;
       try {{
-        stored = window.localStorage.getItem("tau-session-export-theme");
+        stored = window.localStorage.getItem("je-session-export-theme");
       }} catch (err) {{
         stored = null;
       }}
@@ -939,7 +939,7 @@ def render_session_html(
           var next = currentTheme() === "dark" ? "light" : "dark";
           applyTheme(next);
           try {{
-            window.localStorage.setItem("tau-session-export-theme", next);
+            window.localStorage.setItem("je-session-export-theme", next);
           }} catch (err) {{
             /* localStorage unavailable; theme choice just won't persist. */
           }}

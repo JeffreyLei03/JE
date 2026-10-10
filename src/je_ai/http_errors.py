@@ -1,4 +1,4 @@
-"""Helpers for surfacing safe provider HTTP error details."""
+"""提供商安全 HTTP 错误解析与展示工具。"""
 
 from __future__ import annotations
 

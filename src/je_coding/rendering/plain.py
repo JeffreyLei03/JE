@@ -1,4 +1,4 @@
-"""Pi-style final text renderer for print mode."""
+"""纯文本终端控制台渲染器。"""
 
 import typer
 

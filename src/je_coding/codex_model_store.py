@@ -1,4 +1,4 @@
-"""Persisted cache for authenticated OpenAI Codex model catalogs."""
+"""Codex 模型目录本地持久化与缓存。"""
 
 from __future__ import annotations
 

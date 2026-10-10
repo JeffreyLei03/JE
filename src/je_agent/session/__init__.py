@@ -1,4 +1,4 @@
-"""Append-only session tree primitives for Tau."""
+"""Je 的树状会话模型与持久化存储基元。"""
 
 from __future__ import annotations
 

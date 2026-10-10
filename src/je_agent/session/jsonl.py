@@ -1,4 +1,4 @@
-"""JSONL serialization and Tau-v1 persisted-session migration."""
+"""JSONL 会话持久化与数据迁移工具。"""
 
 from __future__ import annotations
 
@@ -17,12 +17,12 @@ class SessionJsonlError(ValueError):
 
 
 def entry_to_json_line(entry: SessionEntry) -> str:
-    """Serialize one entry in Tau's canonical persisted shape."""
+    """Serialize one entry in Je's canonical persisted shape."""
     return _SESSION_ENTRY_ADAPTER.dump_json(entry, exclude_none=True).decode() + "\n"
 
 
 def entry_from_json_line(line: str, *, line_number: int | None = None) -> SessionEntry:
-    """Deserialize one entry, migrating persisted Tau-v1 messages first."""
+    """Deserialize one entry, migrating persisted Je-v1 messages first."""
     location = f" on line {line_number}" if line_number is not None else ""
     try:
         payload = json.loads(line)

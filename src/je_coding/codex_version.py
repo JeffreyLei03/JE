@@ -1,4 +1,4 @@
-"""Runtime resolution and caching of the latest released Codex client version."""
+"""Codex 协议版本检测与缓存。"""
 
 from __future__ import annotations
 

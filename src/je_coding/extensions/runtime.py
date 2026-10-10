@@ -1,4 +1,4 @@
-"""Extension runtime: hook dispatch, tool wrapping, and session binding."""
+"""扩展运行时容器与上下文隔离。"""
 
 from __future__ import annotations
 

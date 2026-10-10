@@ -1,4 +1,4 @@
-"""Shared helpers for provider serialization of multimodal message content."""
+"""多模态消息内容序列化与提供商交互公共工具。"""
 
 from __future__ import annotations
 

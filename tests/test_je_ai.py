@@ -1963,7 +1963,7 @@ async def test_openai_codex_provider_formats_request_and_streams_text() -> None:
     assert request.url == "https://chatgpt.test/backend-api/codex/responses"
     assert request.headers["authorization"] == "Bearer access-token"
     assert request.headers["chatgpt-account-id"] == "account-1"
-    assert request.headers["originator"] == "tau"
+    assert request.headers["originator"] == "je"
     assert request.headers["openai-beta"] == "responses=experimental"
     assert request.headers["x-test"] == "enabled"
 

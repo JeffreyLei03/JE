@@ -1,4 +1,4 @@
-"""HTTP client helpers shared by Tau network integrations."""
+"""Je 网络交互共享的 HTTP 客户端工具模块。"""
 
 from __future__ import annotations
 
@@ -25,7 +25,7 @@ def normalize_proxy_url(proxy_url: str) -> str:
     Some environments use ``socks://`` as a generic SOCKS proxy scheme. httpx
     accepts explicit SOCKS versions (for example ``socks5://`` and
     ``socks5h://``), but rejects the generic scheme before it can make a
-    request. Treat the generic form as SOCKS5 so Tau can honor these proxy
+    request. Treat the generic form as SOCKS5 so Je can honor these proxy
     environment variables.
     """
 
@@ -63,14 +63,14 @@ def normalized_proxy_environment() -> Iterator[None]:
 
 
 def create_async_client(**kwargs: Any) -> httpx.AsyncClient:
-    """Create an ``httpx.AsyncClient`` with Tau's proxy normalization applied."""
+    """Create an ``httpx.AsyncClient`` with Je's proxy normalization applied."""
 
     with normalized_proxy_environment():
         return httpx.AsyncClient(**kwargs)
 
 
 def get_json(url: str, *, timeout: float, follow_redirects: bool = False) -> dict[str, object]:
-    """Fetch a JSON object with Tau's proxy normalization applied."""
+    """Fetch a JSON object with Je's proxy normalization applied."""
 
     with normalized_proxy_environment():
         response = httpx.get(url, timeout=timeout, follow_redirects=follow_redirects)

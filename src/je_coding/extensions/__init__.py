@@ -1,4 +1,4 @@
-"""Tau extension system: discovery, loading, and the extension API."""
+"""Je 扩展机制与生命周期管理包。"""
 
 from je_coding.extensions.api import (
     AGENT_EVENT_TYPES,

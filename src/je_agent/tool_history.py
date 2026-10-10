@@ -1,4 +1,4 @@
-"""Provider-safe repair of malformed tool-call message history."""
+"""畸变或中断工具调用历史的安全修复机制。"""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def repair_tool_history(messages: tuple[AgentMessage, ...]) -> ToolHistoryRepair
     Existing result messages are moved beside their calls. Missing results get a
     deterministic interruption error. Results with no call are omitted because
     a missing call's arguments cannot be reconstructed safely. When duplicate
-    results exist, a real result is preferred over Tau's synthetic interruption.
+    results exist, a real result is preferred over Je's synthetic interruption.
     """
     call_occurrences: list[tuple[tuple[int, int], ToolCall, int]] = []
     for message_index, message in enumerate(messages):

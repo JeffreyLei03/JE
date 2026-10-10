@@ -1,4 +1,4 @@
-"""Frontend-free contracts for process-local extension providers."""
+"""扩展模型提供商适配桥接。"""
 
 from __future__ import annotations
 

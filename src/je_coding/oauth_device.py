@@ -1,4 +1,4 @@
-"""RFC 8628-style device authorization polling helpers."""
+"""通用 OAuth 设备码认证实现。"""
 
 from __future__ import annotations
 

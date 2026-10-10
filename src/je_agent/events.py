@@ -1,4 +1,4 @@
-"""Pi-compatible events emitted by Tau's portable agent layer."""
+"""Je 核心智能体层发出的规范化事件流定义。"""
 
 from __future__ import annotations
 

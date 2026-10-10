@@ -1,8 +1,4 @@
-"""Project-input trust policy, detection, persistence, and coordination.
-
-Project trust controls ambient project resources. It is deliberately not a
-filesystem, process, network, tool, model, or prompt-injection sandbox.
-"""
+"""工程工作区受信任环境检测与安全防护机制。"""
 
 from __future__ import annotations
 

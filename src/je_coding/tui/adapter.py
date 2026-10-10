@@ -1,4 +1,4 @@
-"""Translate Pi-compatible session events into Textual display state."""
+"""Textual 终端 UI 事件流双向适配器。"""
 
 from je_agent.events import (
     AgentEndEvent,

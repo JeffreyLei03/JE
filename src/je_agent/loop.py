@@ -1,4 +1,4 @@
-"""Pure Pi-compatible provider/tool agent loop."""
+"""纯粹的模型提供商与工具交互 Agent 主执行循环。"""
 
 from __future__ import annotations
 
@@ -185,7 +185,7 @@ async def run_agent_loop(
 def _provider_context(messages: list[AgentMessage]) -> list[AgentMessage]:
     """Return replayable messages while retaining failures in durable history.
 
-    Providers cannot consistently accept an assistant turn with no content. Tau
+    Providers cannot consistently accept an assistant turn with no content. Je
     persists terminal failures for diagnostics, but an empty failed or aborted
     turn is not model context and must not poison the next request.
     """

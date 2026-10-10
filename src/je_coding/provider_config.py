@@ -1,4 +1,4 @@
-"""Durable provider configuration for Tau coding sessions."""
+"""大模型提供商运行时连接参数与安全配置。"""
 
 from __future__ import annotations
 

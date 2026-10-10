@@ -1,4 +1,4 @@
-"""Markdown skill loading and expansion."""
+"""Je 自定义技能（Skills）发现与执行引擎。"""
 
 from __future__ import annotations
 

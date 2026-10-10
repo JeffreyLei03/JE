@@ -1,4 +1,4 @@
-"""Public re-exports of the canonical assistant stream event contract."""
+"""大模型流式响应事件公共契约导出。"""
 
 from je_agent.provider_events import (
     AssistantDoneEvent,

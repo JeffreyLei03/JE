@@ -1,4 +1,4 @@
-"""Append-only session entry models."""
+"""只追加（Append-Only）会话条目模型定义。"""
 
 from __future__ import annotations
 
@@ -52,7 +52,7 @@ class CustomMessageEntry(BaseSessionEntry):
 class ModelChangeEntry(BaseSessionEntry):
     """A model selection change entry.
 
-    ``provider`` was added after Tau's first session format.  It remains
+    ``provider`` was added after Je's first session format.  It remains
     optional so older transcripts continue to load; new entries always carry
     the provider selected by the host.
     """
@@ -74,7 +74,7 @@ class CompactionEntry(BaseSessionEntry):
 
     type: Literal["compaction"] = "compaction"
     summary: str
-    # Legacy Tau sessions stored every replaced id. Keep accepting and replaying
+    # Legacy Je sessions stored every replaced id. Keep accepting and replaying
     # that shape, but omit the empty compatibility field from new JSONL records.
     replaces_entry_ids: list[str] = Field(default_factory=list, exclude_if=lambda ids: not ids)
     first_kept_entry_id: str | None = None

@@ -1,4 +1,4 @@
-"""OAuth helpers for subscription-backed coding providers."""
+"""OAuth 设备授权与令牌安全刷新框架。"""
 
 from __future__ import annotations
 

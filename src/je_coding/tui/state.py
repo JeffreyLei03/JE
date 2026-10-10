@@ -1,4 +1,4 @@
-"""Display state for Tau's Textual TUI."""
+"""终端 UI 响应式状态管理。"""
 
 from __future__ import annotations
 

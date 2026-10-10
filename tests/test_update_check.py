@@ -31,8 +31,8 @@ def test_startup_update_notice_reports_newer_stable_release(tmp_path) -> None:
     assert notice is not None
     assert notice.current_version == "0.1.0"
     assert notice.latest_version == "0.2.0"
-    assert "Tau 0.2.0 is available (installed: 0.1.0)" in notice.message
-    assert "Run `tau update` to upgrade" in notice.message
+    assert "Je 0.2.0 is available (installed: 0.1.0)" in notice.message
+    assert "Run `je update` to upgrade" in notice.message
     assert calls == [(PYPI_JSON_URL, UPDATE_CHECK_TIMEOUT_SECONDS)]
 
 
@@ -123,7 +123,7 @@ def test_startup_update_notice_can_be_disabled(tmp_path) -> None:
         "0.1.0",
         fetcher=lambda _url, _timeout: (_ for _ in ()).throw(AssertionError("no fetch")),
         cache_path=tmp_path / "update-check.json",
-        env={"TAU_NO_UPDATE_CHECK": "1"},
+        env={"JE_NO_UPDATE_CHECK": "1"},
     )
 
     assert notice is None
@@ -209,7 +209,7 @@ def test_startup_release_notes_notice_reports_upgrade_once(tmp_path) -> None:
     assert notice.previous_version == "0.1.1"
     assert notice.current_version == "0.1.2"
     assert notice.notes == ("New feature", "Bug fix")
-    assert notice.message == "Tau updated to 0.1.2\n\n**New**\n- New feature\n- Bug fix"
+    assert notice.message == "Je updated to 0.1.2\n\n**New**\n- New feature\n- Bug fix"
 
     second_notice = startup_release_notes_notice(
         "0.1.2",

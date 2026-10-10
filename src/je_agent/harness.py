@@ -1,4 +1,4 @@
-"""Stateful reusable agent harness built on the Pi-compatible loop."""
+"""基于主执行循环的有状态可复用 AgentHarness 调度器。"""
 
 from __future__ import annotations
 

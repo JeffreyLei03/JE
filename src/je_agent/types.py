@@ -1,4 +1,4 @@
-"""Shared low-level types for Tau's portable agent layer."""
+"""Je 核心智能体层共享的基础底层类型定义。"""
 
 from __future__ import annotations
 

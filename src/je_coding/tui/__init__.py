@@ -1,4 +1,4 @@
-"""Textual TUI frontend for Tau coding sessions."""
+"""Textual 终端用户界面包。"""
 
 from __future__ import annotations
 

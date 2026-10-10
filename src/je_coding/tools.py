@@ -1,11 +1,4 @@
-"""Built-in filesystem and shell tools for Tau coding sessions.
-
-The module exposes factory functions that create provider-neutral `AgentTool`
-objects plus richer `ToolDefinition` objects for callers that need prompt
-metadata and JSON schemas. The tools operate relative to a configurable working
-directory, return structured `AgentToolResult` values, and keep local
-filesystem/shell behavior outside the reusable `je_agent` package.
-"""
+"""Je 内置编码工具集合（文件操作与终端执行）。"""
 
 from __future__ import annotations
 

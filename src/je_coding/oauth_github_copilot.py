@@ -1,4 +1,4 @@
-"""GitHub Copilot OAuth device-code provider."""
+"""GitHub Copilot OAuth 认证适配。"""
 
 from __future__ import annotations
 

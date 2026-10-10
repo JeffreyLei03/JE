@@ -1,4 +1,4 @@
-"""Structured diagnostic logging for coding-session failures."""
+"""运行时错误诊断与日志分析工具。"""
 
 from __future__ import annotations
 

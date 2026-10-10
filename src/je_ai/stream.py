@@ -1,4 +1,4 @@
-"""Translate Tau's transitional provider parser output into Pi stream events."""
+"""模型响应解析与流式事件转换。"""
 
 from __future__ import annotations
 

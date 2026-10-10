@@ -1,4 +1,4 @@
-"""Bounded image detection and normalization for coding-tool attachments."""
+"""多模态图像输入压缩与预处理工具。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Model-assisted summaries for abandoned session-tree branches."""
+"""会话分支历史摘要与状态生成工具。"""
 
 from __future__ import annotations
 

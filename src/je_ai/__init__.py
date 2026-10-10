@@ -1,4 +1,4 @@
-"""Provider and Pi-compatible model streaming layer for Tau."""
+"""Je 的大模型流式调用与提供商统一抽象层。"""
 
 # ruff: noqa: F401 - this module intentionally defines the public facade
 

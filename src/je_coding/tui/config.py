@@ -1,4 +1,4 @@
-"""Durable Textual TUI configuration for Tau."""
+"""终端 UI 用户偏好设置与状态持久化。"""
 
 from __future__ import annotations
 
@@ -11,6 +11,8 @@ from je_coding.paths import TauPaths
 from je_coding.tui.themes import (
     BUILTIN_TUI_THEME_NAMES,
     HIGH_CONTRAST_THEME,
+    JE_DARK_THEME,
+    JE_LIGHT_THEME,
     TAU_DARK_THEME,
     TAU_LIGHT_THEME,
     TuiRoleStyle,
@@ -25,6 +27,8 @@ type TurnNotificationMode = Literal["off", "bell", "desktop"]
 __all__ = [
     "BUILTIN_TUI_THEME_NAMES",
     "HIGH_CONTRAST_THEME",
+    "JE_DARK_THEME",
+    "JE_LIGHT_THEME",
     "TAU_DARK_THEME",
     "TAU_LIGHT_THEME",
     "TuiConfigError",

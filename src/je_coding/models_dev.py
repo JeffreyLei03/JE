@@ -1,4 +1,4 @@
-"""Build-time models.dev catalog generation for Tau's bundled providers."""
+"""通用模型列表元数据与特性解析。"""
 
 from __future__ import annotations
 

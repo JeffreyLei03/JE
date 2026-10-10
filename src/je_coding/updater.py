@@ -1,4 +1,4 @@
-"""Upgrade Tau with the package manager that owns its environment."""
+"""Je 版本升级与环境管理。"""
 
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ class UpdateResult:
         return self.command is not None
 
 
-def update_tau(
+def update_je(
     *,
     runner: CommandRunner = run,
     python_executable: str | None = None,
@@ -69,7 +69,7 @@ def update_tau(
         installer = _installed_installer()
     if direct_url:
         return _failure(
-            "Tau was installed from a local or direct URL, so it cannot be safely "
+            "Je was installed from a local or direct URL, so it cannot be safely "
             f"updated from PyPI. Reinstall it from its original source: {direct_url}"
         )
 
@@ -77,12 +77,12 @@ def update_tau(
     if method is None:
         if (prefix / "conda-meta").is_dir():
             return _failure(
-                "Tau is installed in a Conda/Pixi-managed environment. "
+                "Je is installed in a Conda/Pixi-managed environment. "
                 "Update it with the manager that created that environment."
             )
         installed_by = installer or "unknown"
         return _failure(
-            "Could not identify a supported installer for this Tau environment "
+            "Could not identify a supported installer for this Je environment "
             f"({prefix}). Package metadata reports: {installed_by}."
         )
 
@@ -91,9 +91,9 @@ def update_tau(
         try:
             latest_version = latest_version_fetcher()
         except Exception as exc:  # noqa: BLE001 - report update lookup failures to the user
-            return _failure(f"Could not determine the latest Tau version from PyPI: {exc}")
+            return _failure(f"Could not determine the latest Je version from PyPI: {exc}")
         if latest_version is None:
-            return _failure("Could not determine the latest Tau version from PyPI.")
+            return _failure("Could not determine the latest Je version from PyPI.")
 
     executable = python_executable or sys.executable
     command = _update_command(method, executable, latest_version=latest_version)
@@ -170,17 +170,17 @@ function Write-Log([string]$Message) {
 }
 try {
     $ErrorActionPreference = "Stop"
-    $WaitMessage = "Waiting for Tau process $ParentProcessId to exit..."
+    $WaitMessage = "Waiting for Je process $ParentProcessId to exit..."
     $WaitMessage | Set-Content -LiteralPath $LogPath -Encoding UTF8
     $ParentProcess = $null
     try {
         $ParentProcess = Get-Process -Id $ParentProcessId -ErrorAction Stop
     } catch {
         if ($_.FullyQualifiedErrorId -like "NoProcessFoundForGivenId*") {
-            Write-Log "Tau process $ParentProcessId has already exited."
+            Write-Log "Je process $ParentProcessId has already exited."
         } else {
             $Detail = $_.Exception.Message
-            throw "Could not inspect Tau process $ParentProcessId. Update aborted: $Detail"
+            throw "Could not inspect Je process $ParentProcessId. Update aborted: $Detail"
         }
     }
     if ($null -ne $ParentProcess) {
@@ -188,7 +188,7 @@ try {
             Wait-Process -InputObject $ParentProcess -ErrorAction Stop
         } catch {
             $Detail = $_.Exception.Message
-            throw "Could not wait for Tau process $ParentProcessId to exit. Update aborted: $Detail"
+            throw "Could not wait for Je process $ParentProcessId to exit. Update aborted: $Detail"
         }
     }
     $PayloadJson = [Text.Encoding]::UTF8.GetString(
@@ -247,7 +247,7 @@ def _handoff_windows_update(
     script_path: Path | None = None
     try:
         if owns_update_dir:
-            update_dir = Path(tempfile.mkdtemp(prefix="tau-update-"))
+            update_dir = Path(tempfile.mkdtemp(prefix="je-update-"))
         else:
             update_dir = handoff_directory
             assert update_dir is not None
@@ -300,7 +300,7 @@ def _handoff_windows_update(
     return UpdateResult(
         command=command,
         stdout=(
-            "Tau update is scheduled and will start after this process exits. "
+            "Je update is scheduled and will start after this process exits. "
             f"Progress will be written to {log_path}."
         ),
         deferred=True,
@@ -385,3 +385,6 @@ def _result_detail(result: CompletedProcess[str]) -> str:
 
 def _failure(message: str) -> UpdateResult:
     return UpdateResult(command=None, failures=(message,))
+
+
+update_tau = update_je

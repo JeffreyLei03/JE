@@ -1,4 +1,4 @@
-"""Optional runtime model-catalog discovery contracts for provider adapters."""
+"""模型提供商运行时目录发现契约。"""
 
 from __future__ import annotations
 

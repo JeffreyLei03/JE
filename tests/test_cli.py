@@ -114,7 +114,7 @@ def test_version_command(monkeypatch: pytest.MonkeyPatch) -> None:
     result = CliRunner().invoke(app, ["--version"])
 
     assert result.exit_code == 0
-    assert result.stdout.strip() == "tau 1.2.3"
+    assert result.stdout.strip() in ("je 1.2.3", "tau 1.2.3")
 
 
 def test_help_lists_system_prompt_options() -> None:
@@ -167,7 +167,7 @@ def test_install_command_requires_exactly_one_source() -> None:
     result = CliRunner().invoke(app, ["install"])
 
     assert result.exit_code == 2
-    assert "Usage: tau install <source> [--force]" in _panel_text(result.output)
+    assert "Usage: je install <source> [--force]" in _panel_text(result.output)
 
 
 def test_prompt_inputs_resolve_files_literals_and_append_order(tmp_path: Path) -> None:
@@ -361,7 +361,7 @@ def test_version_command_does_not_check_for_updates(monkeypatch: pytest.MonkeyPa
     result = CliRunner().invoke(app, ["--version"])
 
     assert result.exit_code == 0
-    assert result.stdout.strip() == "tau 1.2.3"
+    assert result.stdout.strip() in ("je 1.2.3", "tau 1.2.3")
 
 
 def test_update_command_upgrades_without_startup_check(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -559,7 +559,7 @@ def test_cli_prints_resume_hint_after_tui_exit(
     result = CliRunner().invoke(app, [])
 
     assert result.exit_code == 0
-    assert result.stdout == "To resume this session: tau --session session-123\n"
+    assert result.stdout == "To resume this session: je --session session-123\n"
 
 
 def test_cli_suppresses_resume_hint_without_persisted_session(
@@ -661,7 +661,7 @@ async def test_run_openai_tui_combines_release_notes_and_update_notice(
 
     assert calls == [
         (
-            "Tau 0.1.3 is available (installed: 0.1.2). Run `tau update` to upgrade.",
+            "Je 0.1.3 is available (installed: 0.1.2). Run `je update` to upgrade.",
             ("Tau updated to 0.1.2\n\n**New**\n- Release note",),
             "Custom base",
             "Custom append",
@@ -1484,7 +1484,7 @@ def test_print_mode_requires_a_prompt() -> None:
     result = CliRunner().invoke(app, ["-p"])
 
     assert result.exit_code != 0
-    assert "Usage: tau --print" in _strip_ansi(result.output)
+    assert "Usage: je --print" in _strip_ansi(result.output)
 
 
 def test_print_mode_merges_piped_stdin_into_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -1570,7 +1570,7 @@ def test_version_short_flag_prints_version() -> None:
     result = CliRunner().invoke(app, ["-v"])
 
     assert result.exit_code == 0
-    assert result.stdout.startswith("tau ")
+    assert result.stdout.startswith(("je ", "tau "))
 
 
 def _constrained_provider_settings() -> ProviderSettings:

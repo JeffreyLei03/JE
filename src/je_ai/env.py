@@ -1,4 +1,4 @@
-"""Environment-based provider configuration helpers."""
+"""基于环境变量的模型提供商配置工具。"""
 
 from __future__ import annotations
 

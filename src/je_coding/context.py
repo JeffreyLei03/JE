@@ -1,4 +1,4 @@
-"""Project instruction discovery for Tau coding sessions."""
+"""工程工作区规则（AGENTS.md）与上下文感知解析。"""
 
 from __future__ import annotations
 

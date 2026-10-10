@@ -1,4 +1,4 @@
-"""Shared OpenAI prompt-cache affinity helpers."""
+"""OpenAI 提示词缓存亲和性工具。"""
 
 from __future__ import annotations
 

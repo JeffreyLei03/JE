@@ -1,4 +1,4 @@
-"""Built-in provider catalog for Tau login/setup flows."""
+"""大模型提供商目录与模型配置映射。"""
 
 from __future__ import annotations
 

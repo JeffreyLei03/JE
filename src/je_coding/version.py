@@ -1,4 +1,4 @@
-"""Package version helpers."""
+"""Je 版本号获取与元数据解析。"""
 
 from __future__ import annotations
 

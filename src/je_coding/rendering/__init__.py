@@ -1,4 +1,4 @@
-"""Event renderers for Tau coding frontends and print modes."""
+"""终端渲染模块导出。"""
 
 from __future__ import annotations
 

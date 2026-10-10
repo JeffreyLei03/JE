@@ -1,4 +1,4 @@
-"""Shared trust-aware staging for coding-session startup and replacement."""
+"""会话启动初始化与依赖环境装配。"""
 
 from __future__ import annotations
 

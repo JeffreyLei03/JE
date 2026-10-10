@@ -1,4 +1,4 @@
-"""Reload summary types for Tau coding-session resources."""
+"""模块热重载与开发调试工具。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Pi-compatible JSONL RPC frontend for a Tau coding session."""
+"""无头模式 RPC 交互协议与服务端口。"""
 
 from __future__ import annotations
 

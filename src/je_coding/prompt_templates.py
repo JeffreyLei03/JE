@@ -1,4 +1,4 @@
-"""Markdown prompt template loading and rendering."""
+"""自定义提示词模板加载与渲染。"""
 
 from __future__ import annotations
 

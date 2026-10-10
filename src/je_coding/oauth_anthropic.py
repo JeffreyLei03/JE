@@ -1,4 +1,4 @@
-"""Anthropic Claude Pro/Max OAuth provider."""
+"""Anthropic OAuth 认证流程适配。"""
 
 from __future__ import annotations
 

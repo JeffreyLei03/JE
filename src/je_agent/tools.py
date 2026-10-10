@@ -1,4 +1,4 @@
-"""Pi-compatible provider-neutral tool definitions and execution results."""
+"""平台中立的智能体工具定义与执行结果模型。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Command-line entry point for Tau."""
+"""Je 命令行入口与终端交互逻辑。"""
 
 from __future__ import annotations
 
@@ -102,21 +102,21 @@ def _force_utf8_streams() -> None:
 _force_utf8_streams()
 
 app = typer.Typer(
-    name="tau",
-    help="Tau coding-agent harness.",
+    name="je",
+    help="Je autonomous AI coding agent.",
     epilog="""Commands:
 
-  tau install SOURCE [--force] - Install a trusted local or Git extension.
+  je install SOURCE [--force] - Install a trusted local or Git extension.
 
-  tau update - Upgrade Tau.
+  je update - Upgrade Je.
 
-  tau sessions - List indexed sessions.
+  je sessions - List indexed sessions.
 
-  tau export REF [DEST] - Export a session as HTML or JSONL.
+  je export REF [DEST] - Export a session as HTML or JSONL.
 
-  tau providers - List configured model providers.
+  je providers - List configured model providers.
 
-  tau setup - Configure an OpenAI-compatible provider.
+  je setup - Configure an OpenAI-compatible provider.
 """,
     add_completion=False,
     context_settings={"allow_extra_args": True, "ignore_unknown_options": True},
@@ -136,13 +136,13 @@ def install_command(args: list[str]) -> None:
         if arg == "--force":
             force = True
         elif arg.startswith("-"):
-            raise typer.BadParameter(f"Unknown option for `tau install`: {arg}")
+            raise typer.BadParameter(f"Unknown option for `je install`: {arg}")
         elif source is None:
             source = arg
         else:
-            raise typer.BadParameter("Usage: tau install <source> [--force]")
+            raise typer.BadParameter("Usage: je install <source> [--force]")
     if source is None:
-        raise typer.BadParameter("Usage: tau install <source> [--force]")
+        raise typer.BadParameter("Usage: je install <source> [--force]")
 
     typer.echo(
         "Warning: extensions execute arbitrary Python with your user permissions. "
@@ -186,7 +186,7 @@ def setup_command(
         f"Saved provider '{provider.name}' to {user_catalog_path()} and preferences to {path}"
     )
     if provider.api_key_env not in environ:
-        typer.echo(f"Set {provider.api_key_env} before running Tau with this provider.", err=True)
+        typer.echo(f"Set {provider.api_key_env} before running Je with this provider.", err=True)
 
 
 @app.callback(invoke_without_command=True)
@@ -234,28 +234,28 @@ def main(
     ] = None,
     setup_base_url: Annotated[
         str,
-        typer.Option("--base-url", help="OpenAI-compatible base URL for `tau setup`."),
+        typer.Option("--base-url", help="OpenAI-compatible base URL for `je setup`."),
     ] = DEFAULT_OPENAI_COMPATIBLE_BASE_URL,
     setup_api_key_env: Annotated[
         str,
-        typer.Option("--api-key-env", help="API key environment variable for `tau setup`."),
+        typer.Option("--api-key-env", help="API key environment variable for `je setup`."),
     ] = "OPENAI_API_KEY",
     setup_timeout_seconds: Annotated[
         float,
         typer.Option(
             "--timeout-seconds",
-            help="HTTP timeout in seconds for `tau setup` provider requests.",
+            help="HTTP timeout in seconds for `je setup` provider requests.",
         ),
     ] = DEFAULT_OPENAI_COMPATIBLE_TIMEOUT_SECONDS,
     setup_max_retries: Annotated[
         int,
-        typer.Option("--max-retries", help="Provider retry count for `tau setup`."),
+        typer.Option("--max-retries", help="Provider retry count for `je setup`."),
     ] = DEFAULT_OPENAI_COMPATIBLE_MAX_RETRIES,
     setup_max_retry_delay_seconds: Annotated[
         float,
         typer.Option(
             "--max-retry-delay-seconds",
-            help="Provider retry delay in seconds for `tau setup`.",
+            help="Provider retry delay in seconds for `je setup`.",
         ),
     ] = DEFAULT_OPENAI_COMPATIBLE_MAX_RETRY_DELAY_SECONDS,
     setup_default: Annotated[
@@ -348,7 +348,7 @@ def main(
         bool,
         typer.Option(
             "--export",
-            help="Export the given session id or JSONL path (mirrors `tau export`).",
+            help="Export the given session id or JSONL path (mirrors `je export`).",
         ),
     ] = False,
     no_extensions: Annotated[
@@ -404,7 +404,7 @@ def main(
 
     if resume is not None:
         raise typer.BadParameter(
-            f"--resume was renamed to --session. Use `tau --session {resume}` instead."
+            f"--resume was renamed to --session. Use `je --session {resume}` instead."
         )
 
     if session is not None and new_session:
@@ -415,12 +415,12 @@ def main(
     if prompt_option is not None:
         raise typer.BadParameter(
             "--prompt was removed. Pass the prompt positionally and use --print, e.g. "
-            f'`tau --print "{prompt_option}"`.'
+            f'`je --print "{prompt_option}"`.'
         )
 
     if output is not None:
         raise typer.BadParameter(
-            f"--output was renamed to --mode. Use `tau --mode {output.value}` instead."
+            f"--output was renamed to --mode. Use `je --mode {output.value}` instead."
         )
 
     if extension_legacy is not None:
@@ -455,7 +455,7 @@ def main(
     if not rpc_requested and not print_requested and not export and command == "update":
         positional_models = positional_args[1:] == ["--models"]
         if len(positional_args) != 1 and not positional_models:
-            raise typer.BadParameter("Usage: tau update [--models]")
+            raise typer.BadParameter("Usage: je update [--models]")
         if models or positional_models:
             update_models_command()
         else:
@@ -463,7 +463,7 @@ def main(
         raise typer.Exit()
 
     if models:
-        raise typer.BadParameter("--models is only supported with `tau update`")
+        raise typer.BadParameter("--models is only supported with `je update`")
 
     if not rpc_requested and not print_requested and not export and command == "install":
         install_command(positional_args[1:])
@@ -581,13 +581,13 @@ def main(
         except (RuntimeError, ValueError) as exc:
             raise typer.BadParameter(str(exc)) from exc
         if resumable_session_id is not None:
-            typer.echo(f"To resume this session: tau --session {resumable_session_id}")
+            typer.echo(f"To resume this session: je --session {resumable_session_id}")
         raise typer.Exit()
 
     prompt = _merge_stdin_prompt(initial_prompt or "")
     if not prompt:
         raise typer.BadParameter(
-            'Usage: tau --print "<prompt>" (or --mode text|json|transcript "<prompt>"); '
+            'Usage: je --print "<prompt>" (or --mode text|json|transcript "<prompt>"); '
             "a prompt can also be piped in via stdin"
         )
 
@@ -704,9 +704,9 @@ def update_command() -> None:
     if result.stderr:
         typer.echo(result.stderr, err=True)
     if result.deferred:
-        typer.echo(f"Tau update handed off with: {' '.join(result.command or ())}")
+        typer.echo(f"Je update handed off with: {' '.join(result.command or ())}")
     else:
-        typer.echo(f"Tau update completed with: {' '.join(result.command or ())}")
+        typer.echo(f"Je update completed with: {' '.join(result.command or ())}")
 
 
 def render_session_list(records: list[CodingSessionRecord]) -> None:
@@ -747,7 +747,7 @@ async def export_session_command(
 
 
 def _run_export_cli(args: list[str]) -> None:
-    """Run `tau export`/`tau --export` and exit."""
+    """Run `je export`/`tau --export` and exit."""
     try:
         session_ref, output_path, export_format = _parse_export_cli_args(args)
     except RuntimeError as exc:
@@ -825,7 +825,7 @@ def _merge_stdin_prompt(prompt: str) -> str:
 
 def _parse_export_cli_args(args: list[str]) -> tuple[str, Path | None, str | None]:
     if not args:
-        raise RuntimeError("Usage: tau export <session-id-or-jsonl> [--format html|jsonl] [output]")
+        raise RuntimeError("Usage: je export <session-id-or-jsonl> [--format html|jsonl] [output]")
     session_ref = args[0]
     output_path: Path | None = None
     export_format: str | None = None
@@ -836,7 +836,7 @@ def _parse_export_cli_args(args: list[str]) -> tuple[str, Path | None, str | Non
             index += 1
             if index >= len(args):
                 raise RuntimeError(
-                    "Usage: tau export <session-id-or-jsonl> [--format html|jsonl] [output]"
+                    "Usage: je export <session-id-or-jsonl> [--format html|jsonl] [output]"
                 )
             export_format = args[index]
         elif arg.startswith("--format="):
@@ -847,7 +847,7 @@ def _parse_export_cli_args(args: list[str]) -> tuple[str, Path | None, str | Non
             output_path = Path(arg).expanduser()
         else:
             raise RuntimeError(
-                "Usage: tau export <session-id-or-jsonl> [--format html|jsonl] [output]"
+                "Usage: je export <session-id-or-jsonl> [--format html|jsonl] [output]"
             )
         index += 1
     return session_ref, output_path, export_format
@@ -882,14 +882,14 @@ def _resolve_export_source(
     if candidate_path.exists():
         if candidate_path.is_dir():
             raise RuntimeError(f"Session export source is a directory: {candidate_path}")
-        return candidate_path, f"Tau session {candidate_path.stem}"
+        return candidate_path, f"Je session {candidate_path.stem}"
 
     manager = session_manager or SessionManager()
     record = manager.get_session(session_ref)
     if record is None:
         raise RuntimeError(f"Unknown session or file: {session_ref}")
 
-    title = record.title or f"Tau session {record.id}"
+    title = record.title or f"Je session {record.id}"
     return record.path, title
 
 

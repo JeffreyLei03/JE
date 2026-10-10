@@ -1,4 +1,4 @@
-"""Best-effort PyPI update checks for the Tau CLI."""
+"""Je CLI 版本更新检查模块。"""
 
 from __future__ import annotations
 
@@ -15,11 +15,11 @@ from packaging.version import InvalidVersion, Version
 from je_ai.http import get_json
 from je_coding.paths import TauPaths
 
-PYPI_PACKAGE_NAME = "tau-ai"
+PYPI_PACKAGE_NAME = "je-ai"
 PYPI_JSON_URL = f"https://pypi.org/pypi/{PYPI_PACKAGE_NAME}/json"
 UPDATE_CHECK_INTERVAL = timedelta(days=1)
 UPDATE_CHECK_TIMEOUT_SECONDS = 1.5
-UPDATE_CHECK_ENV_DISABLE = "TAU_NO_UPDATE_CHECK"
+UPDATE_CHECK_ENV_DISABLE = "JE_NO_UPDATE_CHECK"
 RELEASE_NOTES_STATE_FILENAME = "release-notes-state.json"
 RELEASE_NOTES_PATH = Path(__file__).resolve().parent / "data" / "release-notes" / "releases.json"
 
@@ -39,8 +39,8 @@ class UpdateNotice:
     def message(self) -> str:
         """Return concise update guidance."""
         return (
-            f"Tau {self.latest_version} is available (installed: {self.current_version}). "
-            "Run `tau update` to upgrade."
+            f"Je {self.latest_version} is available (installed: {self.current_version}). "
+            "Run `je update` to upgrade."
         )
 
 
@@ -95,7 +95,7 @@ class ReleaseNotesNotice:
             body = "\n\n".join(version_blocks)
         else:
             body = "- See the changelog for details."
-        return f"Tau updated to {self.current_version}\n\n{body}"
+        return f"Je updated to {self.current_version}\n\n{body}"
 
     def _format_entry(self, entry: ReleaseNotesEntry) -> str:
         section_blocks: list[str] = []

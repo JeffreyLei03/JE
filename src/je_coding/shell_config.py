@@ -1,4 +1,4 @@
-"""Durable shell execution settings for Tau terminal commands."""
+"""用户 Shell 环境与命令别名解析。"""
 
 from __future__ import annotations
 

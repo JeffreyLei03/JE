@@ -1,4 +1,4 @@
-"""Small Textual widgets for Tau's interactive TUI."""
+"""终端 UI 自定义组件库。"""
 
 from __future__ import annotations
 

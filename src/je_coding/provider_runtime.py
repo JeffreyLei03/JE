@@ -1,4 +1,4 @@
-"""Runtime provider construction for Tau coding sessions."""
+"""模型提供商运行时实例生命周期与重试管理。"""
 
 from __future__ import annotations
 

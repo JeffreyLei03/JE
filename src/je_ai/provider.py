@@ -1,4 +1,4 @@
-"""Public re-exports of the provider contract implemented by Tau adapters."""
+"""Je 核心模型提供商接口契约定义。"""
 
 from je_agent.provider import CancellationToken, ModelProvider
 

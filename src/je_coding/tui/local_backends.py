@@ -1,8 +1,4 @@
-"""Generic Textual host screens for local backends.
-
-This module intentionally knows only the local-backend contracts. Protocol
-names and provider-specific management concepts stay in backend extensions.
-"""
+"""终端本地模型推理管理面板。"""
 
 from __future__ import annotations
 

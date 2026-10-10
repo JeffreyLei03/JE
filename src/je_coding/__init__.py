@@ -1,4 +1,4 @@
-"""Tau coding-agent application package."""
+"""Je 终端智能编码助理核心入口与模块导出。"""
 
 from __future__ import annotations
 

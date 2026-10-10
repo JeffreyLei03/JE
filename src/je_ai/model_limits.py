@@ -1,4 +1,4 @@
-"""Optional runtime model-limit discovery contracts for provider adapters."""
+"""模型上下文长度与速率限制发现契约。"""
 
 from __future__ import annotations
 

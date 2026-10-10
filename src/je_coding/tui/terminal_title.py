@@ -1,4 +1,4 @@
-"""Helpers for updating the terminal window/tab title from Tau's TUI."""
+"""终端窗口标题与动态状态指示。"""
 
 from __future__ import annotations
 

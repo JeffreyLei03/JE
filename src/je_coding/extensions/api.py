@@ -1,4 +1,4 @@
-"""Extension-facing API types and hook payloads."""
+"""Je 扩展开发者开放 API 与生命周期钩子。"""
 
 from __future__ import annotations
 

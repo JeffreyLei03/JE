@@ -1,4 +1,4 @@
-"""Session tree traversal helpers."""
+"""会话树遍历、分支回溯与祖先查找工具。"""
 
 from __future__ import annotations
 

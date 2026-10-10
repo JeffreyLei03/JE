@@ -1,4 +1,4 @@
-"""Minimal Textual app for Tau coding sessions."""
+"""Je 交互式 Textual 终端应用。"""
 
 from __future__ import annotations
 
@@ -157,7 +157,7 @@ from je_coding.tui.autocomplete import (
     build_completion_state,
 )
 from je_coding.tui.config import (
-    TAU_DARK_THEME,
+    JE_DARK_THEME,
     TuiKeybindings,
     TuiSettings,
     TuiTheme,
@@ -194,7 +194,7 @@ from je_coding.tui.widgets import (
     render_completion_suggestions,
 )
 
-_textual_theme_for_tau_theme = textual_theme_for_tui_theme
+_textual_theme_for_je_theme = textual_theme_for_tui_theme
 _theme_css_variables = theme_css_variables
 
 type BindingEntry = Binding | tuple[str, str] | tuple[str, str, str]
@@ -276,7 +276,7 @@ class _TuiExtensionUiBridge:
         "error": "error",
     }
 
-    def __init__(self, app: TauTuiApp) -> None:
+    def __init__(self, app: JeTuiApp) -> None:
         self._app = app
 
     @property
@@ -366,7 +366,7 @@ class _TuiExtensionUiBridge:
         """Register a pre-dispatch key hook; return an unsubscribe callable.
 
         Ports Pi's ``onTerminalInput``. The handler is consulted in
-        ``TauTuiApp.on_event`` before Textual's app-level priority bindings and
+        ``JeTuiApp.on_event`` before Textual's app-level priority bindings and
         before the focused widget receives the key, so it can own navigation
         keys (``up``/``down``/``tab``/…) that tau otherwise binds with
         ``priority=True``. Because it fires for EVERY main-screen key regardless
@@ -458,7 +458,7 @@ class _MainViewHandle:
     :meth:`_resolve`, so an awaiting extension task never hangs.
     """
 
-    def __init__(self, app: TauTuiApp, result: asyncio.Future[object | None]) -> None:
+    def __init__(self, app: JeTuiApp, result: asyncio.Future[object | None]) -> None:
         self._app = app
         self._open = True
         self.widget: Widget | None = None
@@ -817,7 +817,7 @@ class PromptInput(TextArea):
         """Route completion and submission keys before default input handling.
 
         Extension key interceptors are consulted upstream in
-        :meth:`TauTuiApp.on_event` (pre-dispatch, before app-level priority
+        :meth:`JeTuiApp.on_event` (pre-dispatch, before app-level priority
         bindings), so there is no interceptor splice here.
         """
         keybindings = self.tui_keybindings
@@ -1618,13 +1618,13 @@ class SidebarFileEditor(Vertical):
         except Exception as exc:  # noqa: BLE001 - filesystem worker boundary
             message = f"Could not save {self.path}: {exc}"
             self.query_one("#sidebar-file-editor-status", Static).update(message)
-            cast(TauTuiApp, self.app)._notify(message, severity="error")
+            cast(JeTuiApp, self.app)._notify(message, severity="error")
         else:
             self._snapshot = snapshot
             self._saved_source = source
             message = f"Saved {self.path}"
             self.query_one("#sidebar-file-editor-status", Static).update(message)
-            cast(TauTuiApp, self.app)._notify(message)
+            cast(JeTuiApp, self.app)._notify(message)
         finally:
             self._saving = False
 
@@ -1665,25 +1665,25 @@ class SessionPickerScreen(ModalScreen[str | None]):
     }
 
     #session-picker-tabs Button.-active {
-        background: $tau-highlight-background;
-        color: $tau-highlight-text;
+        background: $je-highlight-background;
+        color: $je-highlight-text;
         text-style: bold;
     }
 
     #session-picker-columns {
         height: auto;
-        border: tall $tau-border;
-        background: $tau-transcript-background;
+        border: tall $je-border;
+        background: $je-transcript-background;
     }
 
     .session-picker-column {
         height: auto;
-        background: $tau-transcript-background;
+        background: $je-transcript-background;
     }
 
     #session-picker-project-column {
         width: 34;
-        border-right: tall $tau-border;
+        border-right: tall $je-border;
     }
 
     #session-picker-session-column {
@@ -1693,12 +1693,12 @@ class SessionPickerScreen(ModalScreen[str | None]):
     .session-picker-column-title {
         height: 1;
         padding: 0 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
         text-style: bold;
     }
 
     .-active-column > .session-picker-column-title {
-        color: $tau-accent;
+        color: $je-accent;
     }
 
     #session-picker-project-list,
@@ -1706,7 +1706,7 @@ class SessionPickerScreen(ModalScreen[str | None]):
         height: auto;
         max-height: 16;
         border: none;
-        background: $tau-transcript-background;
+        background: $je-transcript-background;
     }
 
     #session-picker-list {
@@ -1881,7 +1881,7 @@ class SessionPickerScreen(ModalScreen[str | None]):
 
     def action_archive_cursor(self) -> None:
         """Archive or unarchive the highlighted session or project."""
-        app = cast(TauTuiApp, self.app)
+        app = cast(JeTuiApp, self.app)
         if not self.project_cwds:
             return
         if self.active_column == "projects":
@@ -3749,24 +3749,24 @@ class OAuthLoginScreen(ModalScreen[OAuthCredential | _LoginFlowAction | None]):
 RESERVED_EXTENSION_INTERCEPTOR_KEYS: frozenset[str] = frozenset({"ctrl+c", "ctrl+d"})
 
 
-class TauTuiApp(App[None]):
+class JeTuiApp(App[None]):
     """Interactive Textual frontend for a ``CodingSession``."""
 
-    TITLE = "Tau"
+    TITLE = "Je"
     CSS = """
     Screen {
         layout: vertical;
-        background: $tau-screen-background;
-        color: $tau-screen-text;
+        background: $je-screen-background;
+        color: $je-screen-text;
     }
 
     Toast {
-        background: $tau-chrome-background;
-        color: $tau-chrome-text;
+        background: $je-chrome-background;
+        color: $je-chrome-text;
     }
 
     Toast .toast--title {
-        color: $tau-accent;
+        color: $je-accent;
     }
 
     #workspace {
@@ -3778,7 +3778,7 @@ class TauTuiApp(App[None]):
         min-width: 36;
         height: 1fr;
         padding: 1 1 1 2;
-        background: $tau-prompt-background;
+        background: $je-prompt-background;
         border: none;
     }
 
@@ -3810,14 +3810,14 @@ class TauTuiApp(App[None]):
     #sidebar .sidebar-resource-section CollapsibleTitle {
         width: 1fr;
         padding: 0 0 0 1;
-        color: $tau-prompt-text;
+        color: $je-prompt-text;
         text-style: none;
         background: transparent;
     }
 
     #sidebar .sidebar-resource-section CollapsibleTitle:hover,
     #sidebar .sidebar-resource-section CollapsibleTitle:focus {
-        color: $tau-prompt-text;
+        color: $je-prompt-text;
         text-style: none;
         background: transparent;
     }
@@ -3829,7 +3829,7 @@ class TauTuiApp(App[None]):
     #sidebar .sidebar-section-title {
         height: 1;
         padding: 0 0 0 1;
-        color: $tau-prompt-text;
+        color: $je-prompt-text;
         text-style: bold;
     }
 
@@ -3843,20 +3843,20 @@ class TauTuiApp(App[None]):
     #sidebar .sidebar-file-overflow {
         width: 1fr;
         height: auto;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #sidebar .sidebar-file-item {
         width: 1fr;
         height: auto;
-        color: $tau-muted-text;
+        color: $je-muted-text;
         background: transparent;
     }
 
     #sidebar .sidebar-file-item:hover,
     #sidebar .sidebar-file-item:focus {
-        color: $tau-highlight-text;
-        background: $tau-highlight-background;
+        color: $je-highlight-text;
+        background: $je-highlight-background;
         text-style: underline;
     }
 
@@ -3878,18 +3878,18 @@ class TauTuiApp(App[None]):
 
     #sidebar-brand {
         height: auto;
-        color: $tau-prompt-text;
+        color: $je-prompt-text;
     }
 
-    TauTuiApp.-hide-sidebar #sidebar {
+    JeTuiApp.-hide-sidebar #sidebar {
         display: none;
     }
 
-    TauTuiApp.-hide-sidebar #main-pane {
+    JeTuiApp.-hide-sidebar #main-pane {
         padding-left: 1;
     }
 
-    TauTuiApp.-sidebar-right #sidebar {
+    JeTuiApp.-sidebar-right #sidebar {
         dock: right;
     }
 
@@ -3901,7 +3901,7 @@ class TauTuiApp(App[None]):
     #transcript {
         height: 1fr;
         border: none;
-        background: $tau-transcript-background;
+        background: $je-transcript-background;
         padding: 0 0 0 2;
         overflow-x: auto;
         scrollbar-size-vertical: 0;
@@ -3913,7 +3913,7 @@ class TauTuiApp(App[None]):
         display: none;
         height: 1fr;
         border: none;
-        background: $tau-transcript-background;
+        background: $je-transcript-background;
         padding: 0 0 0 2;
         overflow-x: auto;
         scrollbar-size-vertical: 0;
@@ -3928,7 +3928,7 @@ class TauTuiApp(App[None]):
 
     #sidebar-file-editor-title {
         height: 1;
-        color: $tau-accent;
+        color: $je-accent;
         text-style: bold;
     }
 
@@ -3936,7 +3936,7 @@ class TauTuiApp(App[None]):
     #sidebar-file-editor-help,
     #sidebar-file-editor-status {
         height: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #sidebar-file-editor-path {
@@ -3945,9 +3945,9 @@ class TauTuiApp(App[None]):
 
     #sidebar-file-editor-input {
         height: 1fr;
-        background: $tau-prompt-background;
-        color: $tau-prompt-text;
-        border: tall $tau-prompt-border;
+        background: $je-prompt-background;
+        color: $je-prompt-text;
+        border: tall $je-prompt-border;
     }
 
     #above-prompt-slot {
@@ -3955,7 +3955,7 @@ class TauTuiApp(App[None]):
         max-height: 8;
         margin: 0 1 0 1;
         padding: 0;
-        background: $tau-screen-background;
+        background: $je-screen-background;
     }
 
     #below-prompt-slot {
@@ -3963,7 +3963,7 @@ class TauTuiApp(App[None]):
         max-height: 8;
         margin: 0 1 0 1;
         padding: 0;
-        background: $tau-screen-background;
+        background: $je-screen-background;
     }
 
     #queued-messages {
@@ -3971,8 +3971,8 @@ class TauTuiApp(App[None]):
         max-height: 8;
         margin: 0 1 1 1;
         padding: 0 1;
-        background: $tau-screen-background;
-        color: $tau-muted-text;
+        background: $je-screen-background;
+        color: $je-muted-text;
     }
 
     #prompt-row {
@@ -3986,15 +3986,15 @@ class TauTuiApp(App[None]):
         padding: 0 0 0 0;
         margin: 0;
         content-align: center middle;
-        color: $tau-accent;
+        color: $je-accent;
         text-style: bold;
     }
 
     #prompt {
         width: 1fr;
         height: auto;
-        background: $tau-prompt-background;
-        color: $tau-prompt-text;
+        background: $je-prompt-background;
+        color: $je-prompt-text;
         border: none;
         border-left: tall transparent;
         margin: 0;
@@ -4003,11 +4003,11 @@ class TauTuiApp(App[None]):
     }
 
     #prompt:focus {
-        border-left: tall $tau-prompt-border;
+        border-left: tall $je-prompt-border;
     }
 
     #prompt.-shell-mode {
-        border-left: tall $tau-tool-running;
+        border-left: tall $je-tool-running;
     }
 
     #compact-session-info {
@@ -4015,7 +4015,7 @@ class TauTuiApp(App[None]):
         max-height: 3;
         margin: 0 1 1 1;
         padding: 0 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #autocomplete {
@@ -4023,9 +4023,9 @@ class TauTuiApp(App[None]):
         max-height: 18;
         margin: 0 1 1 1;
         padding: 0 1;
-        background: $tau-autocomplete-background;
-        color: $tau-screen-text;
-        border: tall $tau-border;
+        background: $je-autocomplete-background;
+        color: $je-screen-text;
+        border: tall $je-border;
         overflow-y: auto;
     }
 
@@ -4050,8 +4050,8 @@ class TauTuiApp(App[None]):
         height: auto;
         max-height: 70%;
         padding: 1 2;
-        background: $tau-chrome-background;
-        border: tall $tau-border;
+        background: $je-chrome-background;
+        border: tall $je-border;
     }
 
     #session-picker-title,
@@ -4061,7 +4061,7 @@ class TauTuiApp(App[None]):
     #tree-picker-title,
     #tools-reference-title {
         height: 1;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         text-style: bold;
         margin-bottom: 1;
     }
@@ -4072,14 +4072,14 @@ class TauTuiApp(App[None]):
     #tools-reference-search {
         height: 3;
         margin-bottom: 1;
-        background: $tau-prompt-background;
-        color: $tau-prompt-text;
-        border: tall $tau-prompt-border;
+        background: $je-prompt-background;
+        color: $je-prompt-text;
+        border: tall $je-prompt-border;
     }
 
     #tools-reference-header {
         height: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
         text-style: bold;
     }
 
@@ -4090,14 +4090,14 @@ class TauTuiApp(App[None]):
     #prompt-template-editor-path {
         height: 1;
         margin-bottom: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #prompt-template-editor-input {
         height: 1fr;
-        background: $tau-prompt-background;
-        color: $tau-prompt-text;
-        border: tall $tau-prompt-border;
+        background: $je-prompt-background;
+        color: $je-prompt-text;
+        border: tall $je-prompt-border;
     }
 
     #session-picker-list,
@@ -4107,34 +4107,34 @@ class TauTuiApp(App[None]):
     #tools-reference-list {
         height: auto;
         max-height: 16;
-        background: $tau-transcript-background;
-        border: tall $tau-border;
+        background: $je-transcript-background;
+        border: tall $je-border;
     }
 
     ListView,
     OptionList {
-        scrollbar-background: $tau-transcript-background;
-        scrollbar-color: $tau-border;
-        scrollbar-color-hover: $tau-highlight-background;
-        scrollbar-background-hover: $tau-transcript-background;
-        scrollbar-color-active: $tau-accent;
-        scrollbar-background-active: $tau-transcript-background;
+        scrollbar-background: $je-transcript-background;
+        scrollbar-color: $je-border;
+        scrollbar-color-hover: $je-highlight-background;
+        scrollbar-background-hover: $je-transcript-background;
+        scrollbar-color-active: $je-accent;
+        scrollbar-background-active: $je-transcript-background;
         scrollbar-size-vertical: 2;
     }
 
     ListView > ListItem.-highlight {
-        background: $tau-highlight-background;
-        color: $tau-highlight-text;
+        background: $je-highlight-background;
+        color: $je-highlight-text;
     }
 
     ListView > ListItem.-highlight Label {
-        background: $tau-highlight-background;
-        color: $tau-highlight-text;
+        background: $je-highlight-background;
+        color: $je-highlight-text;
     }
 
     OptionList > .option-list--option-highlighted {
-        background: $tau-highlight-background;
-        color: $tau-highlight-text;
+        background: $je-highlight-background;
+        color: $je-highlight-text;
     }
 
     #skill-picker-list .skill-picker-row {
@@ -4148,11 +4148,11 @@ class TauTuiApp(App[None]):
 
     #skill-picker-list .skill-picker-description {
         width: 65%;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #skill-picker-list ListItem.-highlight .skill-picker-description {
-        color: $tau-highlight-text;
+        color: $je-highlight-text;
     }
 
     #session-picker-help,
@@ -4163,7 +4163,7 @@ class TauTuiApp(App[None]):
     #tools-reference-help {
         height: 1;
         margin-top: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #tree-picker-help {
@@ -4185,7 +4185,7 @@ class TauTuiApp(App[None]):
     }
 
     ProjectTrustScreen {
-        background: $tau-screen-background 60%;
+        background: $je-screen-background 60%;
     }
 
     #extension-select,
@@ -4196,22 +4196,22 @@ class TauTuiApp(App[None]):
         height: auto;
         max-height: 70%;
         padding: 1 2;
-        background: $tau-chrome-background;
-        border: tall $tau-border;
+        background: $je-chrome-background;
+        border: tall $je-border;
     }
 
     #extension-select-title,
     #extension-confirm-title,
     #extension-input-title {
         height: auto;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         text-style: bold;
         margin-bottom: 1;
     }
 
     #extension-confirm-message {
         height: auto;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         margin-bottom: 1;
     }
 
@@ -4219,13 +4219,13 @@ class TauTuiApp(App[None]):
     #extension-confirm-list {
         height: auto;
         max-height: 16;
-        background: $tau-transcript-background;
-        border: tall $tau-border;
+        background: $je-transcript-background;
+        border: tall $je-border;
     }
 
     #extension-input-field {
-        background: $tau-transcript-background;
-        border: tall $tau-border;
+        background: $je-transcript-background;
+        border: tall $je-border;
     }
 
     #extension-select-help,
@@ -4233,7 +4233,7 @@ class TauTuiApp(App[None]):
     #extension-input-help {
         height: 1;
         margin-top: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #local-backend-picker,
@@ -4247,8 +4247,8 @@ class TauTuiApp(App[None]):
         height: auto;
         max-height: 82%;
         padding: 1 2;
-        background: $tau-chrome-background;
-        border: tall $tau-border;
+        background: $je-chrome-background;
+        border: tall $je-border;
     }
 
     #local-backend-picker-title,
@@ -4258,7 +4258,7 @@ class TauTuiApp(App[None]):
     #local-model-action-title,
     #local-search-results-title {
         height: auto;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         text-style: bold;
         margin-bottom: 1;
     }
@@ -4268,7 +4268,7 @@ class TauTuiApp(App[None]):
     #local-configure-screen Label,
     #local-confirm-message,
     #local-search-results-help {
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #local-backend-list,
@@ -4282,8 +4282,8 @@ class TauTuiApp(App[None]):
     #local-configure-screen Input,
     #local-configure-screen Select,
     #local-model-action-input {
-        background: $tau-transcript-background;
-        border: tall $tau-border;
+        background: $je-transcript-background;
+        border: tall $je-border;
         margin-top: 1;
     }
 
@@ -4304,22 +4304,22 @@ class TauTuiApp(App[None]):
 
     #local-model-list:focus,
     #local-action-menu:focus {
-        border: tall $tau-accent;
+        border: tall $je-accent;
     }
 
     #local-model-list.local-section-inactive > ListItem.-highlight,
     #local-action-menu.local-section-inactive > ListItem.-highlight,
     #local-model-list.local-section-inactive > ListItem.-highlight Label,
     #local-action-menu.local-section-inactive > ListItem.-highlight Label {
-        background: $tau-transcript-background;
-        color: $tau-chrome-text;
+        background: $je-transcript-background;
+        color: $je-chrome-text;
     }
 
     #local-model-section-title,
     #local-action-section-title {
         height: 1;
         margin-top: 1;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         text-style: bold;
     }
 
@@ -4335,8 +4335,8 @@ class TauTuiApp(App[None]):
     #local-backend-progress-bar Bar > .bar--bar,
     #local-backend-progress-bar Bar > .bar--complete,
     #local-backend-progress-bar Bar > .bar--indeterminate {
-        color: $tau-accent;
-        background: $tau-border;
+        color: $je-accent;
+        background: $je-border;
     }
 
     #local-backend-picker-footer,
@@ -4347,12 +4347,12 @@ class TauTuiApp(App[None]):
     #local-search-results-footer {
         height: 1;
         margin-top: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #local-backend-progress {
         min-height: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #project-trust-dialog {
@@ -4361,32 +4361,32 @@ class TauTuiApp(App[None]):
         height: auto;
         max-height: 90%;
         padding: 1 2;
-        background: $tau-chrome-background;
-        color: $tau-chrome-text;
-        border: tall $tau-border;
+        background: $je-chrome-background;
+        color: $je-chrome-text;
+        border: tall $je-border;
     }
 
     #project-trust-title {
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
     }
 
     #project-trust-path-label,
     #project-trust-summary-label,
     #project-trust-boundary,
     #project-trust-help {
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     #project-trust-list {
-        background: $tau-transcript-background;
-        color: $tau-screen-text;
-        border: tall $tau-border;
+        background: $je-transcript-background;
+        color: $je-screen-text;
+        border: tall $je-border;
     }
 
     #project-trust-list ListItem.-highlight,
     #project-trust-list ListItem.-highlight Label {
-        background: $tau-highlight-background;
-        color: $tau-highlight-text;
+        background: $je-highlight-background;
+        color: $je-highlight-text;
     }
 
     #command-output {
@@ -4395,14 +4395,14 @@ class TauTuiApp(App[None]):
         height: auto;
         max-height: 70%;
         padding: 1 2;
-        background: $tau-chrome-background;
-        color: $tau-chrome-text;
-        border: tall $tau-border;
+        background: $je-chrome-background;
+        color: $je-chrome-text;
+        border: tall $je-border;
     }
 
     #command-output-title {
         height: 1;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         text-style: bold;
         margin-bottom: 1;
     }
@@ -4410,19 +4410,19 @@ class TauTuiApp(App[None]):
     #command-output-scroll {
         height: auto;
         max-height: 18;
-        background: $tau-transcript-background;
-        border: tall $tau-border;
+        background: $je-transcript-background;
+        border: tall $je-border;
     }
 
     #command-output-body {
-        color: $tau-screen-text;
+        color: $je-screen-text;
         padding: 1;
     }
 
     #command-output-help {
         height: 1;
         margin-top: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     LoginMethodPickerScreen,
@@ -4441,9 +4441,9 @@ class TauTuiApp(App[None]):
         height: auto;
         max-height: 70%;
         padding: 1 2;
-        background: $tau-chrome-background;
-        color: $tau-chrome-text;
-        border: tall $tau-border;
+        background: $je-chrome-background;
+        color: $je-chrome-text;
+        border: tall $je-border;
     }
 
     #login-method-title,
@@ -4451,14 +4451,14 @@ class TauTuiApp(App[None]):
     #theme-picker-title,
     #model-picker-title {
         height: 1;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         text-style: bold;
         margin-bottom: 1;
     }
 
     #model-picker-tabs {
         height: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
         margin-bottom: 1;
     }
 
@@ -4468,33 +4468,33 @@ class TauTuiApp(App[None]):
     #model-picker-list {
         height: auto;
         max-height: 12;
-        background: $tau-transcript-background;
-        color: $tau-screen-text;
-        border: tall $tau-border;
+        background: $je-transcript-background;
+        color: $je-screen-text;
+        border: tall $je-border;
     }
 
     #login-method-list ListItem Label,
     #login-provider-list ListItem Label,
     #theme-picker-list ListItem Label,
     #model-picker-list {
-        color: $tau-screen-text;
+        color: $je-screen-text;
     }
 
     #login-method-list ListItem.-highlight Label,
     #login-provider-list ListItem.-highlight Label,
     #theme-picker-list ListItem.-highlight Label {
-        background: $tau-highlight-background;
-        color: $tau-highlight-text;
+        background: $je-highlight-background;
+        color: $je-highlight-text;
     }
 
     #model-picker-list > .option-list--option-highlighted {
-        background: $tau-highlight-background;
-        color: $tau-highlight-text;
+        background: $je-highlight-background;
+        color: $je-highlight-text;
     }
 
     #login-method-intro {
         height: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
         margin-bottom: 1;
     }
 
@@ -4507,9 +4507,9 @@ class TauTuiApp(App[None]):
     #model-picker-search {
         height: 3;
         margin-bottom: 1;
-        background: $tau-prompt-background;
-        color: $tau-prompt-text;
-        border: tall $tau-prompt-border;
+        background: $je-prompt-background;
+        color: $je-prompt-text;
+        border: tall $je-prompt-border;
     }
 
     #login-method-help,
@@ -4518,7 +4518,7 @@ class TauTuiApp(App[None]):
     #model-picker-help {
         height: 1;
         margin-top: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
 
     CustomProviderLoginScreen,
@@ -4538,13 +4538,13 @@ class TauTuiApp(App[None]):
         max-height: 100%;
         overflow-y: auto;
         padding: 1 2;
-        background: $tau-chrome-background;
-        border: tall $tau-border;
+        background: $je-chrome-background;
+        border: tall $je-border;
     }
 
     #login-title {
         height: 1;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         text-style: bold;
         margin-bottom: 1;
     }
@@ -4552,7 +4552,7 @@ class TauTuiApp(App[None]):
     #login-help,
     #custom-provider-help {
         height: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
         margin-bottom: 1;
     }
 
@@ -4565,9 +4565,9 @@ class TauTuiApp(App[None]):
     #custom-provider-models,
     #custom-provider-default-model,
     #custom-provider-api-key {
-        background: $tau-prompt-background;
-        color: $tau-prompt-text;
-        border: tall $tau-prompt-border;
+        background: $je-prompt-background;
+        color: $je-prompt-text;
+        border: tall $je-prompt-border;
         margin-bottom: 1;
     }
 
@@ -4577,13 +4577,13 @@ class TauTuiApp(App[None]):
            parameters and the provider rejects the request. Keep every line. */
         min-height: 1;
         height: auto;
-        color: $tau-chrome-text;
+        color: $je-chrome-text;
         margin-bottom: 1;
     }
 
     #login-footer {
         height: 1;
-        color: $tau-muted-text;
+        color: $je-muted-text;
     }
     """
     BINDINGS: ClassVar[list[BindingEntry]] = []
@@ -4609,7 +4609,7 @@ class TauTuiApp(App[None]):
         # reset with every app instance and never participates in tui.json.
         self._sidebar_visibility_override: bool | None = None
         super().__init__()
-        self._register_tau_textual_themes()
+        self._register_je_textual_themes()
         # Assign the resolved theme's name: it is always registered, while the
         # raw settings value may name a custom theme that failed to load. The
         # guard keeps the watcher from persisting the fallback over the user's
@@ -4725,8 +4725,8 @@ class TauTuiApp(App[None]):
                 pyperclip.copy(text)
         super().copy_to_clipboard(text)
 
-    def _register_tau_textual_themes(self) -> None:
-        """Register Tau themes with Textual's theme system.
+    def _register_je_textual_themes(self) -> None:
+        """Register Je themes with Textual's theme system.
 
         Textual exposes its own theme menu and command palette entries. Registering
         Tau's built-in themes there makes those controls update the same theme as
@@ -4734,7 +4734,7 @@ class TauTuiApp(App[None]):
         """
         self._registered_themes.clear()
         for theme_name in available_tui_theme_names():
-            self.register_theme(_textual_theme_for_tau_theme(theme_name))
+            self.register_theme(_textual_theme_for_je_theme(theme_name))
 
     def _reload_session_themes(self) -> None:
         """Rebind custom themes to the active session's accepted trust snapshot."""
@@ -4756,7 +4756,7 @@ class TauTuiApp(App[None]):
             self._notify(f"Could not reload custom themes: {exc}", severity="error")
 
         set_custom_tui_themes(custom_themes)
-        self._register_tau_textual_themes()
+        self._register_je_textual_themes()
         resolved_theme = self.tui_settings.resolved_theme.name
         self._applying_settings_theme = True
         try:
@@ -4784,10 +4784,10 @@ class TauTuiApp(App[None]):
             return
         if getattr(self, "_applying_settings_theme", False):
             return
-        tau_theme: TuiThemeName = theme_name
-        if self.tui_settings.theme == tau_theme:
+        je_theme: TuiThemeName = theme_name
+        if self.tui_settings.theme == je_theme:
             return
-        self._replace_tui_settings(theme=tau_theme)
+        self._replace_tui_settings(theme=je_theme)
         save_tui_settings(self.tui_settings)
 
     def get_theme_variable_defaults(self) -> dict[str, str]:
@@ -4816,7 +4816,7 @@ class TauTuiApp(App[None]):
                     yield Static("τ", id="prompt-prefix")
                     yield PromptInput(
                         placeholder=(
-                            "Ask Tau…  Enter submits, "
+                            "Ask Je…  Enter submits, "
                             f"{_key_hint(self.tui_settings.keybindings.insert_newline)} "
                             "inserts a newline"
                         ),
@@ -4893,7 +4893,7 @@ class TauTuiApp(App[None]):
         self._app_has_focus = False
 
     def on_app_focus(self) -> None:
-        """Suppress turn notifications while the Tau terminal surface is active."""
+        """Suppress turn notifications while the Je terminal surface is active."""
         self._app_has_focus = True
 
     def on_paste(self, event: events.Paste) -> None:
@@ -6598,7 +6598,7 @@ class TauTuiApp(App[None]):
     def action_open_session_picker(self) -> None:
         """Open local sessions immediately, then load other projects."""
         if self.state.running:
-            self._notify("Tau is already working. Press Escape to cancel.")
+            self._notify("Je is already working. Press Escape to cancel.")
             return
         if getattr(self.session, "session_manager", None) is None:
             self._notify("No sessions found.")
@@ -6753,7 +6753,7 @@ class TauTuiApp(App[None]):
 
     def _cycle_model(self, *, reverse: bool) -> None:
         if self.state.running:
-            self._notify("Tau is already working. Press Escape to cancel.")
+            self._notify("Je is already working. Press Escape to cancel.")
             return
         preview = getattr(self.session, "preview_cycle_scoped_model", None)
         if preview is not None:
@@ -7338,7 +7338,7 @@ class TauTuiApp(App[None]):
     async def _use_local_model(self, provider_id: str, model_id: str) -> None:
         if self._is_agent_or_queue_active():
             self._notify(
-                "Tau is still working. Press Escape to interrupt before switching models.",
+                "Je is still working. Press Escape to interrupt before switching models.",
                 severity="warning",
             )
             return
@@ -8046,7 +8046,7 @@ def _completion_item_extra_wrapped_lines(
     console.print(
         render_completion_suggestions(
             CompletionState(items=(item,), selected_index=0),
-            theme=TAU_DARK_THEME,
+            theme=JE_DARK_THEME,
         ),
         end="",
     )
@@ -8962,7 +8962,7 @@ async def run_tui_app(
             getattr(session, "resource_diagnostics", ())
         )
         startup_alerts = (resource_conflict_alert,) if resource_conflict_alert is not None else ()
-        app = TauTuiApp(
+        app = JeTuiApp(
             session,
             tui_settings=load_tui_settings(),
             startup_message=startup_message,
@@ -8996,3 +8996,6 @@ async def run_tui_app(
     if active_session_id is None or manager.get_session(active_session_id) is None:
         return None
     return active_session_id
+
+
+TauTuiApp = JeTuiApp

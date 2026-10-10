@@ -1,4 +1,4 @@
-"""Extension discovery and module loading."""
+"""扩展模块动态加载、校验与执行。"""
 
 from __future__ import annotations
 

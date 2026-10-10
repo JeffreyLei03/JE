@@ -1,4 +1,4 @@
-"""Local credential storage for Tau provider credentials."""
+"""Je 本地模型提供商凭据安全存储与管理。"""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from je_coding.paths import TauPaths
 
 
 class CredentialStoreError(ValueError):
-    """Raised when Tau credential storage cannot be read or written."""
+    """Raised when Je credential storage cannot be read or written."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -135,11 +135,11 @@ class FileCredentialStore:
             return {}
         raw = loads(self.path.read_text(encoding="utf-8"))
         if not isinstance(raw, dict):
-            raise CredentialStoreError("Tau credentials must be a JSON object")
+            raise CredentialStoreError("Je credentials must be a JSON object")
         credentials: dict[str, StoredCredential] = {}
         for key, value in raw.items():
             if not isinstance(key, str):
-                raise CredentialStoreError("Tau credential names must be strings")
+                raise CredentialStoreError("Je credential names must be strings")
             credentials[key] = _credential_from_json(value)
         return credentials
 
@@ -168,7 +168,7 @@ class FileCredentialStore:
 
 
 def credentials_path(paths: TauPaths | None = None) -> Path:
-    """Return Tau's local provider credential path."""
+    """Return Je's local provider credential path."""
     return (paths or TauPaths()).home / "credentials.json"
 
 
@@ -195,24 +195,24 @@ def _credential_from_json(value: object) -> StoredCredential:
     if isinstance(value, str):
         return value
     if not isinstance(value, dict):
-        raise CredentialStoreError("Tau credential values must be strings or objects")
+        raise CredentialStoreError("Je credential values must be strings or objects")
 
     credential_type = value.get("type")
     if credential_type not in {"api_key", "oauth"}:
-        raise CredentialStoreError("Tau credential object type must be api_key or oauth")
+        raise CredentialStoreError("Je credential object type must be api_key or oauth")
     if credential_type == "api_key":
         key = _string_field(value, "key", credential_type)
         return ApiKeyCredential(key=key)
 
     expires = value.get("expires")
     if not isinstance(expires, int) or isinstance(expires, bool) or expires <= 0:
-        raise CredentialStoreError("Tau oauth credential expires must be a positive integer")
+        raise CredentialStoreError("Je oauth credential expires must be a positive integer")
     account_id = value.get("account_id")
     if account_id is not None and (not isinstance(account_id, str) or not account_id.strip()):
-        raise CredentialStoreError("Tau oauth credential account_id must be a non-empty string")
+        raise CredentialStoreError("Je oauth credential account_id must be a non-empty string")
     metadata = value.get("metadata", {})
     if not isinstance(metadata, dict):
-        raise CredentialStoreError("Tau oauth credential metadata must be an object")
+        raise CredentialStoreError("Je oauth credential metadata must be an object")
     _validate_oauth_metadata(metadata)
     return OAuthCredential(
         access=_string_field(value, "access", credential_type),
@@ -232,9 +232,9 @@ def _credential_to_json(value: StoredCredential) -> str | dict[str, JSONValue]:
 def _validate_oauth_metadata(metadata: dict[Any, Any]) -> None:
     for key, value in metadata.items():
         if not isinstance(key, str) or not key.strip():
-            raise CredentialStoreError("Tau oauth credential metadata keys must be strings")
+            raise CredentialStoreError("Je oauth credential metadata keys must be strings")
         if not _is_json_value(value):
-            raise CredentialStoreError("Tau oauth credential metadata values must be JSON values")
+            raise CredentialStoreError("Je oauth credential metadata values must be JSON values")
 
 
 def _is_json_value(value: object) -> bool:

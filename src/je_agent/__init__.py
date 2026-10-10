@@ -1,4 +1,4 @@
-"""Portable Pi-compatible agent harness primitives for Tau."""
+"""Je 的便携式 Agent 核心引擎、循环控制与工具基元。"""
 
 # ruff: noqa: F401 - this module intentionally defines the public facade
 

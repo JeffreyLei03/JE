@@ -1,4 +1,4 @@
-"""User-home session management for Tau coding sessions."""
+"""用户会话索引、归档与分支管理。"""
 
 from __future__ import annotations
 

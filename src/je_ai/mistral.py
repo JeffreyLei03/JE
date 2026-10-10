@@ -1,4 +1,4 @@
-"""Mistral Conversations provider."""
+"""Mistral 模型提供商适配模块。"""
 
 from __future__ import annotations
 

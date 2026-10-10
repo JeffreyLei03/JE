@@ -1,4 +1,4 @@
-"""Approximate context-size estimation for Tau coding sessions."""
+"""大模型上下文窗口与 Token 占用计算估算。"""
 
 from __future__ import annotations
 

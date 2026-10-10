@@ -1,4 +1,4 @@
-"""System prompt assembly for Tau coding sessions."""
+"""Je 系统提示词组装与上下文注入引擎。"""
 
 from __future__ import annotations
 
@@ -94,7 +94,7 @@ def build_system_prompt_inspection(options: BuildSystemPromptOptions) -> SystemP
         sources.append(
             SystemPromptSource(
                 kind="default",
-                label="Tau default prompt",
+                label="Je default prompt",
                 source="je_coding.system_prompt",
                 content=(
                     "You are an expert coding assistant operating inside Tau, a coding agent "
@@ -104,7 +104,7 @@ def build_system_prompt_inspection(options: BuildSystemPromptOptions) -> SystemP
                     "\n\nIn addition to the tools above, you may have access to other custom tools "
                     "depending on the project."
                     f"\n\nGuidelines:\n{format_guidelines(options.tools, options.extra_guidelines)}"
-                    f"\n\n{format_tau_documentation()}"
+                    f"\n\n{format_je_documentation()}"
                 ),
             )
         )
@@ -142,7 +142,7 @@ def build_system_prompt_inspection(options: BuildSystemPromptOptions) -> SystemP
             SystemPromptSource(
                 kind="runtime",
                 label="Current date",
-                source="Tau runtime",
+                source="Je runtime",
                 content=f"\nCurrent date: {current_date.isoformat()}",
             ),
             SystemPromptSource(
@@ -186,27 +186,27 @@ def format_prompt_section(section: PromptSection) -> str:
     return f"## {section.title}\n\n{section.body}"
 
 
-def format_tau_documentation() -> str:
+def format_je_documentation() -> str:
     """Format Pi-style routing hints to Tau's installed reference material."""
     readme_path = _format_path(tau_readme_path())
     docs_path = _format_path(tau_docs_path())
     examples_path = _format_path(tau_examples_path())
     return (
-        "Tau documentation (read only when the user asks about Tau itself, its SDK, "
+        "Je documentation (read only when the user asks about Je itself, its SDK, "
         "extensions, skills, providers, models, commands, or TUI):\n"
         f"- Main documentation: {readme_path}\n"
         f"- Additional docs: {docs_path}\n"
         f"- Examples: {examples_path} (extensions and custom tools)\n"
-        "- When reading Tau docs or examples, resolve docs/... under Additional docs and "
+        "- When reading Je docs or examples, resolve docs/... under Additional docs and "
         "examples/... under Examples, not the current working directory\n"
         "- When asked about: creating or modifying extensions (docs/extensions.md, "
         "examples/extensions/), skills and prompt templates (docs/skills.md), custom "
         "providers or adding built-in providers/models (docs/models.md), CLI and slash "
         "commands (docs/cli.md), TUI usage "
-        "(docs/tui.md), Tau architecture and packages (docs/architecture.md)\n"
-        "- When working on Tau topics, read the docs and examples, and follow .md "
+        "(docs/tui.md), Je architecture and packages (docs/architecture.md)\n"
+        "- When working on Je topics, read the docs and examples, and follow .md "
         "cross-references before implementing\n"
-        "- Always read relevant Tau .md files completely and follow links to related docs"
+        "- Always read relevant Je .md files completely and follow links to related docs"
     )
 
 
@@ -391,3 +391,6 @@ def _has_tool(tools: Sequence[AgentTool], name: str) -> bool:
 
 def _format_path(path: Path) -> str:
     return str(path).replace("\\", "/")
+
+
+format_tau_documentation = format_je_documentation

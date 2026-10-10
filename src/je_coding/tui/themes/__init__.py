@@ -1,9 +1,4 @@
-"""JSON-defined TUI themes for Tau.
-
-Themes are data, not code. The built-in themes ship as JSON files next to this
-module and load through the same parser as user themes, which live in
-``<Tau home>/themes/*.json`` and ``<project>/.tau/themes/*.json``.
-"""
+"""Je 终端 UI 颜色主题体系定义。"""
 
 from __future__ import annotations
 
@@ -373,12 +368,14 @@ def _load_builtin_theme(filename: str) -> TuiTheme:
     return parse_tui_theme_json(loads(payload))
 
 
-TAU_DARK_THEME = _load_builtin_theme("je-dark.json")
-TAU_LIGHT_THEME = _load_builtin_theme("je-light.json")
+JE_DARK_THEME = _load_builtin_theme("je-dark.json")
+TAU_DARK_THEME = JE_DARK_THEME
+JE_LIGHT_THEME = _load_builtin_theme("je-light.json")
+TAU_LIGHT_THEME = JE_LIGHT_THEME
 HIGH_CONTRAST_THEME = _load_builtin_theme("high-contrast.json")
 
 _BUILTIN_THEMES: dict[str, TuiTheme] = {
-    theme.name: theme for theme in (TAU_DARK_THEME, TAU_LIGHT_THEME, HIGH_CONTRAST_THEME)
+    theme.name: theme for theme in (JE_DARK_THEME, JE_LIGHT_THEME, HIGH_CONTRAST_THEME)
 }
 BUILTIN_TUI_THEME_NAMES: tuple[TuiThemeName, ...] = tuple(_BUILTIN_THEMES)
 
@@ -425,6 +422,36 @@ def textual_theme_for_tui_theme(theme_name: TuiThemeName) -> Theme:
 
 def theme_css_variables(theme: TuiTheme) -> dict[str, str]:
     """Return Textual CSS variables for a resolved Tau theme."""
+    css_vars = {
+        "je-screen-background": theme.screen_background,
+        "je-screen-text": theme.screen_text,
+        "je-chrome-background": theme.chrome_background,
+        "je-chrome-text": theme.chrome_text,
+        "je-muted-text": theme.muted_text,
+        "je-sidebar-background": theme.sidebar_background,
+        "je-border": theme.border,
+        "je-transcript-background": theme.transcript_background,
+        "je-prompt-background": theme.prompt_background,
+        "je-prompt-text": theme.prompt_text,
+        "je-prompt-border": theme.prompt_border,
+        "je-autocomplete-background": theme.autocomplete_background,
+        "je-accent": theme.accent,
+        "je-tool-running": theme.role_styles["tool"].border,
+        "je-highlight-background": theme.highlight_background,
+        "je-highlight-text": theme.highlight_text,
+        "je-markdown-highlight": theme.markdown_heading,
+        "je-markdown-table-header": theme.markdown_table_header,
+        "je-markdown-table-border": theme.markdown_table_border,
+        "je-markdown-inline-code": theme.markdown_inline_code,
+        "je-markdown-code-block-background": theme.markdown_code_block_background,
+        "je-markdown-link": theme.markdown_link,
+    }
+    # 兼容现有 tau 变量
+    for k, v in list(css_vars.items()):
+        css_vars[k.replace("je-", "tau-")] = v
+    return css_vars
+
+def _legacy_vars(theme):
     return {
         "tau-screen-background": theme.screen_background,
         "tau-screen-text": theme.screen_text,

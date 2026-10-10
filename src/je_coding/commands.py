@@ -1,4 +1,4 @@
-"""Slash command registry for Tau coding sessions."""
+"""Je 终端斜杠命令（Slash Commands）注册与调度器。"""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Shared event-rendering primitives for Tau coding modes."""
+"""终端事件流渲染器基类。"""
 
 from __future__ import annotations
 

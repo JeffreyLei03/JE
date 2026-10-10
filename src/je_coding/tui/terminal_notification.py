@@ -1,4 +1,4 @@
-"""Best-effort terminal attention notifications for completed Tau turns."""
+"""终端原生通知系统。"""
 
 from __future__ import annotations
 

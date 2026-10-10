@@ -1,4 +1,4 @@
-"""Human-readable Pi-compatible streaming transcript renderer."""
+"""富文本对话历史与转录渲染器。"""
 
 import typer
 from rich.console import Console

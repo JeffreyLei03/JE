@@ -1,4 +1,4 @@
-"""OpenAI Codex subscription Responses provider."""
+"""OpenAI Codex 响应协议提供商适配模块。"""
 
 from __future__ import annotations
 
@@ -83,13 +83,13 @@ class OpenAICodexConfig:
     timeout_seconds: float = DEFAULT_OPENAI_COMPATIBLE_TIMEOUT_SECONDS
     max_retries: int = DEFAULT_OPENAI_COMPATIBLE_MAX_RETRIES
     max_retry_delay_seconds: float = DEFAULT_OPENAI_COMPATIBLE_MAX_RETRY_DELAY_SECONDS
-    originator: str = "tau"
+    originator: str = "je"
     reasoning_effort: str | None = None
     reasoning_summary: str = "auto"
     supports_images: bool = False
     provider_name: str = "OpenAI Codex"
     # The endpoint requires an official Codex compatibility version and filters
-    # newer models from older clients. Tau resolves the latest release at runtime;
+    # newer models from older clients. Je resolves the latest release at runtime;
     # this bundled value remains the offline/error fallback.
     client_version: str = DEFAULT_OPENAI_CODEX_CLIENT_VERSION
     client_version_resolver: OpenAICodexClientVersionResolver | None = None
@@ -392,7 +392,7 @@ class _ToolCallBuilder:
             self.name = name
 
     def build(self) -> ToolCall:
-        """Build a complete Tau tool call."""
+        """Build a complete Je tool call."""
         arguments_text = "".join(self.arguments_parts)
         arguments = _loads_object(arguments_text) if arguments_text else {}
         if arguments is None:
@@ -878,7 +878,7 @@ def _usage_from_response(event: Mapping[str, Any]) -> Usage | None:
     """Parse billed usage from a Responses ``response.completed``-style event.
 
     Cache reads and writes are subtracted from ``input_tokens`` to leave fresh
-    input. Cost is left unset (None) because Tau has no per-model pricing table.
+    input. Cost is left unset (None) because Je has no per-model pricing table.
     """
     response = event.get("response")
     if not isinstance(response, Mapping):
@@ -1015,7 +1015,7 @@ def _build_codex_headers(
         "Authorization": f"Bearer {access_token}",
         "chatgpt-account-id": account_id,
         "originator": originator,
-        "User-Agent": f"tau ({system()} {release()}; {machine()})",
+        "User-Agent": f"je ({system()} {release()}; {machine()})",
         "OpenAI-Beta": "responses=experimental",
         "accept": "text/event-stream",
         "content-type": "application/json",

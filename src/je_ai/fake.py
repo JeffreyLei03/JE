@@ -1,4 +1,4 @@
-"""Deterministic Pi-compatible model provider for tests."""
+"""用于单元测试的高确定性虚拟模型提供商。"""
 
 from __future__ import annotations
 

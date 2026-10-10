@@ -1,4 +1,4 @@
-"""Pi-compatible JSON event stream renderer."""
+"""JSON 流式事件输出渲染器。"""
 
 import typer
 
