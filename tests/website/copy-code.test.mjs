@@ -209,5 +209,5 @@ test("announces rejected and unavailable clipboard operations, then resets", asy
 
 test("keeps the visible focus affordance for keyboard users", async () => {
   const css = await readFile("website/assets/css/main.css", "utf8");
-  assert.match(css, /\.copy-btn:focus-visible\s*\{[^}]*opacity:1;/s);
+  assert.match(css, /\.copy-btn:focus-visible\s*\{[^}]*opacity:\s*1;/s);
 });

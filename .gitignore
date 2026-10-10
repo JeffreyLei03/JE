@@ -16,6 +16,12 @@ website/resources/
 website/node_modules/
 website/dist/
 website/.astro/
+desktop/node_modules/
+desktop/dist/
+desktop/release/
+desktop/engine-dist/
+desktop/engine-build/
+desktop/*.spec
 
 # System files
 .DS_Store

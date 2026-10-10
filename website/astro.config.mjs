@@ -11,7 +11,7 @@ export default defineConfig({
   publicDir: "./static",
   integrations: [sitemap()],
   markdown: {
-    shikiConfig: { theme: "min-light" },
+    shikiConfig: { theme: "min-dark" },
     processor: unified({ remarkPlugins: [admonitions, baseLinks] }),
   },
 });

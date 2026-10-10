@@ -1,12 +1,14 @@
 ---
-title: What is Tau?
-description: Tau is a small, readable coding agent for your terminal — and a working example of how coding agents are built.
+title: What is JE?
+description: JE is a small, readable coding agent for your terminal — and a working example of how coding agents are built.
 type: doc
 ---
 
-**Tau is a coding agent that lives in your terminal.** You type what you want in
+JE is Jeffrey's personal coding-agent project, built on [Hugging Face Tau](https://github.com/huggingface/tau).
+
+**JE is a coding agent that lives in your terminal.** You type what you want in
 plain English — "explain this repo", "add tests for the parser", "fix this
-stack trace" — and Tau reads files, runs commands, and edits code to get it
+stack trace" — and JE reads files, runs commands, and edits code to get it
 done, streaming its work as it goes.
 
 It's two things at once:
@@ -14,13 +16,13 @@ It's two things at once:
 - **A tool you can use.** A real terminal coding agent with an interactive UI,
   multiple model providers, durable sessions you can resume and branch, and a
   resource system for your own skills and prompts.
-- **A project you can learn from.** Tau is built to be *read*. Its source is
+- **A project you can learn from.** JE is built to be *read*. Its source is
   organized into small, honest layers so you can see exactly how a coding agent
   works — from model streaming, to the agent loop, to tools and sessions.
 
-> [!NOTE] Why "Tau"?
+> [!NOTE] Why "JE"?
 > The name is a small joke about picking the *right* foundation. See
-> [Why "Tau"?](/why-tau/) for the (genuinely fun) math rant behind it.
+> [Why "JE"?](/why-tau/) for the (genuinely fun) math rant behind it.
 
 ## What can it do?
 
@@ -42,12 +44,12 @@ It's two things at once:
 - **You want a coding agent you can run and shape** — install it, point it at a
   model, and work. Start with the [Quickstart](/quickstart/).
 - **You want to understand how coding agents are built** — read the
-  [core concepts](/concepts/), then the [How Tau works](/internals/architecture/)
+  [core concepts](/concepts/), then the [How JE works](/internals/architecture/)
   section.
 
 ## Where to go next
 
-- **[Quickstart](/quickstart/)** — install Tau and run your first session in
+- **[Quickstart](/quickstart/)** — install JE and run your first session in
   a few minutes.
 - **[Core concepts](/concepts/)** — the handful of ideas (agent loop,
   providers, tools, sessions, skills) that everything else builds on.

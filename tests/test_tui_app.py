@@ -973,7 +973,7 @@ def test_session_sidebar_brand_includes_current_version() -> None:
 
     console.print(_sidebar_brand(theme=TAU_DARK_THEME))
 
-    assert f"τ = 2π  {current_version()}" in console.export_text()
+    assert f"JE  {current_version()}" in console.export_text()
 
 
 def test_session_sidebar_uses_prominent_title_and_accented_section_headers() -> None:
@@ -3349,7 +3349,8 @@ async def test_tui_app_highlights_prompt_shell_mode() -> None:
 
         assert not prompt.has_class("-shell-mode")
         assert prompt.get_line(0).spans == []
-        assert indicator.render().plain == "τ"
+        assert indicator.render().plain == "JE"
+        assert indicator.content_size.width >= 2
 
 
 @pytest.mark.anyio
@@ -4547,7 +4548,7 @@ async def test_tui_app_shows_activity_indicator_while_running() -> None:
         assert prompt.styles.border_top[0] == ""
         assert prompt.styles.border_right[0] == ""
         assert prompt.styles.border_bottom[0] == ""
-        assert indicator.render().plain == "τ"
+        assert indicator.render().plain == "JE"
 
         app.adapter.apply(AgentStartEvent())
         app._refresh()
@@ -4567,7 +4568,7 @@ async def test_tui_app_shows_activity_indicator_while_running() -> None:
 
         assert not app.query("#status")
         assert prompt.styles.border_left[1].hex.lower() == "#2d3748"
-        assert indicator.render().plain == "τ"
+        assert indicator.render().plain == "JE"
 
 
 @pytest.mark.anyio
@@ -4579,24 +4580,24 @@ async def test_tui_app_updates_terminal_title_for_running_and_named_session() ->
     app._terminal_title = TerminalTitleController(enabled=True, writer=writes.append)
 
     async with app.run_test():
-        assert writes[-1] == "\x1b]0;τ | build notes\x07"
+        assert writes[-1] == "\x1b]0;JE | build notes\x07"
 
         app.adapter.apply(AgentStartEvent())
         app._refresh()
-        assert writes[-1] == "\x1b]0;⠋ τ | build notes\x07"
+        assert writes[-1] == "\x1b]0;⠋ JE | build notes\x07"
 
         app._tick_activity()
-        assert writes[-1] == "\x1b]0;⠙ τ | build notes\x07"
+        assert writes[-1] == "\x1b]0;⠙ JE | build notes\x07"
 
         session._session_title = "ship notes"
         app._refresh_chrome()
-        assert writes[-1] == "\x1b]0;⠙ τ | ship notes\x07"
+        assert writes[-1] == "\x1b]0;⠙ JE | ship notes\x07"
 
         app.adapter.apply(AgentEndEvent())
         app._refresh()
-        assert writes[-1] == "\x1b]0;τ | ship notes\x07"
+        assert writes[-1] == "\x1b]0;JE | ship notes\x07"
 
-    assert writes[-1] == "\x1b]0;τ\x07"
+    assert writes[-1] == "\x1b]0;JE\x07"
 
 
 @pytest.mark.anyio
@@ -4663,16 +4664,16 @@ async def test_tui_app_updates_terminal_title_after_auto_session_naming() -> Non
     app._terminal_title = TerminalTitleController(enabled=True, writer=writes.append)
 
     async with app.run_test():
-        assert writes[-1] == "\x1b]0;τ\x07"
+        assert writes[-1] == "\x1b]0;JE\x07"
 
         await app._run_prompt("debug the login flow")
 
-        assert "\x1b]0;τ | Debug login\x07" in writes
+        assert "\x1b]0;JE | Debug login\x07" in writes
         sidebar_content = app.query_one("#sidebar-content", Static)
         console = Console(record=True, width=80, file=StringIO())
         console.print(sidebar_content.content)
         assert "Debug login" in console.export_text()
-        assert writes[-1] == "\x1b]0;τ | Debug login\x07"
+        assert writes[-1] == "\x1b]0;JE | Debug login\x07"
 
 
 @pytest.mark.anyio
@@ -4697,7 +4698,7 @@ async def test_tui_app_clears_activity_status_on_error() -> None:
         assert prompt.styles.border_top[0] == ""
         assert prompt.styles.border_right[0] == ""
         assert prompt.styles.border_bottom[0] == ""
-        assert indicator.render().plain == "τ"
+        assert indicator.render().plain == "JE"
 
 
 @pytest.mark.anyio
@@ -5632,11 +5633,11 @@ async def test_tui_app_shows_working_state_during_manual_compaction() -> None:
         assert app._is_agent_or_queue_active() is False
         assert app._is_compaction_active() is True
         assert prompt._footer_mode == "running"
-        assert indicator.render().plain != "τ"
-        assert titles[-1] == "\x1b]0;⠋ τ | build notes\x07"
+        assert indicator.render().plain != "JE"
+        assert titles[-1] == "\x1b]0;⠋ JE | build notes\x07"
 
         app._tick_activity()
-        assert titles[-1] == "\x1b]0;⠙ τ | build notes\x07"
+        assert titles[-1] == "\x1b]0;⠙ JE | build notes\x07"
 
         finish.set()
         await pilot.pause()
@@ -5645,8 +5646,8 @@ async def test_tui_app_shows_working_state_during_manual_compaction() -> None:
         assert app._is_working() is False
         assert app._is_compaction_active() is False
         assert prompt._footer_mode == "normal"
-        assert indicator.render().plain == "τ"
-        assert titles[-1] == "\x1b]0;τ | build notes\x07"
+        assert indicator.render().plain == "JE"
+        assert titles[-1] == "\x1b]0;JE | build notes\x07"
 
 
 @pytest.mark.anyio

@@ -91,7 +91,15 @@ test("docs retain callouts, highlighting, navigation, and edit links", async () 
     assert.ok(html.includes(value), value);
   const home = await readFile(path.join(dist, "index.html"), "utf8");
   assert.ok(home.includes("https://github.com/JeffreyLei03/JE"));
-  assert.ok(home.includes("loopRadius"));
+  for (const frame of ["01-prompt.svg", "02-result.svg", "03-tools.svg"]) {
+    assert.ok(
+      home.includes(frame.replace(".svg", ".jpg")),
+      `missing real demo frame: ${frame}`,
+    );
+    await access(path.join(dist, "images/demo", frame));
+  }
+  assert.ok(home.includes('id="demo"'));
+  assert.ok(home.includes('id="engineering"'));
   const why = await readFile(path.join(dist, "why-tau/index.html"), "utf8");
   assert.ok(why.includes("MathJax"));
 });
@@ -119,4 +127,36 @@ test("callout plugin preserves inline content and supports default titles", () =
   assert.equal(node.children[0].children[0].value, "Note");
   assert.equal(node.children[1].children[0].value, "Hello ");
   assert.equal(node.children[1].children[1].type, "strong");
+});
+
+test("homepage search includes the complete documentation index", async () => {
+  const entry = JSON.parse(
+    await readFile(path.join(dist, "pagefind/pagefind-entry.json"), "utf8"),
+  );
+  const indexes = Object.values(entry.languages);
+  assert.equal(
+    indexes.length,
+    1,
+    "homepage and docs must share a searchable index",
+  );
+  const pages = (await files(dist)).filter((file) => file.endsWith(".html"));
+  assert.equal(indexes[0].page_count, pages.length);
+});
+
+test("demo assets carry a real-run record without credentials", async () => {
+  const directory = path.join(dist, "images/demo");
+  const record = JSON.parse(
+    await readFile(path.join(directory, "capture.json"), "utf8"),
+  );
+  assert.equal(record.renderer, "Textual App.save_screenshot");
+  for (const tool of ["read", "edit", "write"])
+    assert.ok(record.tools.includes(tool));
+  assert.match(record.validation, /assertions passed/);
+  for (const file of await files(directory)) {
+    assert.doesNotMatch(
+      await readFile(file, "utf8"),
+      /sk-(?:proj-)?[a-zA-Z0-9_-]{20,}/,
+      file,
+    );
+  }
 });

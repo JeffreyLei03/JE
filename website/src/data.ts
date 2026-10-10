@@ -3,9 +3,9 @@ import { parse as yaml } from "yaml";
 import { parse as toml } from "smol-toml";
 
 export const site = {
-  title: "Je",
+  title: "JE — Jeffrey's coding agent project",
   description:
-    "An educational Python project for learning how coding agents are built.",
+    "JE, a terminal coding agent by Jeffrey. Explore real model runs, tool execution, and the engineering behind the interface.",
   githubUrl: "https://github.com/JeffreyLei03/JE",
   communityUrl: "https://github.com/JeffreyLei03/JE/discussions",
   editRepoUrl: "https://github.com/JeffreyLei03/JE/edit/main/website/content",

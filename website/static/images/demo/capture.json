@@ -1,0 +1,32 @@
+{
+  "captured_at": "2026-10-10",
+  "provider": "DeepSeek",
+  "model": "deepseek-v4-flash",
+  "renderer": "Textual App.save_screenshot",
+  "environment": "headless real TUI, isolated demo workspace",
+  "terminal_size": [
+    120,
+    40
+  ],
+  "prompt": "Read greeting.py. Change greet to accept a name with default 'world' and return 'Hello, <name>!'. Write test_greeting.py with assertions for greet() and greet('Ada'). Read both files to verify. Use read, edit and write tools. Reply with a short summary.",
+  "tools": [
+    "read",
+    "edit",
+    "write",
+    "read",
+    "read"
+  ],
+  "screenshots": [
+    "01-prompt.svg",
+    "02-result.svg",
+    "03-tools.svg"
+  ],
+  "validation": "greet() and greet('Ada') assertions passed",
+  "rendered_images": [
+    "01-prompt.jpg",
+    "02-result.jpg",
+    "03-tools.jpg"
+  ],
+  "rasterization": "Browser screenshots of native SVG; full terminal frame preserved",
+  "ui_refresh": "JE input prefix, sidebar brand and terminal title; native TUI re-render of the original recorded DeepSeek session, no additional model call"
+}

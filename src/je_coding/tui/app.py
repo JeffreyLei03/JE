@@ -3990,7 +3990,7 @@ class JeTuiApp(App[None]):
     }
 
     #prompt-prefix {
-        width: 2;
+        width: 3;
         height: 3;
         padding: 0 0 0 0;
         margin: 0;
@@ -4822,7 +4822,7 @@ class JeTuiApp(App[None]):
                 yield Container(id="above-prompt-slot")
                 yield Static("", id="queued-messages")
                 with Horizontal(id="prompt-row"):
-                    yield Static("τ", id="prompt-prefix")
+                    yield Static("JE", id="prompt-prefix")
                     yield PromptInput(
                         placeholder=(
                             "Ask Je…  Enter submits, "
@@ -7857,11 +7857,11 @@ def _render_activity_indicator(
     running: bool,
     shell_mode: bool = False,
 ) -> Text:
-    """Render the prompt prefix: a moving square while running, ``$`` in shell mode."""
+    """Render JE while idle, a moving square while running, or ``$`` in shell mode."""
     if shell_mode and not running:
         return Text("$", style=f"bold {theme.role_styles['tool'].border}")
     if not running:
-        return Text("τ", style=f"bold {theme.accent}")
+        return Text("JE", style=f"bold {theme.accent}")
 
     cycle_length = (ACTIVITY_INDICATOR_HEIGHT - 1) * 2
     cycle_position = frame % cycle_length

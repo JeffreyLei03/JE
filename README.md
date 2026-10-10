@@ -10,6 +10,20 @@ Je 是一个面向专业开发者、轻量且高度可扩展的终端 AI 编程�
 
 ---
 
+## 🖥 桌面工作台 (Desktop)
+
+JE Desktop 提供会话、文件树、Monaco 编辑器、聊天与代码分栏、Git 更改、终端命令输出，以及常驻的 Skills/Prompts/Tools 资源栏。通过 RPC 复用 JE 引擎，并与终端版共享模型配置和会话。
+
+源码启动：
+
+```powershell
+cd desktop
+npm install
+npm run dev
+```
+
+需要 Node.js 24+，并先在仓库根目录完成 `uv sync`。Windows 便携版位于 `desktop/release/`；[桌面端运行和打包说明](desktop/README.md) 包含完整步骤。
+
 ## 🏗 核心架构设计 (Architecture)
 
 Je 秉承**极简、高内聚、低耦合**的工程哲学，严格遵循三层分层解耦架构：

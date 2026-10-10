@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && pagefind --site dist",
+    "build": "astro build && pagefind --site dist --force-language zh-cn",
     "preview": "astro preview",
     "check": "astro check",
     "test": "node --test tests/*.test.mjs && cd .. && node --test tests/website/*.test.mjs",

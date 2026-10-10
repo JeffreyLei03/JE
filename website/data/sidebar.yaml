@@ -1,8 +1,8 @@
 - label: Home
   link: /
-- label: Use Tau
+- label: Use JE
   items:
-    - label: What is Tau?
+    - label: What is JE?
       path: /what-is-tau/
     - label: Quickstart
       path: /quickstart/
@@ -40,7 +40,7 @@
       path: /reference/configuration/
     - label: Built-in tools
       path: /reference/tools/
-- label: How Tau works
+- label: How JE works
   items:
     - label: Architecture overview
       path: /internals/architecture/

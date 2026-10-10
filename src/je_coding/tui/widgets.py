@@ -58,7 +58,7 @@ from je_coding.tui.state import (
 )
 from je_coding.version import current_version
 
-TAU_SIDEBAR_LOGO = "τ = 2π"
+JE_SIDEBAR_LOGO = "JE"
 SIDEBAR_BULLET_LIST_LIMIT = 5
 SIDEBAR_COMMA_LIST_MAX_LINES = 3
 
@@ -2134,7 +2134,7 @@ def _sidebar_separator(*, theme: TuiTheme) -> RenderableType:
 
 def _sidebar_brand(*, theme: TuiTheme) -> RenderableType:
     brand = Text(style=f"bold {theme.prompt_text}")
-    brand.append(TAU_SIDEBAR_LOGO)
+    brand.append(JE_SIDEBAR_LOGO)
     brand.append(f"  {current_version()}", style=theme.completion_description)
     return Align.center(brand)
 

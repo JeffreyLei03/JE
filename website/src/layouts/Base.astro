@@ -13,7 +13,7 @@ interface Props {
 const {
   title,
   description = site.description,
-  image = "/images/og-image.png",
+  image = "/images/je-social.jpg",
   mathjax,
 } = Astro.props;
 const pageTitle =
@@ -30,31 +30,14 @@ const ogImage = new URL(sitePath(image), Astro.site);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={Astro.url.pathname === sitePath("/") ? "zh-CN" : "en"}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href={sitePath("/favicon.ico")} sizes="any" />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href={sitePath("/favicon-32x32.png")}
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href={sitePath("/favicon-16x16.png")}
-    />
-    <link
-      rel="apple-touch-icon"
-      sizes="180x180"
-      href={sitePath("/apple-touch-icon.png")}
-    />
+    <link rel="icon" href={sitePath("/je-icon.svg")} type="image/svg+xml" />
     <link rel="manifest" href={sitePath("/site.webmanifest")} />
     <link
       rel="alternate"
@@ -95,8 +78,9 @@ const ogImage = new URL(sitePath(image), Astro.site);
     }
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <Navbar />
-    <main data-pagefind-body><slot /></main>
+    <main id="main-content" data-pagefind-body><slot /></main>
     <Footer />
     <script>
       import "../../assets/js/nav-toggle.js";

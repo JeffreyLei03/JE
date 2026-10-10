@@ -11,7 +11,7 @@ from typing import TextIO, cast
 
 MAX_TERMINAL_TITLE_LENGTH = 120
 OSC_TERMINATOR = "\a"
-TAU_TITLE_MARK = "τ"
+JE_TITLE_MARK = "JE"
 RUNNING_TITLE_FRAMES = ("⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏")
 _CONTROL_CHARS_RE = re.compile(r"[\x00-\x1f\x7f-\x9f]")
 
@@ -21,7 +21,7 @@ def terminal_title_supported(
     environ: Mapping[str, str] | None = None,
     stream: TextIO | None = None,
 ) -> bool:
-    """Return whether Tau should emit OSC title sequences in this process."""
+    """Return whether JE should emit OSC title sequences in this process."""
     env = os.environ if environ is None else environ
     if env.get("TAU_TERMINAL_TITLE", "").lower() in {"0", "false", "no", "off"}:
         return False
@@ -55,12 +55,12 @@ def build_terminal_title(
     running: bool,
     frame: int = 0,
 ) -> str:
-    """Return Tau's terminal tab title for the current session/running state."""
+    """Return JE's terminal tab title for the current session/running state."""
     title = sanitize_terminal_title(session_title)
     title = (
-        TAU_TITLE_MARK
+        JE_TITLE_MARK
         if not title or title.lower() == "untitled session"
-        else f"{TAU_TITLE_MARK} | {title}"
+        else f"{JE_TITLE_MARK} | {title}"
     )
     if not running:
         return title
@@ -82,7 +82,7 @@ class TerminalTitleController:
         writer: Callable[[str], object] | None = None,
         stream: TextIO | None = None,
         environ: Mapping[str, str] | None = None,
-        exit_title: str = TAU_TITLE_MARK,
+        exit_title: str = JE_TITLE_MARK,
     ) -> None:
         self._stream = cast(TextIO, sys.__stdout__) if stream is None else stream
         self.enabled = (
@@ -103,7 +103,7 @@ class TerminalTitleController:
         return False
 
     def update(self, session_title: str | None, *, running: bool, frame: int = 0) -> None:
-        """Write the current Tau title if it differs from the last emitted title."""
+        """Write the current JE title if it differs from the last emitted title."""
         if not self.enabled:
             return
         title = build_terminal_title(session_title, running=running, frame=frame)
@@ -113,7 +113,7 @@ class TerminalTitleController:
             self._last_title = title
 
     def restore(self) -> None:
-        """Leave the terminal title in a neutral idle Tau state on shutdown."""
+        """Leave the terminal title in a neutral idle JE state on shutdown."""
         if not self.enabled:
             return
         if self._write(osc_terminal_title_sequence(self._exit_title)):

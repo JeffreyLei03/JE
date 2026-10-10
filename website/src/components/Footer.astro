@@ -1,26 +1,18 @@
 ---
-import { sitePath } from "../data";
-import { site } from "../data";
+import { site, sitePath } from "../data";
 ---
 
-<footer class="site-footer" data-pagefind-ignore>
-  <div class="brand">
-    <span class="glyph" style="font-size:20px;">&#964;</span>
-    <span class="name">Je</span>
+<footer class="site-footer shell" data-pagefind-ignore>
+  <div>
+    <a class="footer-brand" href={sitePath("/")}>JE<span>/</span></a><p>
+      A coding agent, made legible.
+    </p>
+  </div><div class="footer-links">
+    <a href={sitePath("/quickstart/")}>Documentation ↗</a><a
+      href={site.githubUrl}>Source code ↗</a
+    ><a href={sitePath("/releases/")}>Releases ↗</a>
+  </div><div class="footer-bottom">
+    <span>JEFFREY / PERSONAL PROJECT</span><span>BUILT ON PI · OPEN SOURCE</span
+    ><a href={`${sitePath("/")}#top`}>BACK TO TOP ↑</a>
   </div>
-  <div class="l">
-    <a href={sitePath("/")}>Home</a>
-    <a href={sitePath("/quickstart/")}>Docs</a>
-    <a href={sitePath("/internals/architecture/")}>Architecture</a>
-    <a href={sitePath("/releases/")}>Releases</a>
-    <a href={sitePath("/roadmap/")}>Roadmap</a>
-    <a href={site.githubUrl}>GitHub</a>
-  </div>
-  <span
-    >An educational project &middot; inspired by <a
-      href="https://pi.dev"
-      target="_blank"
-      rel="noopener">Pi</a
-    ></span
-  >
 </footer>
