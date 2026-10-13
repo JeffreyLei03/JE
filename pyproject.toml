@@ -42,6 +42,7 @@ packages = ["src/je_ai", "src/je_agent", "src/je_coding"]
 line-length = 100
 target-version = "py312"
 src = ["src", "tests"]
+extend-exclude = ["scripts", "tmp", "benchmark", "benchmark_output"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
